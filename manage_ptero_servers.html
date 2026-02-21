@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kelola Server Pterodactyl</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .box { border: 1px solid #ccc; padding: 15px; margin-bottom: 20px; border-radius: 8px; background: #f9f9f9; overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; background: white; min-width: 600px; }
+        table, th, td { border: 1px solid #aaa; }
+        th, td { padding: 10px; text-align: left; }
+        a { text-decoration: none; color: blue; font-weight: bold; }
+        .btn-hapus { background: #dc3545; color: white; border: none; cursor: pointer; border-radius: 4px; padding: 5px 10px; font-weight: bold; }
+        .btn-hapus:hover { background: #c82333; }
+        .badge-spek { background: #17a2b8; color: white; padding: 3px 6px; border-radius: 4px; font-size: 12px; margin-right: 4px;}
+    </style>
+</head>
+<body>
+    <h2>Kelola Server Pterodactyl</h2>
+    <a href="index.html">⬅ Kembali ke Dashboard</a>
+    <p>Di sini kamu bisa melihat dan menghapus server yang ada di panel Pterodactyl.</p>
+
+    <div class="box">
+        <h3>🖥️ Semua Server di Panel</h3>
+        <table id="tabelServer">
+            <tr>
+                <th>ID</th>
+                <th>Nama Server</th>
+                <th>Owner (User ID)</th>
+                <th>Spesifikasi (RAM / CPU / Disk)</th>
+                <th>Aksi</th>
+            </tr>
+            <tr>
+                <td colspan="5">⏳ Memanggil data server dari Pterodactyl...</td>
+            </tr>
+        </table>
+    </div>
+
+    <script>
+        // Cek Login
+        let userRole = localStorage.getItem('role');
+        if (!userRole) {
+            alert("Harap login terlebih dahulu!");
+            window.location.replace("login.html");
+        }
+
+        // ==========================================
+        // 1. DATA RAHASIA (SUDAH DIISI OLEH MINI)
+        // ==========================================
+        const PTERO_DOMAIN = "zeroix.panel-prvt.web.id"; 
+        const PTERO_API = "ptla_ZM2Ka67FdLj62khENxUm22bKnsHHDBhUCEnDtXfuHhw"; 
+        const WORKER_URL = "https://restless-truth-9b75.amisterious09.workers.dev"; 
+        
+        // ==========================================
+        // 2. FUNGSI MENAMPILKAN SERVER (READ)
+        // ==========================================
+        function ambilDataServer() {
+            // URL untuk endpoint Servers
+            let targetUrl = `${WORKER_URL}/?https://${PTERO_DOMAIN}/api/application/servers`;
+            
+            fetch(targetUrl, {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${PTERO_API}`
+                }
+            })
+            .then(async response => {
+                if (!response.ok) throw new Error("Gagal ngambil data server!");
+                return response.json();
+            })
+            .then(data => {
+                let servers = data.data;
+                let tabel = `<tr><th>ID</th><th>Nama Server</th><th>Owner (User ID)</th><th>Spesifikasi</th><th>Aksi</th></tr>`;
+                
+                if (servers.length === 0) {
+                    tabel += `<tr><td colspan="5" style="text-align:center;">Belum ada server yang dibuat.</td></tr>`;
+                } else {
+                    servers.forEach(server => {
+                        let s = server.attributes;
+                        
+                        // Cek spesifikasi
+                        let ram = s.limits.memory === 0 ? "Unlimited" : s.limits.memory + " MB";
+                        let cpu = s.limits.cpu === 0 ? "Unlimited" : s.limits.cpu + " %";
+                        let disk = s.limits.disk === 0 ? "Unlimited" : s.limits.disk + " MB";
+                        
+                        let spekHtml = `
+                            <span class="badge-spek">RAM: ${ram}</span>
+                            <span class="badge-spek">CPU: ${cpu}</span>
+                            <span class="badge-spek">Disk: ${disk}</span>
+                        `;
+
+                        // Tombol Hapus Server
+                        let tombolHapus = `<button class="btn-hapus" onclick="hapusServerPtero(${s.id}, '${s.name}')">🗑️ Hapus Server</button>`;
+
+                        tabel += `<tr>
+                            <td>${s.id}</td>
+                            <td><b>${s.name}</b></td>
+                            <td>User ID: ${s.user}</td>
+                            <td>${spekHtml}</td>
+                            <td>${tombolHapus}</td>
+                        </tr>`;
+                    });
+                }
+                document.getElementById('tabelServer').innerHTML = tabel;
+            })
+            .catch(error => {
+                document.getElementById('tabelServer').innerHTML = `<tr><td colspan="5" style="color:red;">❌ Error: ${error.message}</td></tr>`;
+            });
+        }
+
+        // ==========================================
+        // 3. FUNGSI MENGHAPUS SERVER (DELETE)
+        // ==========================================
+        function hapusServerPtero(serverId, serverName) {
+            let konfirmasi = confirm(`🚨 SUPER PERINGATAN!\n\nYakin mau MENGHAPUS server "${serverName}" (ID: ${serverId})? \nSemua file dan data di dalam server ini akan HANGUS PERMANEN!`);
+            
+            if (!konfirmasi) return; 
+
+            // URL khusus buat hapus server pake ID
+            let deleteUrl = `${WORKER_URL}/?https://${PTERO_DOMAIN}/api/application/servers/${serverId}`;
+
+            fetch(deleteUrl, {
+                method: 'DELETE',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${PTERO_API}`
+                }
+            })
+            .then(async response => {
+                if (!response.ok) {
+                    let err = await response.text();
+                    throw new Error(err);
+                }
+                alert(`💥 BOOM! Server "${serverName}" berhasil diratakan dengan tanah!`);
+                ambilDataServer(); // Refresh tabel biar servernya hilang
+            })
+            .catch(error => {
+                alert("Gagal menghapus server. Alasan: " + error.message);
+                console.error(error);
+            });
+        }
+
+        // Mulai Panggil Data
+        ambilDataServer();
+    </script>
+</body>
+</html>

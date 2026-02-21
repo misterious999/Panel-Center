@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Panel</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; background-color: #f4f7f6;}
+        .box { border: 1px solid #ccc; padding: 15px; margin-bottom: 20px; border-radius: 8px; background: #fff; box-shadow: 0 4px 6px rgba(0,0,0,0.1);}
+        a { display: block; margin: 10px 0; padding: 12px; background: #007bff; color: white; text-decoration: none; border-radius: 5px; text-align: center; font-weight: bold; }
+        a:hover { background: #0056b3; }
+        .btn-logout { background: #dc3545; }
+        .btn-logout:hover { background: #c82333; }
+
+        /* CSS Tambahan buat Statistik Dashboard */
+        .stats-container { display: flex; gap: 15px; margin-bottom: 25px; flex-wrap: wrap; }
+        .stat-box { background: #fff; border: 1px solid #ddd; padding: 20px; border-radius: 8px; flex: 1; min-width: 100px; text-align: center; box-shadow: 2px 2px 10px rgba(0,0,0,0.05); }
+        .stat-box h3 { margin: 0; font-size: 28px; color: #333; }
+        .stat-box p { margin: 5px 0 0; color: #666; font-size: 14px; font-weight: bold; }
+        .box-total { border-bottom: 5px solid #007bff; }
+        .box-aktif { border-bottom: 5px solid #28a745; }
+        .box-suspend { border-bottom: 5px solid #dc3545; }
+    </style>
+</head>
+<body>
+    <h2>Selamat Datang, <span id="namaUser">Juragan</span>! 👋</h2>
+    <p>Ini adalah halaman control panel utama.</p>
+    
+    <div class="stats-container">
+        <div class="stat-box box-total">
+            <h3 id="countTotal">⏳</h3>
+            <p>Total Server</p>
+        </div>
+        <div class="stat-box box-aktif">
+            <h3 id="countActive">⏳</h3>
+            <p>Server Aktif</p>
+        </div>
+        <div class="stat-box box-suspend">
+            <h3 id="countSuspended">⏳</h3>
+            <p>Suspended</p>
+        </div>
+    </div>
+
+    <div class="box">
+        <h3>🚀 Menu Navigasi</h3>
+        
+        <a href="manage_panel_users.html" id="menuKelolaPanel" style="background: #ffc107; color: #000;">👤 Kelola Akun Panel (Reseller)</a>
+        
+        <a href="manage_ptero_users.html">👥 Kelola User Pterodactyl</a>
+        <a href="manage_ptero_servers.html">🖥️ Kelola Server Pterodactyl</a>
+        <a href="#" class="btn-logout" onclick="logout()">🚪 Logout</a>
+    </div>
+
+    <script>
+        // ==========================================
+        // 1. CEK LOGIN & KEAMANAN ROLE
+        // ==========================================
+        let userRole = localStorage.getItem('role');
+        let username = localStorage.getItem('username'); 
+        
+        // Kalau belum login, lempar ke halaman login
+        if (!userRole) {
+            alert("Harap login terlebih dahulu!");
+            window.location.replace("login.html");
+        }
+
+        // Tampilkan nama user di layar
+        if (username) {
+            document.getElementById('namaUser').innerText = username;
+        }
+
+        // GEMBOK KEAMANAN: Hilangkan tombol kuning kalau yang login adalah Reseller
+        if (userRole && userRole.toLowerCase() === 'reseller') {
+            document.getElementById('menuKelolaPanel').style.display = 'none';
+        }
+
+        // Fungsi Logout
+        function logout() {
+            localStorage.clear(); 
+            window.location.replace("login.html");
+        }
+
+        // ==========================================
+        // 2. SCRIPT MESIN PENARIK DATA STATISTIK
+        // ==========================================
+        const PTERO_DOMAIN = "zeroix.panel-prvt.web.id"; 
+        const PTERO_API = "ptla_ZM2Ka67FdLj62khENxUm22bKnsHHDBhUCEnDtXfuHhw"; 
+        const WORKER_URL = "https://restless-truth-9b75.amisterious09.workers.dev"; 
+
+        function loadDashboardStats() {
+            let targetUrl = `${WORKER_URL}/?https://${PTERO_DOMAIN}/api/application/servers`;
+
+            fetch(targetUrl, {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${PTERO_API}`
+                }
+            })
+            .then(res => {
+                if (!res.ok) throw new Error("Gagal mengambil data");
+                return res.json();
+            })
+            .then(data => {
+                let servers = data.data;
+                
+                // Rumus Menghitung Server
+                let total = servers.length;
+                let suspended = servers.filter(s => s.attributes.suspended === true).length;
+                let active = total - suspended;
+
+                // Tembak angkanya ke layar HTML
+                document.getElementById('countTotal').innerText = total;
+                document.getElementById('countActive').innerText = active;
+                document.getElementById('countSuspended').innerText = suspended;
+            })
+            .catch(err => {
+                console.error("Gagal load stats:", err);
+                document.getElementById('countTotal').innerText = "Err";
+                document.getElementById('countActive').innerText = "Err";
+                document.getElementById('countSuspended').innerText = "Err";
+            });
+        }
+
+        // Jalankan fungsinya saat halaman dibuka
+        loadDashboardStats();
+    </script>
+</body>
+</html>

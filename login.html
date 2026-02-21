@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Panel Center</title>
+</head>
+<body>
+    <h2>Login</h2>
+    <div>
+        <label>Username:</label><br>
+        <input type="text" id="username" required><br><br>
+        <label>Password:</label><br>
+        <input type="password" id="password" required><br><br>
+        <button onclick="prosesLogin()">Masuk</button>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+
+    <script>
+        // 1. TEMPEL LINK DATABASE KAMU DI BAWAH INI (JANGAN LUPA TANDA KUTIPNYA)
+        const firebaseConfig = {
+            databaseURL: "https://cobaaja-ac5d0-default-rtdb.firebaseio.com" 
+        };
+
+        // Mulai jalankan Firebase
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+
+        // Fungsi pintar: Bikin akun admin otomatis kalau database masih kosong
+        database.ref('users').once('value').then((snapshot) => {
+            if (!snapshot.exists()) {
+                database.ref('users/user_001').set({
+                    username: "admin",
+                    password: "pstar7@123",
+                    role: "pemilik"
+                });
+                console.log("Akun admin berhasil dibuat otomatis di Firebase!");
+            }
+        });
+
+        // 2. Fungsi pas tombol ditekan
+                function prosesLogin() {
+            let userIn = document.getElementById('username').value;
+            let passIn = document.getElementById('password').value;
+
+            // Cari data di Firebase
+            database.ref('users').once('value').then((snapshot) => {
+                let users = snapshot.val();
+                let loginSukses = false;
+
+                // Cek apakah data users ada di Firebase
+                if (users !== null) {
+                    for (let id in users) {
+                        if (users[id].username === userIn && users[id].password === passIn) {
+                            localStorage.setItem('user_id', id);
+                            localStorage.setItem('role', users[id].role);
+                            loginSukses = true;
+                            break;
+                        }
+                    }
+                }
+
+                if (loginSukses) {
+                    alert("Berhasil masuk! Beralih ke Dashboard...");
+                    window.location.href = "index.html"; // Ini yang bikin pindah halaman
+                } else {
+                    alert("Gagal! Username atau Password salah. Atau data admin belum terbuat di Firebase.");
+                }
+            }).catch((error) => {
+                alert("Waduh, gagal konek ke Firebase. Coba refresh halamannya atau cek internet.");
+                console.error(error);
+            });
+        }
+    </script>
+</body>
+</html>

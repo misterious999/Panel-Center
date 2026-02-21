@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kelola User Panel</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .box { border: 1px solid #ccc; padding: 15px; margin-bottom: 20px; border-radius: 8px; background: #f9f9f9;}
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; background: white; }
+        table, th, td { border: 1px solid #aaa; }
+        th, td { padding: 10px; text-align: left; }
+        input, select, button { padding: 8px; margin-top: 5px; }
+        .btn-tambah { background: #28a745; color: white; border: none; cursor: pointer; border-radius: 4px; font-weight: bold; }
+        .btn-hapus { background: #dc3545; color: white; border: none; cursor: pointer; border-radius: 4px; padding: 6px 10px;}
+        a { text-decoration: none; color: blue; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <h2>Kelola User Panel</h2>
+    <a href="index.html">⬅ Kembali ke Dashboard</a>
+    <p>Di sini kamu bisa menambahkan atau menghapus akun Reseller & Partner.</p>
+
+    <div class="box">
+        <h3>➕ Tambah User Baru</h3>
+        <label>Username:</label><br>
+        <input type="text" id="newUsername" placeholder="Ketik username..."><br><br>
+        
+        <label>Password:</label><br>
+        <input type="text" id="newPassword" placeholder="Ketik password..."><br><br>
+        
+        <label>Pilih Role:</label><br>
+        <select id="newRole">
+            <option value="reseller">Reseller</option>
+            <option value="partner">Partner</option>
+        </select><br><br>
+        
+        <button class="btn-tambah" onclick="tambahUser()">Simpan User</button>
+    </div>
+
+    <div class="box">
+        <h3>📋 Daftar User Aktif</h3>
+        <table id="tabelUser">
+            <tr>
+                <th>Username</th>
+                <th>Password</th>
+                <th>Role</th>
+                <th>Aksi</th>
+            </tr>
+            </table>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+
+    <script>
+            if (localStorage.getItem('role') && localStorage.getItem('role').toLowerCase() === 'reseller') {
+            alert("🚨 AKSES DITOLAK! Halaman ini khusus untuk Owner/Admin.");
+            window.location.replace("index.html");
+        }
+        // 1. KEAMANAN: Pastikan cuma Pemilik yang bisa buka halaman ini
+        let userRole = localStorage.getItem('role');
+        if (userRole !== 'pemilik') {
+            alert("Akses Ditolak! Cuma Pemilik yang boleh masuk ke sini.");
+            window.location.href = "index.html";
+        }
+
+        // 2. TEMPEL LINK DATABASE KAMU DI BAWAH INI
+        const firebaseConfig = {
+            databaseURL: "https://cobaaja-ac5d0-default-rtdb.firebaseio.com" 
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+
+        // 3. FUNGSI MENAMPILKAN DATA (Otomatis Update)
+        function muatDataUser() {
+            // .on() bikin tabel langsung update kalau ada perubahan di database
+            database.ref('users').on('value', (snapshot) => {
+                let users = snapshot.val();
+                let tabel = `<tr><th>Username</th><th>Password</th><th>Role</th><th>Aksi</th></tr>`;
+                
+                for (let id in users) {
+                    // Akun 'pemilik' disembunyikan biar nggak kehapus nggak sengaja
+                    if (users[id].role !== 'pemilik') {
+                        tabel += `<tr>
+                            <td>${users[id].username}</td>
+                            <td>${users[id].password}</td>
+                            <td><b>${users[id].role.toUpperCase()}</b></td>
+                            <td><button class="btn-hapus" onclick="hapusUser('${id}')">Hapus</button></td>
+                        </tr>`;
+                    }
+                }
+                document.getElementById('tabelUser').innerHTML = tabel;
+            });
+        }
+        muatDataUser(); // Jalankan fungsinya
+
+        // 4. FUNGSI NAMBAH USER
+        function tambahUser() {
+            let un = document.getElementById('newUsername').value;
+            let pw = document.getElementById('newPassword').value;
+            let rl = document.getElementById('newRole').value;
+
+            if(un === "" || pw === "") {
+                alert("Username dan Password tidak boleh kosong ya!");
+                return;
+            }
+
+            // Bikin ID unik otomatis (biar nggak bentrok)
+            let idBaru = "user_" + new Date().getTime();
+
+            database.ref('users/' + idBaru).set({
+                username: un,
+                password: pw,
+                role: rl
+            }).then(() => {
+                alert("Berhasil! User baru sudah ditambahkan.");
+                document.getElementById('newUsername').value = "";
+                document.getElementById('newPassword').value = "";
+            }).catch((error) => {
+                alert("Yah, gagal menambahkan user. Cek internetmu.");
+            });
+        }
+
+        // 5. FUNGSI HAPUS USER
+        function hapusUser(id) {
+            let konfirmasi = confirm("Yakin nih mau hapus user ini?");
+            if (konfirmasi) {
+                database.ref('users/' + id).remove()
+                .then(() => alert("Sip, user berhasil dihapus!"))
+                .catch(() => alert("Gagal menghapus user!"));
+            }
+        }
+    </script>
+</body>
+</html>
