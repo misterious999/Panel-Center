@@ -51,20 +51,52 @@
         <a href="#" class="btn-logout" onclick="logout()">🚪 Logout</a>
     </div>
 
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+
     <script>
         // ==========================================
-        // 1. CEK LOGIN & KEAMANAN ROLE
+        // 1. AMBIL DATA MEMORI BROWSER DULU
         // ==========================================
+        let currentUserId = localStorage.getItem('user_id');
         let userRole = localStorage.getItem('role');
+        // Ambil nama (kalau nanti kamu tambahin di login.html)
         let username = localStorage.getItem('username'); 
-        
-        // Kalau belum login, lempar ke halaman login
-        if (!userRole) {
-            alert("Harap login terlebih dahulu!");
+
+        // Kalau nggak ada ID di browser, langsung tendang ke login
+        if (!currentUserId) {
             window.location.replace("login.html");
         }
 
-        // Tampilkan nama user di layar
+        // ==========================================
+        // 2. SATPAM REAL-TIME FIREBASE (AUTO-KICK)
+        // ==========================================
+        const firebaseConfig = {
+            databaseURL: "https://cobaaja-ac5d0-default-rtdb.firebaseio.com" 
+        };
+        
+        // Cek biar Firebase nggak jalan dobel
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
+        const database = firebase.database();
+
+        if (currentUserId) {
+            // Pantau terus data user ini di database secara REAL-TIME
+            database.ref('users/' + currentUserId).on('value', (snapshot) => {
+                if (!snapshot.exists()) {
+                    // BAM! 💥 Data udah dihapus sama Owner
+                    alert("🚨 SESI BERAKHIR!\nAkun kamu telah dihapus atau dinonaktifkan oleh Pemilik Panel.");
+                    localStorage.clear(); // Bersihkan sisa-sisa login
+                    window.location.replace("login.html"); // Tendang ke luar
+                }
+            });
+        }
+
+        // ==========================================
+        // 3. PENGATURAN TAMPILAN
+        // ==========================================
+        // Tampilkan nama user di layar kalau ada
         if (username) {
             document.getElementById('namaUser').innerText = username;
         }
@@ -81,7 +113,7 @@
         }
 
         // ==========================================
-        // 2. SCRIPT MESIN PENARIK DATA STATISTIK
+        // 4. SCRIPT MESIN PENARIK DATA STATISTIK PTERODACTYL
         // ==========================================
         const PTERO_DOMAIN = "zeroix.panel-prvt.web.id"; 
         const PTERO_API = "ptla_ZM2Ka67FdLj62khENxUm22bKnsHHDBhUCEnDtXfuHhw"; 
