@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kelola Akun Panel</title>
+    <title>Kelola Akses Web Panel</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
         :root { --bg-color: #0f172a; --card-bg: #1e293b; --primary: #3b82f6; --success: #10b981; --danger: #ef4444; --warning: #f59e0b; --text-main: #f8fafc; --text-sub: #94a3b8; --input-bg: #0f172a; --border-color: rgba(255,255,255,0.1); }
@@ -14,127 +14,185 @@
         .btn-back:hover { background: var(--card-bg); transform: translateX(-3px); }
         .box { background: var(--card-bg); padding: 20px; border-radius: 16px; border: 1px solid var(--border-color); margin-bottom: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); overflow-x: auto; }
         .box h3 { margin-top: 0; font-size: 18px; margin-bottom: 15px; display: flex; align-items: center; gap: 8px; }
-        label { display: block; margin-bottom: 5px; font-size: 13px; font-weight: 600; color: var(--text-sub); }
+        
+        label { display: block; margin-bottom: 5px; font-size: 12px; font-weight: 600; color: var(--text-sub); text-transform: uppercase; }
         input, select { width: 100%; padding: 12px; margin-bottom: 15px; background: var(--input-bg); border: 1px solid var(--border-color); border-radius: 8px; color: var(--text-main); font-size: 14px; box-sizing: border-box; outline: none; transition: 0.2s; }
         input:focus, select:focus { border-color: var(--primary); box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2); }
-        .btn-tambah { width: 100%; background: var(--primary); color: white; border: none; cursor: pointer; border-radius: 8px; padding: 12px; font-weight: bold; transition: 0.2s; }
-        .btn-tambah:hover { background: #2563eb; transform: translateY(-2px); }
+        
+        .btn-tambah { width: 100%; background: var(--primary); color: white; border: none; cursor: pointer; border-radius: 8px; padding: 14px; font-weight: bold; transition: 0.2s; margin-top: 5px; font-size: 15px; }
+        .btn-tambah:hover { background: #2563eb; transform: translateY(-2px); box-shadow: 0 5px 15px rgba(59, 130, 246, 0.3); }
+        
         table { width: 100%; border-collapse: collapse; min-width: 500px; margin-top: 10px; }
         th, td { padding: 12px 15px; text-align: left; border-bottom: 1px solid var(--border-color); font-size: 14px; }
         th { background: rgba(255,255,255,0.02); color: var(--text-sub); font-weight: 600; text-transform: uppercase; font-size: 12px; letter-spacing: 1px; }
         tr:hover { background: rgba(255,255,255,0.02); }
-        .btn-hapus { background: rgba(239, 68, 68, 0.1); color: var(--danger); border: 1px solid var(--danger); cursor: pointer; border-radius: 6px; padding: 6px 12px; font-weight: 600; font-size: 12px; transition: 0.2s; white-space: nowrap; }
+        
+        .btn-hapus { background: rgba(239, 68, 68, 0.1); color: var(--danger); border: 1px solid var(--danger); cursor: pointer; border-radius: 6px; padding: 6px 12px; font-weight: 600; font-size: 12px; transition: 0.2s; }
         .btn-hapus:hover { background: var(--danger); color: white; }
-        .badge { padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.5px; white-space: nowrap; display: inline-block;}
+        
+        .badge { padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: bold; text-transform: uppercase; display: inline-block; white-space: nowrap; }
         .badge-owner { background: rgba(245, 158, 11, 0.2); color: var(--warning); border: 1px solid var(--warning); }
-        .badge-private { background: rgba(16, 185, 129, 0.2); color: var(--success); border: 1px solid var(--success); }
-        .badge-public { background: rgba(59, 130, 246, 0.2); color: var(--primary); border: 1px solid var(--primary); }
-        .status-online { color: var(--success); font-weight: bold; font-size: 12px;}
-        .status-offline { color: var(--text-sub); font-size: 12px;}
+        .badge-partner { background: rgba(16, 185, 129, 0.2); color: var(--success); border: 1px solid var(--success); }
+        .badge-private { background: rgba(59, 130, 246, 0.2); color: var(--primary); border: 1px solid var(--primary); }
+        .badge-public { background: rgba(148, 163, 184, 0.2); color: var(--text-main); border: 1px solid var(--text-sub); }
+        
+        .status-online { color: var(--success); font-weight: bold; font-size: 12px; display: flex; align-items: center; gap: 4px; }
+        .status-offline { color: var(--text-sub); font-size: 12px; display: flex; align-items: center; gap: 4px; }
     </style>
 </head>
 <body>
     <a href="index.html" class="btn-back">⬅ Kembali ke Dashboard</a>
     
-    <h2>Kelola Akun Panel</h2>
-    <p class="sub-title">Tambah atau hapus akses masuk Private & Public</p>
+    <h2>Kelola Akses Web Panel</h2>
+    <p class="sub-title">Tambah atau hapus akses masuk (Login) ke website ini.</p>
 
     <div class="box">
         <h3>➕ Buat Akses Baru</h3>
         <label>Username (Tanpa Spasi):</label>
-        <input type="text" id="newUsername" placeholder="Ketik username login...">
+        <input type="text" id="newUsername" placeholder="Ketik username login..." autocomplete="off">
         
         <label>Password:</label>
-        <input type="text" id="newPassword" placeholder="Ketik password login...">
+        <input type="text" id="newPassword" placeholder="Ketik password login..." autocomplete="off">
         
         <label>Tipe Akun (Role):</label>
         <select id="newRole">
-            <option value="reseller_private">💎 Reseller (Khusus Private)</option>
-            <option value="reseller_public">🌍 Reseller (Khusus Public)</option>
-            <option value="partner_public">🤝 Partner (Khusus Public)</option>
-            <option value="pemilik">👑 Pemilik (Akses Penuh)</option>
-        </select>
+            </select>
         
         <button class="btn-tambah" onclick="tambahUser()">🚀 Buat Akun Sekarang</button>
     </div>
 
     <div class="box">
-        <h3>📋 Daftar Pengguna Panel</h3>
+        <h3>👥 Daftar Pengguna Panel <span id="textDaftar"></span></h3>
         <table id="tabelUsers">
-            <tr>
-                <th>Username</th>
-                <th>Tipe Akun</th>
-                <th>Status</th>
-                <th>Aksi</th>
-            </tr>
-            <tr><td colspan="4" style="text-align: center; color: var(--text-sub);">⏳ Memuat data...</td></tr>
+            <tr><th>Username & Password</th><th>Tipe Akun</th><th>Status</th><th>Aksi</th></tr>
+            <tr><td colspan="4" style="text-align: center; color: var(--text-sub); padding: 20px;">⏳ Memuat data dari Firebase...</td></tr>
         </table>
     </div>
 
-       <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
     <script>
+        const currentUserId = localStorage.getItem('user_id');
+        const currentUserRole = localStorage.getItem('role');
+        const currentUsername = localStorage.getItem('username');
+
+        // 🔥 SATPAM AKSES: Cuma Pemilik dan Partner yang boleh masuk!
+        const allowedAccess = ['pemilik', 'partner_public'];
+        if (!currentUserId || !allowedAccess.includes(currentUserRole)) {
+            alert("🚨 AKSES DITOLAK!\nHalaman ini khusus Pemilik dan Partner Panel.");
+            window.location.replace("index.html");
+        }
+
+        // Ubah teks judul tabel biar jelas ini lihat data siapa
+        if (currentUserRole !== 'pemilik') {
+            document.getElementById('textDaftar').innerText = "(Buatanmu)";
+        } else {
+            document.getElementById('textDaftar').innerText = "(Semua)";
+        }
+
+        // ==========================================
+        // 🔥 RADAR FIREBASE ONLINE
+        // ==========================================
         const firebaseConfig = { databaseURL: "https://cobaaja-ac5d0-default-rtdb.firebaseio.com" };
         if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
 
-        const currentUserId = localStorage.getItem('user_id');
-        const currentUserRole = localStorage.getItem('role');
-
-        if (!currentUserId || currentUserRole !== 'pemilik') {
-            alert("🚨 AKSES DITOLAK!\nHalaman ini khusus Pemilik Panel.");
-            window.location.replace("index.html");
-        }
-
-        // ==========================================
-        // 🔥 MESIN DETEKTOR ONLINE (PRESENCE SYSTEM)
-        // ==========================================
-        const userRef = database.ref('users/' + currentUserId);
         const connectedRef = database.ref('.info/connected');
-
         connectedRef.on('value', (snap) => {
-            if (snap.val() === true) {
-                // Kalau koneksi putus (tutup tab), otomatis jadi Offline
+            if (snap.val() === true && currentUserId) {
+                let userRef = database.ref('users/' + currentUserId);
                 userRef.child('isOnline').onDisconnect().set(false);
-                // Kalau lagi buka halaman ini, set jadi Online
                 userRef.child('isOnline').set(true);
             }
         });
 
         // ==========================================
-        // FUNGSI TAMPILKAN USER
+        // 🛠️ FILTER DROPDOWN ROLE (YANG SUDAH DIPERBAIKI)
+        // ==========================================
+        function muatPilihanRole() {
+            let roleSelect = document.getElementById('newRole');
+            let options = '';
+
+            if (currentUserRole === 'pemilik') {
+                // Pemilik bisa bikin SEMUA role
+                options = `
+                    <option value="reseller_private">💎 Reseller (Khusus Private)</option>
+                    <option value="reseller_public">🌍 Reseller (Khusus Public)</option>
+                    <option value="partner_public">🤝 Partner Panel (Public)</option>
+                    <option value="pemilik">👑 Pemilik Panel (Full Akses)</option>
+                `;
+            } else if (currentUserRole === 'partner_public') {
+                // 🔥 PARTNER PUBLIC CUMA BISA BIKIN RESELLER PUBLIC AJA!
+                options = `
+                    <option value="reseller_public">🌍 Reseller (Khusus Public)</option>
+                `;
+            }
+            roleSelect.innerHTML = options;
+        }
+
+        // ==========================================
+        // 👥 TAMPILKAN USER (DENGAN ISOLASI KAMAR)
         // ==========================================
         function muatDataUsers() {
             database.ref('users').on('value', (snapshot) => {
                 let users = snapshot.val();
-                let tabel = `<tr><th>Username</th><th>Tipe Akun</th><th>Status</th><th>Aksi</th></tr>`;
+                let tabel = `<tr><th>Username & Password</th><th>Tipe Akun</th><th>Status</th><th>Aksi</th></tr>`;
+                let countDisplayed = 0;
 
                 if (users) {
                     for (let id in users) {
                         let u = users[id];
-                        let roleBadge = "";
                         
+                        // 🛡️ LOGIKA ISOLASI PARTNER:
+                        if (currentUserRole === 'partner_public') {
+                            if (id !== currentUserId && u.maker !== currentUsername) {
+                                continue; 
+                            }
+                        }
+
+                        countDisplayed++;
+
+                        let roleBadge = "";
                         if (u.role === 'pemilik') roleBadge = `<span class="badge badge-owner">👑 Pemilik</span>`;
-                        else if (u.role === 'reseller_private' || u.role === 'reseller') roleBadge = `<span class="badge badge-private">💎 Private Reseller</span>`;
-                        else if (u.role === 'reseller_public') roleBadge = `<span class="badge badge-public">🌍 Public Reseller</span>`;
-                        else if (u.role === 'partner_public') roleBadge = `<span class="badge badge-public">🤝 Public Partner</span>`;
+                        else if (u.role === 'partner_public') roleBadge = `<span class="badge badge-partner">🤝 Partner</span>`;
+                        else if (u.role === 'reseller_private') roleBadge = `<span class="badge badge-private">💎 Private Reseller</span>`;
+                        else if (u.role === 'reseller_public' || u.role === 'reseller') roleBadge = `<span class="badge badge-public">🌍 Public Reseller</span>`;
 
                         let onlineStatus = u.isOnline ? `<span class="status-online">🟢 Online</span>` : `<span class="status-offline">⚫ Offline</span>`;
-                        let btnHapus = id === currentUserId ? `<span style="color:var(--text-sub); font-size:12px;">(Kamu)</span>` : `<button class="btn-hapus" onclick="hapusUser('${id}', '${u.username}')">Hapus</button>`;
+                        
+                        let btnHapus = "";
+                        if (id === currentUserId) {
+                            btnHapus = `<span style="color:var(--text-sub); font-size:12px;">(Kamu)</span>`;
+                        } else {
+                            btnHapus = `<button class="btn-hapus" onclick="hapusUser('${id}', '${u.username}')">Hapus</button>`;
+                        }
+
+                        let pembuatTag = u.maker && currentUserRole === 'pemilik' ? `<br><span style="font-size:10px; color:var(--primary);">Oleh: ${u.maker}</span>` : '';
 
                         tabel += `<tr>
-                            <td style="font-weight: 600; color: var(--text-main);">${u.username}<br><span style="font-size: 10px; color: var(--warning); font-family: monospace;">${u.password}</span></td>
+                            <td style="font-weight: 600; color: var(--text-main);">${u.username}<br>
+                                <span style="font-size: 11px; color: var(--warning); font-family: monospace;">🔑 ${u.password}</span>
+                                ${pembuatTag}
+                            </td>
                             <td>${roleBadge}</td>
                             <td>${onlineStatus}</td>
                             <td>${btnHapus}</td>
                         </tr>`;
                     }
                 }
+
+                if (countDisplayed === 0) {
+                    tabel += `<tr><td colspan="4" style="text-align: center; color: var(--warning); padding: 20px;">Belum ada data reseller buatanmu.</td></tr>`;
+                }
+
                 document.getElementById('tabelUsers').innerHTML = tabel;
             });
         }
 
+        // ==========================================
+        // ➕ TAMBAH USER BARU KE FIREBASE
+        // ==========================================
         function tambahUser() {
             let username = document.getElementById('newUsername').value.trim();
             let password = document.getElementById('newPassword').value.trim();
@@ -143,19 +201,32 @@
             if (username === "" || password === "") { alert("Isi Username dan Password!"); return; }
 
             let newId = "user_" + Date.now(); 
-            database.ref('users/' + newId).set({ username: username, password: password, role: role, isOnline: false })
+            
+            database.ref('users/' + newId).set({ 
+                username: username, 
+                password: password, 
+                role: role, 
+                isOnline: false,
+                maker: currentUsername 
+            })
             .then(() => {
-                alert(`✅ Berhasil! Akun ${username} siap digunakan.`);
-                document.getElementById('newUsername').value = ""; document.getElementById('newPassword').value = "";
+                alert(`✅ Berhasil! Akses untuk "${username}" berhasil dibuat.`);
+                document.getElementById('newUsername').value = ""; 
+                document.getElementById('newPassword').value = "";
             }).catch(e => alert("Error: " + e.message));
         }
 
+        // ==========================================
+        // 🗑️ HAPUS USER DARI FIREBASE
+        // ==========================================
         function hapusUser(id, username) {
-            if (confirm(`Yakin menghapus akses "${username}"?`)) {
-                database.ref('users/' + id).remove().then(() => alert(`💥 Akun ${username} terhapus!`));
+            if (confirm(`🚨 Yakin menghapus akses login untuk "${username}"?\nMereka tidak akan bisa masuk ke web panel ini lagi.`)) {
+                database.ref('users/' + id).remove().then(() => alert(`💥 Akses untuk "${username}" telah dicabut!`));
             }
         }
         
+        // Jalankan fungsi
+        muatPilihanRole();
         muatDataUsers();
     </script>
 </body>

@@ -34,7 +34,6 @@
         .menu-card h3 { margin: 0 0 5px 0; font-size: 16px; color: var(--text-main); }
         .menu-card p { color: var(--text-sub); margin: 0; font-size: 13px; line-height: 1.5; }
         
-        /* TEMA WARNA KHUSUS TIAP DIVISI BADAII! */
         .card-internal { border-left: 4px solid var(--warning); }
         .card-internal:hover { background: rgba(245, 158, 11, 0.05); border-color: var(--warning); transform: translateX(5px); }
         .card-internal h3 { color: var(--warning); }
@@ -66,29 +65,30 @@
         <div class="stat-card">
             <span class="stat-icon">💎</span>
             <p class="stat-value" id="countPrivate">⏳</p>
-            <p class="stat-title">Server Public</p>
+            <p class="stat-title">Server Private</p>
         </div>
         <div class="stat-card">
             <span class="stat-icon">🌍</span>
             <p class="stat-value" id="countPublic">⏳</p>
-            <p class="stat-title">Server Private</p>
+            <p class="stat-title">Server Public</p>
         </div>
+        
         <div class="stat-card" id="boxTotalUserPanel" style="display: none;">
             <span class="stat-icon">👥</span>
             <p class="stat-value" id="countUsers">⏳</p>
-            <p class="stat-title">Total Akun Web</p>
+            <p class="stat-title" id="titleTotalUser">Total Akun Web</p>
         </div>
         <div class="stat-card" id="boxOnlineUser" style="display: none;">
             <span class="stat-icon">🟢</span>
             <p class="stat-value" id="countOnline" style="color: var(--success);">⏳</p>
-            <p class="stat-title">User Online</p>
+            <p class="stat-title" id="titleOnlineUser">Web Online</p>
         </div>
     </div>
 
     <h2>🚀 Menu Navigasi</h2>
 
     <div id="sectionWeb" style="display: none;">
-        <div class="section-title">🛡️ Sistem Internal</div>
+        <div class="section-title">🛡️ Sistem Internal (Kelola Akses)</div>
         <div class="menu-grid">
             <a href="manage_panel_users.html" class="menu-card card-internal">
                 <h3>Kelola Akses Web</h3>
@@ -129,33 +129,49 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
     <script>
-        // 1. CEK LOGIN
         const currentUserId = localStorage.getItem('user_id');
-        const role = localStorage.getItem('role');
-        const username = localStorage.getItem('username');
+        const role = (localStorage.getItem('role') || '').trim().toLowerCase();
+        const username = localStorage.getItem('username') || "Juragan";
 
         if (!currentUserId) {
             window.location.replace("login.html");
         }
 
-        document.getElementById('namaUser').innerText = username || "Juragan";
+        document.getElementById('namaUser').innerText = username;
         document.getElementById('roleUser').innerText = "Role: " + (role || "Tidak diketahui");
 
-        // 2. ATUR MUNCULNYA KATEGORI MENU BERDASARKAN ROLE
+        // ==========================================
+        // 🛠️ MENGATUR TAMPILAN MENU & JUDUL STATISTIK
+        // ==========================================
         if (role === 'pemilik') {
             document.getElementById('sectionWeb').style.display = 'block';
             document.getElementById('sectionPrivate').style.display = 'block';
             document.getElementById('sectionPublic').style.display = 'block';
             
+            // Tampilan Statistik Pemilik
             document.getElementById('boxTotalUserPanel').style.display = 'block';
             document.getElementById('boxOnlineUser').style.display = 'block';
+            document.getElementById('titleTotalUser').innerText = "Total Akun Web";
+            document.getElementById('titleOnlineUser').innerText = "Web Online";
+            
+        } else if (role === 'partner_public') {
+            document.getElementById('sectionWeb').style.display = 'block';
+            document.getElementById('sectionPublic').style.display = 'block';
+            
+            // 🔥 Tampilan Statistik Partner (Isolasi Kata & Data)
+            document.getElementById('boxTotalUserPanel').style.display = 'block';
+            document.getElementById('boxOnlineUser').style.display = 'block';
+            document.getElementById('titleTotalUser').innerText = "Total Resellermu";
+            document.getElementById('titleOnlineUser').innerText = "Tim Online";
+            
         } else if (role === 'reseller_private' || role === 'reseller') {
             document.getElementById('sectionPrivate').style.display = 'block';
-        } else if (role === 'reseller_public' || role === 'partner_public') {
+            
+        } else if (role === 'reseller_public') {
             document.getElementById('sectionPublic').style.display = 'block';
         }
 
-        // 3. INISIALISASI FIREBASE & PRESENCE
+        // INISIALISASI FIREBASE & PRESENCE
         const firebaseConfig = { databaseURL: "https://cobaaja-ac5d0-default-rtdb.firebaseio.com" };
         if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
@@ -169,7 +185,6 @@
             }
         });
 
-        // 4. LOGIKA LOGOUT
         function logout() {
             if (currentUserId) {
                 database.ref('users/' + currentUserId + '/isOnline').set(false).then(() => {
@@ -182,7 +197,9 @@
             }
         }
 
-        // 5. AUTO-FETCH STATISTIK REAL-TIME
+        // ==========================================
+        // 📊 AUTO-FETCH STATISTIK REAL-TIME
+        // ==========================================
         const WORKER_URL = "https://restless-truth-9b75.amisterious09.workers.dev/?"; 
         const PRVT_DOMAIN = "zeroix.panel-prvt.web.id"; 
         const PRVT_API = "ptla_ZM2Ka67FdLj62khENxUm22bKnsHHDBhUCEnDtXfuHhw"; 
@@ -202,13 +219,25 @@
                 document.getElementById('countPublic').innerText = data.meta.pagination.total;
             }).catch(() => document.getElementById('countPublic').innerText = "❌");
 
-            if (role === 'pemilik') {
+            // 🔥 Logika Penghitungan Beda Untuk Owner & Partner
+            if (role === 'pemilik' || role === 'partner_public') {
                 database.ref('users').on('value', snap => {
-                    let totalUsers = snap.numChildren();
+                    let totalUsers = 0;
                     let onlineCount = 0;
+                    
                     snap.forEach(childSnap => {
-                        if (childSnap.val().isOnline === true) onlineCount++;
+                        let userData = childSnap.val();
+                        
+                        // Kalau Pemilik -> Hitung semua!
+                        // Kalau Partner -> Hitung HANYA yang "maker"-nya adalah nama si Partner!
+                        if (role === 'pemilik' || userData.maker === username) {
+                            totalUsers++;
+                            if (userData.isOnline === true) {
+                                onlineCount++;
+                            }
+                        }
                     });
+                    
                     document.getElementById('countUsers').innerText = totalUsers;
                     document.getElementById('countOnline').innerText = onlineCount;
                 }, () => {
