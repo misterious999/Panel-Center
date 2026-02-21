@@ -99,6 +99,27 @@
             <tr><td colspan="5" style="text-align: center; color: var(--text-sub); padding: 20px;">⏳ Mengambil data...</td></tr>
         </table>
     </div>
+    
+        <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+    <script>
+        // 1. Panggil Mesin Firebase
+        const firebaseConfig = { databaseURL: "https://cobaaja-ac5d0-default-rtdb.firebaseio.com" };
+        if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+
+        // 2. Mesin Detektor Online
+        const connectedRef = database.ref('.info/connected');
+        connectedRef.on('value', (snap) => {
+            const uid = localStorage.getItem('user_id'); 
+            if (snap.val() === true && uid) {
+                let userRef = database.ref('users/' + uid);
+                userRef.child('isOnline').onDisconnect().set(false);
+                userRef.child('isOnline').set(true);
+            }
+        });
+    </script>
+    
 
     <script>
         const currentUserId = localStorage.getItem('user_id');
