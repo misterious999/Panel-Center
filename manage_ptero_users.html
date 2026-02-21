@@ -10,23 +10,17 @@
         body { font-family: 'Inter', sans-serif; padding: 20px; background-color: var(--bg-color); color: var(--text-main); margin: 0; }
         h2 { font-weight: 700; margin-bottom: 5px; color: var(--text-main); }
         .sub-title { color: var(--text-sub); margin-bottom: 25px; font-size: 14px; }
-        
         .btn-back { display: inline-block; margin-bottom: 20px; padding: 10px 15px; background: rgba(255,255,255,0.05); color: var(--text-main); text-decoration: none; border-radius: 8px; font-size: 14px; font-weight: 600; border: 1px solid var(--border-color); transition: 0.2s; }
         .btn-back:hover { background: var(--card-bg); transform: translateX(-3px); }
-        
         .box { background: var(--card-bg); padding: 20px; border-radius: 16px; border: 1px solid var(--border-color); margin-bottom: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); overflow-x: auto; }
         .box h3 { margin-top: 0; font-size: 18px; margin-bottom: 15px; display: flex; align-items: center; gap: 8px; }
-        
         label { display: block; margin-bottom: 5px; font-size: 12px; font-weight: 600; color: var(--text-sub); text-transform: uppercase; }
         input, select { width: 100%; padding: 12px; margin-bottom: 15px; background: var(--input-bg); border: 1px solid var(--border-color); border-radius: 8px; color: var(--text-main); font-size: 14px; box-sizing: border-box; outline: none; transition: 0.2s; }
         input:focus, select:focus { border-color: var(--primary); box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2); }
-        
         .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
         .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
-        
         .btn-tambah { width: 100%; background: var(--primary); color: white; border: none; cursor: pointer; border-radius: 8px; padding: 14px; font-weight: bold; transition: 0.2s; margin-top: 5px; font-size: 15px; }
         .btn-tambah:hover { background: #2563eb; transform: translateY(-2px); box-shadow: 0 5px 15px rgba(59, 130, 246, 0.3); }
-        
         table { width: 100%; border-collapse: collapse; min-width: 500px; margin-top: 10px; }
         th, td { padding: 12px 15px; text-align: left; border-bottom: 1px solid var(--border-color); font-size: 14px; }
         th { background: rgba(255,255,255,0.02); color: var(--text-sub); font-weight: 600; text-transform: uppercase; font-size: 12px; letter-spacing: 1px; }
@@ -49,6 +43,9 @@
         .timer-text { font-size: 14px !important; color: var(--danger) !important; font-weight: bold; margin-bottom: 15px !important; }
         .btn-tutup { background: rgba(255,255,255,0.1); color: white; border: none; padding: 10px; width: 100%; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.2s; }
         .btn-tutup:hover { background: var(--danger); }
+        
+        /* Tambahan buat penanda reseller */
+        .reseller-tag { font-size: 10px; color: var(--primary); background: rgba(59,130,246,0.1); padding: 2px 6px; border-radius: 4px; display: inline-block; margin-top: 3px; }
     </style>
 </head>
 <body>
@@ -72,12 +69,10 @@
             <div><label>CPU (%):</label><input type="number" id="newCpu" value="60"></div>
             <div><label>Disk (MB):</label><input type="number" id="newDisk" value="1000"></div>
         </div>
-        
         <div class="grid-2" style="display: none;">
             <input type="number" id="newLocId" value="1">
             <input type="number" id="newEggId" value="15">
         </div>
-
         <div id="roleContainer">
             <label>Tipe Akun (Pterodactyl Role):</label>
             <select id="newRole">
@@ -89,7 +84,7 @@
     </div>
 
     <div class="box">
-        <h3>📋 Semua User di Pterodactyl Private</h3>
+        <h3>📋 Semua User Pelanggan <span id="textDaftar"></span></h3>
         <table id="tabelPtero">
             <tr><th>ID</th><th>Username</th><th>Email</th><th>Status</th><th>Aksi</th></tr>
             <tr><td colspan="5" style="text-align: center; color: var(--text-sub); padding: 20px;">⏳ Mengambil data...</td></tr>
@@ -112,69 +107,89 @@
     </div>
         <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
-    <script>
-        // 1. Panggil Mesin Firebase
-        const firebaseConfig = { databaseURL: "https://cobaaja-ac5d0-default-rtdb.firebaseio.com" };
-        if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
-        const database = firebase.database();
-
-        // 2. Mesin Detektor Online
-        const connectedRef = database.ref('.info/connected');
-        connectedRef.on('value', (snap) => {
-            const uid = localStorage.getItem('user_id'); 
-            if (snap.val() === true && uid) {
-                let userRef = database.ref('users/' + uid);
-                userRef.child('isOnline').onDisconnect().set(false);
-                userRef.child('isOnline').set(true);
-            }
-        });
-    </script>
 
     <script>
         const currentUserId = localStorage.getItem('user_id');
         const role = localStorage.getItem('role') || '';
+        const myUsername = localStorage.getItem('username') || 'Unknown'; 
+        // SATPAM KHUSUS PRIVATE
         const allowedRoles = ['pemilik', 'reseller_private', 'reseller'];
 
         if (!currentUserId || !allowedRoles.includes(role)) {
             alert("🚨 AKSES DITOLAK!\nHalaman ini khusus divisi Private.");
             window.location.replace("index.html");
         }
-        if (role !== 'pemilik') document.getElementById('roleContainer').style.display = 'none';
+        
+        if (role !== 'pemilik') {
+            document.getElementById('roleContainer').style.display = 'none';
+            document.getElementById('textDaftar').innerText = "Buatanmu";
+        } else {
+            document.getElementById('textDaftar').innerText = "(Semua Reseller)";
+        }
 
+        const firebaseConfig = { databaseURL: "https://cobaaja-ac5d0-default-rtdb.firebaseio.com" };
+        if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+
+        const connectedRef = database.ref('.info/connected');
+        connectedRef.on('value', (snap) => {
+            if (snap.val() === true && currentUserId) {
+                let userRef = database.ref('users/' + currentUserId);
+                userRef.child('isOnline').onDisconnect().set(false);
+                userRef.child('isOnline').set(true);
+            }
+        });
+
+        // API DATA KHUSUS PRIVATE
         const PTERO_DOMAIN = "zeroix.panel-prvt.web.id"; 
         const PTERO_API = "ptla_ZM2Ka67FdLj62khENxUm22bKnsHHDBhUCEnDtXfuHhw"; 
         const WORKER_URL = "https://restless-truth-9b75.amisterious09.workers.dev"; 
         let intervalTimer; 
 
-        // 1. TAMPILKAN USER & UBAH TOMBOL HAPUS JADI FUNGSI "Thanos Snap"
         function ambilDataPtero() {
             fetch(`${WORKER_URL}/?https://${PTERO_DOMAIN}/api/application/users`, {
                 headers: { 'Accept': 'application/json', 'Authorization': `Bearer ${PTERO_API}` }
             }).then(res => res.json()).then(data => {
                 let tabel = `<tr><th>ID</th><th>Username</th><th>Email</th><th>Status</th><th>Aksi</th></tr>`;
+                let countDisplayed = 0;
+
                 data.data.forEach(user => {
                     let u = user.attributes;
-                    if (role !== 'pemilik' && u.root_admin === true) return; 
-                    let status = u.root_admin ? `<span class="badge badge-admin">👑 Admin</span>` : `<span class="badge badge-user">👤 Member</span>`;
                     
-                    // Tombol hapus sekarang manggil hapusSatuPaket
+                    if (role !== 'pemilik') {
+                        if (u.root_admin === true) return; 
+                        if (u.last_name !== myUsername) return; 
+                    }
+
+                    countDisplayed++;
+                    
+                    let status = u.root_admin ? `<span class="badge badge-admin">👑 Admin</span>` : `<span class="badge badge-user">👤 Member</span>`;
+                    let makerTag = role === 'pemilik' && u.last_name !== 'User' && u.last_name !== 'Admin' ? `<br><span class="reseller-tag">Oleh: ${u.last_name}</span>` : '';
                     let tombolHapus = u.id !== 1 ? `<button class="btn-hapus" id="btnHapus_${u.id}" onclick="hapusSatuPaket(${u.id}, '${u.username}')">🗑️ Hapus 1 Paket</button>` : `<span style="color:var(--text-sub); font-size:12px;">Sistem</span>`;
                     
-                    tabel += `<tr><td style="color: var(--text-sub); font-weight: bold;">#${u.id}</td><td style="font-weight: 600; color: var(--text-main);">${u.username}</td><td style="color: var(--text-sub); font-size: 13px;">${u.email}</td><td>${status}</td><td>${tombolHapus}</td></tr>`;
+                    tabel += `<tr>
+                        <td style="color: var(--text-sub); font-weight: bold;">#${u.id}</td>
+                        <td style="font-weight: 600; color: var(--text-main);">${u.username}${makerTag}</td>
+                        <td style="color: var(--text-sub); font-size: 13px;">${u.email}</td>
+                        <td>${status}</td>
+                        <td>${tombolHapus}</td>
+                    </tr>`;
                 });
+
+                if (countDisplayed === 0) {
+                    tabel += `<tr><td colspan="5" style="text-align: center; color: var(--warning); padding: 20px;">Kamu belum membuat satupun akun pelanggan.</td></tr>`;
+                }
                 document.getElementById('tabelPtero').innerHTML = tabel;
             }).catch(e => {
                 document.getElementById('tabelPtero').innerHTML = `<tr><td colspan="5" style="text-align: center; color: var(--danger);">❌ Error: ${e.message}</td></tr>`;
             });
         }
 
-        // 2. FUNGSI BUAT 1 PAKET
         async function buatSatuPaket() {
             let username = document.getElementById('newUsername').value.trim();
             let password = document.getElementById('newPassword').value.trim();
             let email = document.getElementById('newEmail').value.trim();
             let serverName = document.getElementById('newServerName').value.trim();
-            
             let ram = document.getElementById('newRam').value;
             let cpu = document.getElementById('newCpu').value;
             let disk = document.getElementById('newDisk').value;
@@ -189,30 +204,31 @@
             
             try {
                 btn.innerText = "⏳ 1/2: Membuat Akun User...";
-                let userPayload = { "email": email, "username": username, "first_name": username, "last_name": isAdmin ? "Admin" : "User", "password": password, "root_admin": isAdmin };
+                let userPayload = { 
+                    "email": email, "username": username, "first_name": username, 
+                    "last_name": role === 'pemilik' ? (isAdmin ? "Admin" : "User") : myUsername, 
+                    "password": password, "root_admin": isAdmin 
+                };
                 
                 let resUser = await fetch(`${WORKER_URL}/?https://${PTERO_DOMAIN}/api/application/users`, {
                     method: 'POST', headers: { 'Accept': 'application/json', 'Content-Type': 'application/json', 'Authorization': `Bearer ${PTERO_API}` }, body: JSON.stringify(userPayload)
                 });
-                
                 if (!resUser.ok) throw new Error("Gagal buat Akun: " + await resUser.text());
                 let dataUser = await resUser.json();
                 let newUserId = dataUser.attributes.id; 
 
                 btn.innerText = "⏳ 2/2: Mendeploy Server...";
                 let serverPayload = {
-                    "name": serverName, "description": "Dibuat 1 Paket via Custom Panel Private", "user": newUserId, "egg": parseInt(eggId),
+                    "name": serverName, "description": `Dibuat 1 Paket oleh ${myUsername}`, "user": newUserId, "egg": parseInt(eggId),
                     "docker_image": "ghcr.io/parkervcp/yolks:nodejs_20", "startup": "npm start",
                     "environment": { "INST": "npm", "USER_UPLOAD": "0", "AUTO_UPDATE": "0", "CMD_RUN": "npm start" },
                     "limits": { "memory": parseInt(ram), "swap": 0, "disk": parseInt(disk), "io": 500, "cpu": parseInt(cpu) },
                     "feature_limits": { "databases": 5, "backups": 5, "allocations": 5 },
                     "deploy": { "locations": [parseInt(locId)], "dedicated_ip": false, "port_range": [] }
                 };
-                
                 let resServer = await fetch(`${WORKER_URL}/?https://${PTERO_DOMAIN}/api/application/servers`, {
                     method: 'POST', headers: { 'Accept': 'application/json', 'Content-Type': 'application/json', 'Authorization': `Bearer ${PTERO_API}` }, body: JSON.stringify(serverPayload)
                 });
-                
                 if (!resServer.ok) throw new Error("Akun jadi, TAPI Gagal Deploy Server:\n" + await resServer.text());
 
                 btn.innerText = "🔥 Bikin 1 Paket Sekarang"; btn.style.pointerEvents = "auto";
@@ -226,57 +242,33 @@
             }
         }
 
-        // =========================================
-        // 3. FUNGSI SAKTI: HAPUS 1 PAKET (Thanos Snap)
-        // =========================================
         async function hapusSatuPaket(userId, username) {
             let konfirmasi = confirm(`🚨 PERINGATAN KERAS!\nYakin ingin menghapus user "${username}" beserta SEMUA SERVER miliknya di Panel Private?\n\nData yang dihapus tidak bisa dikembalikan!`);
-            
             if (!konfirmasi) return;
 
             let btn = document.getElementById(`btnHapus_${userId}`);
-            btn.innerText = "Menghancurkan... ⏳";
-            btn.style.pointerEvents = "none";
+            btn.innerText = "Menghancurkan... ⏳"; btn.style.pointerEvents = "none";
 
             try {
-                // TAHAP 1: Cari semua server yang dimiliki User ini
-                let resServers = await fetch(`${WORKER_URL}/?https://${PTERO_DOMAIN}/api/application/servers`, {
-                    headers: { 'Accept': 'application/json', 'Authorization': `Bearer ${PTERO_API}` }
-                });
+                let resServers = await fetch(`${WORKER_URL}/?https://${PTERO_DOMAIN}/api/application/servers`, { headers: { 'Accept': 'application/json', 'Authorization': `Bearer ${PTERO_API}` } });
                 let dataServers = await resServers.json();
-                
-                // Filter hanya server yang ID User-nya sama dengan yang mau dihapus
                 let serversMilikUser = dataServers.data.filter(s => s.attributes.user === userId);
 
-                // TAHAP 2: Hapus semua servernya satu per satu
                 for (let server of serversMilikUser) {
                     let sId = server.attributes.id;
-                    await fetch(`${WORKER_URL}/?https://${PTERO_DOMAIN}/api/application/servers/${sId}/force`, {
-                        method: 'DELETE',
-                        headers: { 'Accept': 'application/json', 'Authorization': `Bearer ${PTERO_API}` }
-                    });
+                    await fetch(`${WORKER_URL}/?https://${PTERO_DOMAIN}/api/application/servers/${sId}/force`, { method: 'DELETE', headers: { 'Accept': 'application/json', 'Authorization': `Bearer ${PTERO_API}` } });
                 }
 
-                // TAHAP 3: Setelah server musnah, baru eksekusi akun User-nya!
-                let resUser = await fetch(`${WORKER_URL}/?https://${PTERO_DOMAIN}/api/application/users/${userId}`, {
-                    method: 'DELETE',
-                    headers: { 'Accept': 'application/json', 'Authorization': `Bearer ${PTERO_API}` }
-                });
-
+                let resUser = await fetch(`${WORKER_URL}/?https://${PTERO_DOMAIN}/api/application/users/${userId}`, { method: 'DELETE', headers: { 'Accept': 'application/json', 'Authorization': `Bearer ${PTERO_API}` } });
                 if (!resUser.ok) throw new Error(await resUser.text());
 
-                // TAHAP 4: Sukses!
                 alert(`💥 DUAARR!! User "${username}" beserta ${serversMilikUser.length} Server miliknya telah MUSNAH!`);
-                ambilDataPtero(); // Refresh tabel
-
+                ambilDataPtero(); 
             } catch (e) {
-                alert("❌ Gagal menghapus 1 Paket: " + e.message);
-                btn.innerText = "🗑️ Hapus 1 Paket";
-                btn.style.pointerEvents = "auto";
+                alert("❌ Gagal menghapus: " + e.message); btn.innerText = "🗑️ Hapus 1 Paket"; btn.style.pointerEvents = "auto";
             }
         }
 
-        // 4. MODAL & TIMER 10 DETIK
         function munculkanModal(user, pass, email, serverName) {
             document.getElementById('resUser').innerText = user; document.getElementById('resPass').innerText = pass;
             document.getElementById('resEmail').innerText = email; document.getElementById('resServer').innerText = serverName;
@@ -290,3 +282,4 @@
     </script>
 </body>
 </html>
+        
