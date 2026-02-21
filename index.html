@@ -16,22 +16,37 @@
         .btn-logout { background: rgba(239, 68, 68, 0.1); color: var(--danger); border: 1px solid var(--danger); padding: 8px 15px; border-radius: 8px; font-weight: 600; cursor: pointer; transition: 0.2s; font-size: 14px; }
         .btn-logout:hover { background: var(--danger); color: white; box-shadow: 0 4px 15px rgba(239, 68, 68, 0.4); }
 
-        /* STATISTIK BOX */
-        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 30px; }
+        /* STATISTIK BOX (GRID 2x2) */
+        .stats-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-bottom: 30px; }
         .stat-card { background: var(--card-bg); padding: 20px; border-radius: 16px; border: 1px solid var(--border-color); text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.2); transition: 0.3s; }
         .stat-card:hover { transform: translateY(-5px); border-color: var(--primary); }
         .stat-icon { font-size: 30px; margin-bottom: 10px; display: block; }
         .stat-value { font-size: 28px; font-weight: 700; color: var(--text-main); margin: 0; }
         .stat-title { color: var(--text-sub); font-size: 13px; text-transform: uppercase; font-weight: 600; letter-spacing: 1px; margin-top: 5px; }
 
-        /* MENU BOX */
-        h2 { font-size: 18px; margin-bottom: 15px; color: var(--text-main); border-left: 4px solid var(--primary); padding-left: 10px; }
-        .menu-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px; }
-        .menu-card { display: block; background: var(--card-bg); padding: 20px; border-radius: 16px; border: 1px solid var(--border-color); text-decoration: none; transition: 0.3s; }
-        .menu-card:hover { background: rgba(59, 130, 246, 0.1); border-color: var(--primary); transform: translateX(5px); }
-        .menu-card h3 { color: var(--primary); margin: 0 0 5px 0; font-size: 16px; display: flex; align-items: center; gap: 8px; }
+        /* MENU BOX BARU (DIKELOMPOKKAN) */
+        h2 { font-size: 18px; margin-bottom: 10px; color: var(--text-main); border-left: 4px solid var(--primary); padding-left: 10px; }
+        
+        .section-title { font-size: 15px; color: var(--text-sub); margin: 25px 0 10px 0; border-bottom: 1px solid var(--border-color); padding-bottom: 8px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px;}
+        .menu-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px; margin-bottom: 10px; }
+        
+        .menu-card { display: block; background: var(--card-bg); padding: 20px; border-radius: 12px; border: 1px solid var(--border-color); text-decoration: none; transition: 0.3s; position: relative; overflow: hidden; }
+        .menu-card h3 { margin: 0 0 5px 0; font-size: 16px; color: var(--text-main); }
         .menu-card p { color: var(--text-sub); margin: 0; font-size: 13px; line-height: 1.5; }
         
+        /* TEMA WARNA KHUSUS TIAP DIVISI BADAII! */
+        .card-internal { border-left: 4px solid var(--warning); }
+        .card-internal:hover { background: rgba(245, 158, 11, 0.05); border-color: var(--warning); transform: translateX(5px); }
+        .card-internal h3 { color: var(--warning); }
+
+        .card-private { border-left: 4px solid var(--primary); }
+        .card-private:hover { background: rgba(59, 130, 246, 0.05); border-color: var(--primary); transform: translateX(5px); }
+        .card-private h3 { color: var(--primary); }
+
+        .card-public { border-left: 4px solid var(--success); }
+        .card-public:hover { background: rgba(16, 185, 129, 0.05); border-color: var(--success); transform: translateX(5px); }
+        .card-public h3 { color: var(--success); }
+
         .role-badge { display: inline-block; padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: bold; text-transform: uppercase; margin-bottom: 10px; background: rgba(245, 158, 11, 0.2); color: var(--warning); border: 1px solid var(--warning); }
     </style>
 </head>
@@ -46,53 +61,68 @@
         <button class="btn-logout" onclick="logout()">Keluar 🚪</button>
     </div>
 
-    <h2>📊 Statistik Sistem (Real-Time)</h2>
+    <h2>📊 Statistik Sistem</h2>
     <div class="stats-grid">
         <div class="stat-card">
             <span class="stat-icon">💎</span>
             <p class="stat-value" id="countPrivate">⏳</p>
-            <p class="stat-title">Server Private</p>
+            <p class="stat-title">Server Public</p>
         </div>
         <div class="stat-card">
             <span class="stat-icon">🌍</span>
             <p class="stat-value" id="countPublic">⏳</p>
-            <p class="stat-title">Server Public</p>
+            <p class="stat-title">Server Private</p>
         </div>
         <div class="stat-card" id="boxTotalUserPanel" style="display: none;">
             <span class="stat-icon">👥</span>
             <p class="stat-value" id="countUsers">⏳</p>
-            <p class="stat-title">Akun Web Panel</p>
+            <p class="stat-title">Total Akun Web</p>
+        </div>
+        <div class="stat-card" id="boxOnlineUser" style="display: none;">
+            <span class="stat-icon">🟢</span>
+            <p class="stat-value" id="countOnline" style="color: var(--success);">⏳</p>
+            <p class="stat-title">User Online</p>
         </div>
     </div>
 
     <h2>🚀 Menu Navigasi</h2>
-    <div class="menu-grid">
-        
-        <a href="manage_panel_users.html" class="menu-card" id="menuKelolaWeb" style="display: none;">
-            <h3>🛡️ Kelola Akses Web Panel</h3>
-            <p>Tambah/Hapus Reseller yang bisa login ke web ini.</p>
-        </a>
 
-        <a href="manage_ptero_users.html" class="menu-card" id="menuPrivateUser" style="display: none;">
-            <h3>💎 1-Klik Private (User + Server)</h3>
-            <p>Buat akun dan server pelanggan Private sekaligus.</p>
-        </a>
-        
-        <a href="manage_ptero_servers.html" class="menu-card" id="menuPrivateServer" style="display: none;">
-            <h3>🖥️ Kelola Server (Private)</h3>
-            <p>Lihat/Tambah server baru untuk pelanggan Private yang sudah ada.</p>
-        </a>
+    <div id="sectionWeb" style="display: none;">
+        <div class="section-title">🛡️ Sistem Internal</div>
+        <div class="menu-grid">
+            <a href="manage_panel_users.html" class="menu-card card-internal">
+                <h3>Kelola Akses Web</h3>
+                <p>Tambah/Hapus Reseller yang bisa login ke web panel ini.</p>
+            </a>
+        </div>
+    </div>
 
-        <a href="manage_ptero_users_pub.html" class="menu-card" id="menuPublicUser" style="display: none;">
-            <h3>🌍 1-Klik Public (User + Server)</h3>
-            <p>Buat akun dan server pelanggan Public sekaligus.</p>
-        </a>
-        
-        <a href="manage_ptero_servers_pub.html" class="menu-card" id="menuPublicServer" style="display: none;">
-            <h3>🖥️ Kelola Server (Public)</h3>
-            <p>Lihat/Tambah server baru untuk pelanggan Public yang sudah ada.</p>
-        </a>
-        
+    <div id="sectionPrivate" style="display: none;">
+        <div class="section-title">💎 Divisi Private</div>
+        <div class="menu-grid">
+            <a href="manage_ptero_users.html" class="menu-card card-private">
+                <h3>1-Klik (User + Server)</h3>
+                <p>Buat akun dan server pelanggan Private sekaligus.</p>
+            </a>
+            <a href="manage_ptero_servers.html" class="menu-card card-private">
+                <h3>Kelola Server Saja</h3>
+                <p>Tambah server baru untuk pelanggan Private yang sudah ada.</p>
+            </a>
+        </div>
+    </div>
+
+    <div id="sectionPublic" style="display: none;">
+        <div class="section-title">🌍 Divisi Public</div>
+        <div class="menu-grid">
+            <a href="manage_ptero_users_pub.html" class="menu-card card-public">
+                <h3>1-Klik (User + Server)</h3>
+                <p>Buat akun dan server pelanggan Public sekaligus.</p>
+            </a>
+            <a href="manage_ptero_servers_pub.html" class="menu-card card-public">
+                <h3>Kelola Server Saja</h3>
+                <p>Tambah server baru untuk pelanggan Public yang sudah ada.</p>
+            </a>
+        </div>
     </div>
 
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
@@ -111,23 +141,21 @@
         document.getElementById('namaUser').innerText = username || "Juragan";
         document.getElementById('roleUser').innerText = "Role: " + (role || "Tidak diketahui");
 
-        // 2. ATUR MENU BERDASARKAN ROLE
+        // 2. ATUR MUNCULNYA KATEGORI MENU BERDASARKAN ROLE
         if (role === 'pemilik') {
-            document.getElementById('menuKelolaWeb').style.display = 'block';
-            document.getElementById('menuPrivateUser').style.display = 'block';
-            document.getElementById('menuPrivateServer').style.display = 'block';
-            document.getElementById('menuPublicUser').style.display = 'block';
-            document.getElementById('menuPublicServer').style.display = 'block';
+            document.getElementById('sectionWeb').style.display = 'block';
+            document.getElementById('sectionPrivate').style.display = 'block';
+            document.getElementById('sectionPublic').style.display = 'block';
+            
             document.getElementById('boxTotalUserPanel').style.display = 'block';
+            document.getElementById('boxOnlineUser').style.display = 'block';
         } else if (role === 'reseller_private' || role === 'reseller') {
-            document.getElementById('menuPrivateUser').style.display = 'block';
-            document.getElementById('menuPrivateServer').style.display = 'block';
+            document.getElementById('sectionPrivate').style.display = 'block';
         } else if (role === 'reseller_public' || role === 'partner_public') {
-            document.getElementById('menuPublicUser').style.display = 'block';
-            document.getElementById('menuPublicServer').style.display = 'block';
+            document.getElementById('sectionPublic').style.display = 'block';
         }
 
-        // 3. INISIALISASI FIREBASE & PRESENCE (BIAR ONLINE TERUS)
+        // 3. INISIALISASI FIREBASE & PRESENCE
         const firebaseConfig = { databaseURL: "https://cobaaja-ac5d0-default-rtdb.firebaseio.com" };
         if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
@@ -154,7 +182,7 @@
             }
         }
 
-        // 5. AUTO-FETCH STATISTIK REAL-TIME API
+        // 5. AUTO-FETCH STATISTIK REAL-TIME
         const WORKER_URL = "https://restless-truth-9b75.amisterious09.workers.dev/?"; 
         const PRVT_DOMAIN = "zeroix.panel-prvt.web.id"; 
         const PRVT_API = "ptla_ZM2Ka67FdLj62khENxUm22bKnsHHDBhUCEnDtXfuHhw"; 
@@ -175,10 +203,18 @@
             }).catch(() => document.getElementById('countPublic').innerText = "❌");
 
             if (role === 'pemilik') {
-                database.ref('users').once('value').then(snap => {
+                database.ref('users').on('value', snap => {
                     let totalUsers = snap.numChildren();
+                    let onlineCount = 0;
+                    snap.forEach(childSnap => {
+                        if (childSnap.val().isOnline === true) onlineCount++;
+                    });
                     document.getElementById('countUsers').innerText = totalUsers;
-                }).catch(() => document.getElementById('countUsers').innerText = "❌");
+                    document.getElementById('countOnline').innerText = onlineCount;
+                }, () => {
+                    document.getElementById('countUsers').innerText = "❌";
+                    document.getElementById('countOnline').innerText = "❌";
+                });
             }
         }
 
