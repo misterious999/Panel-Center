@@ -10,28 +10,21 @@
         body { font-family: 'Inter', sans-serif; padding: 20px; background-color: var(--bg-color); color: var(--text-main); margin: 0; }
         h2 { font-weight: 700; margin-bottom: 5px; color: var(--text-main); }
         .sub-title { color: var(--text-sub); margin-bottom: 25px; font-size: 14px; }
-        
         .btn-back { display: inline-block; margin-bottom: 20px; padding: 10px 15px; background: rgba(255,255,255,0.05); color: var(--text-main); text-decoration: none; border-radius: 8px; font-size: 14px; font-weight: 600; border: 1px solid var(--border-color); transition: 0.2s; }
         .btn-back:hover { background: var(--card-bg); transform: translateX(-3px); }
-        
         .box { background: var(--card-bg); padding: 20px; border-radius: 16px; border: 1px solid var(--border-color); margin-bottom: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); overflow-x: auto; }
         .box h3 { margin-top: 0; font-size: 18px; margin-bottom: 15px; display: flex; align-items: center; gap: 8px; }
-        
         label { display: block; margin-bottom: 5px; font-size: 13px; font-weight: 600; color: var(--text-sub); text-transform: uppercase;}
         input { width: 100%; padding: 12px; margin-bottom: 15px; background: var(--input-bg); border: 1px solid var(--border-color); border-radius: 8px; color: var(--text-main); font-size: 14px; box-sizing: border-box; outline: none; transition: 0.2s; }
         input:focus { border-color: var(--primary); box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2); }
-        
         .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
         .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 5px; }
-        
         .btn-tambah { width: 100%; background: var(--primary); color: white; border: none; cursor: pointer; border-radius: 8px; padding: 12px; font-weight: bold; transition: 0.2s; margin-top: 10px; }
         .btn-tambah:hover { background: #2563eb; transform: translateY(-2px); }
-
         table { width: 100%; border-collapse: collapse; min-width: 600px; margin-top: 10px; }
         th, td { padding: 12px 15px; text-align: left; border-bottom: 1px solid var(--border-color); font-size: 14px; }
         th { background: rgba(255,255,255,0.02); color: var(--text-sub); font-weight: 600; text-transform: uppercase; font-size: 12px; letter-spacing: 1px; }
         tr:hover { background: rgba(255,255,255,0.02); }
-        
         .btn-action { cursor: pointer; border-radius: 6px; padding: 6px 12px; font-weight: 600; font-size: 12px; transition: 0.2s; border: none; margin-right: 5px; margin-bottom: 5px; display: inline-block; white-space: nowrap; }
         .btn-hapus { background: rgba(239, 68, 68, 0.1); color: var(--danger); border: 1px solid var(--danger); }
         .btn-hapus:hover { background: var(--danger); color: white; }
@@ -39,91 +32,53 @@
         .btn-suspend:hover { background: var(--warning); color: white; }
         .btn-unsuspend { background: rgba(16, 185, 129, 0.1); color: var(--success); border: 1px solid var(--success); }
         .btn-unsuspend:hover { background: var(--success); color: white; }
-        
         .badge { padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.5px; display: inline-block; white-space: nowrap; }
         .badge-aktif { background: rgba(16, 185, 129, 0.2); color: var(--success); border: 1px solid var(--success); }
         .badge-suspend { background: rgba(239, 68, 68, 0.2); color: var(--danger); border: 1px solid var(--danger); }
-        
         .server-name { font-weight: 600; color: var(--text-main); font-size: 15px; }
         .server-uuid { color: var(--text-sub); font-size: 11px; font-family: monospace; display: block; margin-top: 3px; }
+        .reseller-tag { font-size: 10px; color: var(--primary); background: rgba(59,130,246,0.1); padding: 2px 6px; border-radius: 4px; display: inline-block; margin-top: 5px; border: 1px solid rgba(59,130,246,0.2); }
     </style>
 </head>
 <body>
     <a href="index.html" class="btn-back">⬅ Kembali ke Dashboard</a>
     
-    <h2>Kelola Server (Divisi Private)</h2>
-    <p class="sub-title">Deploy, Pantau, Suspend, atau Hapus server pelanggan Private.</p>
+    <h2>Kelola Server Saja (Private)</h2>
+    <p class="sub-title">Tambah server untuk user lama yang sudah ada.</p>
 
     <div class="box">
-        <h3>🚀 Auto-Deploy Server Bot WA (Private)</h3>
-        
+        <h3>🚀 Tambah Server Baru (Private)</h3>
         <label>User ID Pterodactyl (Pemilik):</label>
         <input type="number" id="newServerUserId" placeholder="Contoh: 1" autocomplete="off">
-        
         <label>Nama Server:</label>
         <input type="text" id="newServerName" placeholder="Contoh: Bot Private VIP" autocomplete="off">
-        
         <div class="grid-3">
-            <div>
-                <label>RAM (MB):</label>
-                <input type="number" id="newRam" value="2000">
-            </div>
-            <div>
-                <label>CPU (%):</label>
-                <input type="number" id="newCpu" value="60">
-            </div>
-            <div>
-                <label>Disk (MB):</label>
-                <input type="number" id="newDisk" value="1000">
-            </div>
+            <div><label>RAM (MB):</label><input type="number" id="newRam" value="2000"></div>
+            <div><label>CPU (%):</label><input type="number" id="newCpu" value="60"></div>
+            <div><label>Disk (MB):</label><input type="number" id="newDisk" value="1000"></div>
         </div>
-
-        <div class="grid-2" style="margin-top: 5px;">
-            <div>
-                <label>Location ID:</label>
-                <input type="number" id="newLocId" value="1" title="ID Lokasi di Pterodactyl Private">
-            </div>
-            <div>
-                <label>Egg ID:</label>
-                <input type="number" id="newEggId" value="15" title="ID Egg Bot WA di Pterodactyl Private">
-            </div>
+        <div class="grid-2" style="display: none;">
+            <input type="number" id="newLocId" value="1">
+            <input type="number" id="newEggId" value="15">
         </div>
-        
         <button class="btn-tambah" onclick="buatServerPtero()">⚡ Deploy Server Private</button>
     </div>
 
     <div class="box">
-        <h3>💎 Daftar Server Private</h3>
+        <h3>💎 Daftar Server Private <span id="textDaftar"></span></h3>
         <table id="tabelServers">
             <tr><th>ID</th><th>Info Server</th><th>Node / RAM</th><th>Status</th><th>Aksi Cepat</th></tr>
             <tr><td colspan="5" style="text-align: center; color: var(--text-sub); padding: 20px;">⏳ Mengambil data...</td></tr>
         </table>
     </div>
-    
-        <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
-    <script>
-        // 1. Panggil Mesin Firebase
-        const firebaseConfig = { databaseURL: "https://cobaaja-ac5d0-default-rtdb.firebaseio.com" };
-        if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
-        const database = firebase.database();
-
-        // 2. Mesin Detektor Online
-        const connectedRef = database.ref('.info/connected');
-        connectedRef.on('value', (snap) => {
-            const uid = localStorage.getItem('user_id'); 
-            if (snap.val() === true && uid) {
-                let userRef = database.ref('users/' + uid);
-                userRef.child('isOnline').onDisconnect().set(false);
-                userRef.child('isOnline').set(true);
-            }
-        });
-    </script>
-
 
     <script>
         const currentUserId = localStorage.getItem('user_id');
         const role = localStorage.getItem('role') || '';
+        const myUsername = localStorage.getItem('username') || 'Unknown';
         const allowedRoles = ['pemilik', 'reseller_private', 'reseller'];
 
         if (!currentUserId || !allowedRoles.includes(role)) {
@@ -131,110 +86,154 @@
             window.location.replace("index.html");
         }
 
-        // DATA API PRIVATE KAMU
+        if (role !== 'pemilik') {
+            document.getElementById('textDaftar').innerText = "Buatanmu";
+        } else {
+            document.getElementById('textDaftar').innerText = "(Semua Reseller)";
+        }
+
+        // ==========================================
+        // 🔥 RADAR FIREBASE ONLINE
+        // ==========================================
+        const firebaseConfig = { databaseURL: "https://cobaaja-ac5d0-default-rtdb.firebaseio.com" };
+        if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+
+        const connectedRef = database.ref('.info/connected');
+        connectedRef.on('value', (snap) => {
+            if (snap.val() === true && currentUserId) {
+                let userRef = database.ref('users/' + currentUserId);
+                userRef.child('isOnline').onDisconnect().set(false);
+                userRef.child('isOnline').set(true);
+            }
+        });
+
         const PTERO_DOMAIN = "zeroix.panel-prvt.web.id"; 
         const PTERO_API_APP = "ptla_ZM2Ka67FdLj62khENxUm22bKnsHHDBhUCEnDtXfuHhw"; 
         const WORKER_URL = "https://restless-truth-9b75.amisterious09.workers.dev"; 
 
-        function ambilDataServers() {
-            fetch(`${WORKER_URL}/?https://${PTERO_DOMAIN}/api/application/servers`, {
-                headers: { 'Accept': 'application/json', 'Authorization': `Bearer ${PTERO_API_APP}` }
-            }).then(res => res.json()).then(data => {
-                let tabel = `<tr><th>ID</th><th>Info Server</th><th>Node / RAM</th><th>Status</th><th>Aksi Cepat</th></tr>`;
+        // ==========================================
+        // TAMPILKAN SERVER DENGAN FILTER SAKTI
+        // ==========================================
+        async function ambilDataServers() {
+            try {
+                // TAHAP 1: Ambil data User dulu buat dicocokkan
+                let resUsers = await fetch(`${WORKER_URL}/?https://${PTERO_DOMAIN}/api/application/users`, {
+                    headers: { 'Accept': 'application/json', 'Authorization': `Bearer ${PTERO_API_APP}` }
+                });
+                let dataUsers = await resUsers.json();
                 
-                if (data.data.length === 0) tabel += `<tr><td colspan="5" style="text-align: center; color: var(--warning);">Belum ada server Private.</td></tr>`;
+                // Bikin Peta (Map) buat nyari tau siapa pembuat user tersebut
+                let userMap = {};
+                let myUserIds = []; // ID pelanggan milik reseller ini
+                
+                dataUsers.data.forEach(u => {
+                    let attr = u.attributes;
+                    userMap[attr.id] = { ownerUsername: attr.username, maker: attr.last_name };
+                    
+                    // Kalau ini reseller, catat ID pelanggannya
+                    if (attr.last_name === myUsername) {
+                        myUserIds.push(attr.id);
+                    }
+                });
 
-                data.data.forEach(server => {
+                // TAHAP 2: Ambil data Server
+                let resServers = await fetch(`${WORKER_URL}/?https://${PTERO_DOMAIN}/api/application/servers`, {
+                    headers: { 'Accept': 'application/json', 'Authorization': `Bearer ${PTERO_API_APP}` }
+                });
+                let dataServers = await resServers.json();
+
+                let tabel = `<tr><th>ID</th><th>Info Server</th><th>Node / RAM</th><th>Status</th><th>Aksi Cepat</th></tr>`;
+                let countDisplayed = 0;
+
+                dataServers.data.forEach(server => {
                     let s = server.attributes;
+                    let serverOwnerId = s.user; // ID pemilik server
+                    let userInfo = userMap[serverOwnerId] || { ownerUsername: "Unknown", maker: "Unknown" };
+                    
+                    // ==========================================
+                    // 🛡️ LOGIKA FILTER KAMAR ISOLASI
+                    // ==========================================
+                    if (role !== 'pemilik') {
+                        // Kalau ID pemilik server ini BUKAN pelanggan dari reseller ini, SEMBUNYIKAN!
+                        if (!myUserIds.includes(serverOwnerId)) return; 
+                    }
+
+                    countDisplayed++;
+
                     let statusBadge = s.suspended ? `<span class="badge badge-suspend">🔴 Suspended</span>` : `<span class="badge badge-aktif">🟢 Aktif</span>`;
                     let btnSuspend = s.suspended ? `<button class="btn-action btn-unsuspend" onclick="ubahStatusServer(${s.id}, 'unsuspend', '${s.name}')">▶️ Unsuspend</button>` : `<button class="btn-action btn-suspend" onclick="ubahStatusServer(${s.id}, 'suspend', '${s.name}')">⏸️ Suspend</button>`;
                     let ram = s.limits.memory === 0 ? "Unlimited" : s.limits.memory + " MB";
 
+                    // Tanda Tangan buat Owner (Biar tau ini server siapa lewat reseller mana)
+                    let makerTag = "";
+                    if (role === 'pemilik') {
+                        if (userInfo.maker !== 'User' && userInfo.maker !== 'Admin' && userInfo.maker !== 'Unknown') {
+                            makerTag = `<br><span class="reseller-tag">👤 ${userInfo.ownerUsername} (via ${userInfo.maker})</span>`;
+                        } else {
+                            makerTag = `<br><span class="reseller-tag" style="color:var(--text-sub); border-color:var(--border-color);">👤 ${userInfo.ownerUsername}</span>`;
+                        }
+                    } else {
+                        // Kalo reseller, tampilin nama pelanggannya aja
+                        makerTag = `<br><span class="reseller-tag" style="color:var(--text-sub); border-color:var(--border-color);">👤 ${userInfo.ownerUsername}</span>`;
+                    }
+
                     tabel += `<tr>
                         <td style="color: var(--text-sub); font-weight: bold;">#${s.id}</td>
-                        <td><span class="server-name">${s.name}</span><span class="server-uuid">${s.uuid.split('-')[0]}...</span></td>
+                        <td><span class="server-name">${s.name}</span><span class="server-uuid">${s.uuid.split('-')[0]}...</span>${makerTag}</td>
                         <td style="color: var(--text-main); font-size: 13px;">${s.node}<br><span style="color: var(--text-sub); font-size: 11px;">RAM: ${ram}</span></td>
                         <td>${statusBadge}</td>
                         <td>${btnSuspend}<button class="btn-action btn-hapus" onclick="hapusServer(${s.id}, '${s.name}')">🗑️ Hapus</button></td>
                     </tr>`;
                 });
+
+                if (countDisplayed === 0) {
+                    tabel += `<tr><td colspan="5" style="text-align: center; color: var(--warning); padding: 20px;">Kamu belum memiliki server pelanggan.</td></tr>`;
+                }
+
                 document.getElementById('tabelServers').innerHTML = tabel;
-            }).catch(e => {
+
+            } catch (e) {
                 document.getElementById('tabelServers').innerHTML = `<tr><td colspan="5" style="text-align: center; color: var(--danger);">❌ Error: ${e.message}</td></tr>`;
-            });
+            }
         }
 
+        // FUNGSI BUAT SERVER
         function buatServerPtero() {
             let userId = document.getElementById('newServerUserId').value;
             let name = document.getElementById('newServerName').value;
             let ram = document.getElementById('newRam').value;
             let cpu = document.getElementById('newCpu').value;
             let disk = document.getElementById('newDisk').value;
-            
             let locId = document.getElementById('newLocId').value;
             let eggId = document.getElementById('newEggId').value;
 
             if (!userId || !name || !ram || !cpu || !disk || !locId || !eggId) {
-                alert("Harap isi semua kolom formulir!");
-                return;
+                alert("Harap isi semua kolom formulir!"); return;
             }
 
             let payload = {
-                "name": name,
-                "description": "Dibuat via Custom Panel Private",
-                "user": parseInt(userId),
-                "egg": parseInt(eggId),
-                "docker_image": "ghcr.io/parkervcp/yolks:nodejs_20",
-                "startup": "npm start",
-                "environment": { 
-                    "INST": "npm", 
-                    "USER_UPLOAD": "0", 
-                    "AUTO_UPDATE": "0", 
-                    "CMD_RUN": "npm start" 
-                },
-                "limits": { 
-                    "memory": parseInt(ram), 
-                    "swap": 0, 
-                    "disk": parseInt(disk), 
-                    "io": 500, 
-                    "cpu": parseInt(cpu) 
-                },
-                "feature_limits": { 
-                    "databases": 5, 
-                    "backups": 5, 
-                    "allocations": 5 
-                },
-                "deploy": { 
-                    "locations": [parseInt(locId)], 
-                    "dedicated_ip": false, 
-                    "port_range": [] 
-                }
+                "name": name, "description": `Dibuat via Custom Panel oleh ${myUsername}`, "user": parseInt(userId), "egg": parseInt(eggId),
+                "docker_image": "ghcr.io/parkervcp/yolks:nodejs_20", "startup": "npm start",
+                "environment": { "INST": "npm", "USER_UPLOAD": "0", "AUTO_UPDATE": "0", "CMD_RUN": "npm start" },
+                "limits": { "memory": parseInt(ram), "swap": 0, "disk": parseInt(disk), "io": 500, "cpu": parseInt(cpu) },
+                "feature_limits": { "databases": 5, "backups": 5, "allocations": 5 },
+                "deploy": { "locations": [parseInt(locId)], "dedicated_ip": false, "port_range": [] }
             };
 
             let btn = document.querySelector('.btn-tambah');
-            btn.innerText = "Mendeploy Server... ⏳";
-            btn.style.pointerEvents = "none";
+            btn.innerText = "Mendeploy Server... ⏳"; btn.style.pointerEvents = "none";
 
             fetch(`${WORKER_URL}/?https://${PTERO_DOMAIN}/api/application/servers`, {
-                method: 'POST',
-                headers: { 'Accept': 'application/json', 'Content-Type': 'application/json', 'Authorization': `Bearer ${PTERO_API_APP}` },
-                body: JSON.stringify(payload)
+                method: 'POST', headers: { 'Accept': 'application/json', 'Content-Type': 'application/json', 'Authorization': `Bearer ${PTERO_API_APP}` }, body: JSON.stringify(payload)
             }).then(async res => {
-                btn.innerText = "⚡ Deploy Server Private";
-                btn.style.pointerEvents = "auto";
-                if (!res.ok) {
-                    let err = await res.text();
-                    throw new Error(err);
-                }
+                btn.innerText = "⚡ Deploy Server Private"; btn.style.pointerEvents = "auto";
+                if (!res.ok) throw new Error(await res.text());
                 alert(`✅ MANTAP! Server "${name}" berhasil di-deploy tanpa Error!`);
-                
-                document.getElementById('newServerName').value = "";
-                document.getElementById('newServerUserId').value = "";
+                document.getElementById('newServerName').value = ""; document.getElementById('newServerUserId').value = "";
                 ambilDataServers(); 
             }).catch(e => {
-                btn.innerText = "⚡ Deploy Server Private";
-                btn.style.pointerEvents = "auto";
-                alert(`❌ Gagal Deploy Server!\n\nAlasan API: ${e.message}`);
+                btn.innerText = "⚡ Deploy Server Private"; btn.style.pointerEvents = "auto"; alert(`❌ Gagal Deploy Server!\n\nAlasan API: ${e.message}`);
             });
         }
 
