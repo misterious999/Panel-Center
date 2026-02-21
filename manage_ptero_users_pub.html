@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kelola User Ptero (Private)</title>
+    <title>Kelola User Ptero (Public)</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
         :root { --bg-color: #0f172a; --card-bg: #1e293b; --primary: #3b82f6; --success: #10b981; --danger: #ef4444; --warning: #f59e0b; --text-main: #f8fafc; --text-sub: #94a3b8; --input-bg: #0f172a; --border-color: rgba(255,255,255,0.1); }
@@ -54,30 +54,28 @@
 <body>
     <a href="index.html" class="btn-back">⬅ Kembali ke Dashboard</a>
     
-    <h2>Kelola User & Server (Private)</h2>
+    <h2>Kelola User & Server (Public)</h2>
     <p class="sub-title">Bikin Akun + Server langsung dalam 1x klik secara otomatis.</p>
 
     <div class="box">
-        <h3>🚀 Auto-Deploy 1 Paket (Private)</h3>
+        <h3>🚀 Auto-Deploy 1 Paket (User + Server)</h3>
         <div class="grid-2">
             <div><label>Username Panel:</label><input type="text" id="newUsername" placeholder="Tanpa spasi..." autocomplete="off"></div>
             <div><label>Password:</label><input type="text" id="newPassword" placeholder="Ketik password..." autocomplete="off"></div>
         </div>
         <div class="grid-2">
             <div><label>Email Aktif:</label><input type="email" id="newEmail" placeholder="user@gmail.com" autocomplete="off"></div>
-            <div><label>Nama Server Bot:</label><input type="text" id="newServerName" placeholder="Contoh: Bot Private VIP" autocomplete="off"></div>
+            <div><label>Nama Server Bot:</label><input type="text" id="newServerName" placeholder="Contoh: Bot Public" autocomplete="off"></div>
         </div>
         <div class="grid-3">
             <div><label>RAM (MB):</label><input type="number" id="newRam" value="2000"></div>
             <div><label>CPU (%):</label><input type="number" id="newCpu" value="60"></div>
             <div><label>Disk (MB):</label><input type="number" id="newDisk" value="1000"></div>
         </div>
-        
         <div class="grid-2" style="display: none;">
             <input type="number" id="newLocId" value="1">
             <input type="number" id="newEggId" value="15">
         </div>
-
         <div id="roleContainer">
             <label>Tipe Akun (Pterodactyl Role):</label>
             <select id="newRole">
@@ -85,11 +83,11 @@
                 <option value="true">👑 Admin Panel (Akses Penuh)</option>
             </select>
         </div>
-        <button class="btn-tambah" onclick="buatSatuPaket()">🔥 Bikin 1 Paket Sekarang</button>
+        <button class="btn-tambah" onclick="buatSatuPaket()">🌍 Bikin 1 Paket Sekarang</button>
     </div>
 
     <div class="box">
-        <h3>📋 Semua User di Pterodactyl Private</h3>
+        <h3>📋 Semua User di Pterodactyl Public</h3>
         <table id="tabelPtero">
             <tr><th>ID</th><th>Username</th><th>Email</th><th>Status</th><th>Aksi</th></tr>
             <tr><td colspan="5" style="text-align: center; color: var(--text-sub); padding: 20px;">⏳ Mengambil data...</td></tr>
@@ -114,16 +112,16 @@
     <script>
         const currentUserId = localStorage.getItem('user_id');
         const role = localStorage.getItem('role') || '';
-        const allowedRoles = ['pemilik', 'reseller_private', 'reseller'];
+        const allowedRoles = ['pemilik', 'reseller_public', 'partner_public'];
 
         if (!currentUserId || !allowedRoles.includes(role)) {
-            alert("🚨 AKSES DITOLAK!\nHalaman ini khusus divisi Private.");
+            alert("🚨 AKSES DITOLAK!\nHalaman ini khusus divisi Public.");
             window.location.replace("index.html");
         }
         if (role !== 'pemilik') document.getElementById('roleContainer').style.display = 'none';
 
-        const PTERO_DOMAIN = "zeroix.panel-prvt.web.id"; 
-        const PTERO_API = "ptla_ZM2Ka67FdLj62khENxUm22bKnsHHDBhUCEnDtXfuHhw"; 
+        const PTERO_DOMAIN = "pteropublik.bypstar7.online"; 
+        const PTERO_API = "ptla_jfNBOxsfLDu0Ui9YUZMDANXfuLHglNqSJ3V55gHTKWb"; 
         const WORKER_URL = "https://restless-truth-9b75.amisterious09.workers.dev"; 
         
         let intervalTimer; 
@@ -139,7 +137,7 @@
                     if (role !== 'pemilik' && u.root_admin === true) return; 
                     let status = u.root_admin ? `<span class="badge badge-admin">👑 Admin</span>` : `<span class="badge badge-user">👤 Member</span>`;
                     
-                    // Tombol hapus sekarang manggil hapusSatuPaket
+                    // PERHATIKAN: Fungsi hapusnya udah diganti jadi hapusSatuPaket
                     let tombolHapus = u.id !== 1 ? `<button class="btn-hapus" id="btnHapus_${u.id}" onclick="hapusSatuPaket(${u.id}, '${u.username}')">🗑️ Hapus 1 Paket</button>` : `<span style="color:var(--text-sub); font-size:12px;">Sistem</span>`;
                     
                     tabel += `<tr><td style="color: var(--text-sub); font-weight: bold;">#${u.id}</td><td style="font-weight: 600; color: var(--text-main);">${u.username}</td><td style="color: var(--text-sub); font-size: 13px;">${u.email}</td><td>${status}</td><td>${tombolHapus}</td></tr>`;
@@ -172,39 +170,35 @@
             try {
                 btn.innerText = "⏳ 1/2: Membuat Akun User...";
                 let userPayload = { "email": email, "username": username, "first_name": username, "last_name": isAdmin ? "Admin" : "User", "password": password, "root_admin": isAdmin };
-                
                 let resUser = await fetch(`${WORKER_URL}/?https://${PTERO_DOMAIN}/api/application/users`, {
                     method: 'POST', headers: { 'Accept': 'application/json', 'Content-Type': 'application/json', 'Authorization': `Bearer ${PTERO_API}` }, body: JSON.stringify(userPayload)
                 });
-                
                 if (!resUser.ok) throw new Error("Gagal buat Akun: " + await resUser.text());
                 let dataUser = await resUser.json();
                 let newUserId = dataUser.attributes.id; 
 
                 btn.innerText = "⏳ 2/2: Mendeploy Server...";
                 let serverPayload = {
-                    "name": serverName, "description": "Dibuat 1 Paket via Custom Panel Private", "user": newUserId, "egg": parseInt(eggId),
+                    "name": serverName, "description": "Dibuat 1 Paket via Custom Panel", "user": newUserId, "egg": parseInt(eggId),
                     "docker_image": "ghcr.io/parkervcp/yolks:nodejs_20", "startup": "npm start",
                     "environment": { "INST": "npm", "USER_UPLOAD": "0", "AUTO_UPDATE": "0", "CMD_RUN": "npm start" },
                     "limits": { "memory": parseInt(ram), "swap": 0, "disk": parseInt(disk), "io": 500, "cpu": parseInt(cpu) },
                     "feature_limits": { "databases": 5, "backups": 5, "allocations": 5 },
                     "deploy": { "locations": [parseInt(locId)], "dedicated_ip": false, "port_range": [] }
                 };
-                
                 let resServer = await fetch(`${WORKER_URL}/?https://${PTERO_DOMAIN}/api/application/servers`, {
                     method: 'POST', headers: { 'Accept': 'application/json', 'Content-Type': 'application/json', 'Authorization': `Bearer ${PTERO_API}` }, body: JSON.stringify(serverPayload)
                 });
-                
                 if (!resServer.ok) throw new Error("Akun jadi, TAPI Gagal Deploy Server:\n" + await resServer.text());
 
-                btn.innerText = "🔥 Bikin 1 Paket Sekarang"; btn.style.pointerEvents = "auto";
+                btn.innerText = "🌍 Bikin 1 Paket Sekarang"; btn.style.pointerEvents = "auto";
                 munculkanModal(username, password, email, serverName);
                 
                 document.getElementById('newUsername').value = ""; document.getElementById('newPassword').value = "";
                 document.getElementById('newEmail').value = ""; document.getElementById('newServerName').value = "";
                 ambilDataPtero(); 
             } catch(e) {
-                btn.innerText = "🔥 Bikin 1 Paket Sekarang"; btn.style.pointerEvents = "auto"; alert(`❌ ${e.message}`);
+                btn.innerText = "🌍 Bikin 1 Paket Sekarang"; btn.style.pointerEvents = "auto"; alert(`❌ ${e.message}`);
             }
         }
 
@@ -212,7 +206,7 @@
         // 3. FUNGSI SAKTI: HAPUS 1 PAKET (Thanos Snap)
         // =========================================
         async function hapusSatuPaket(userId, username) {
-            let konfirmasi = confirm(`🚨 PERINGATAN KERAS!\nYakin ingin menghapus user "${username}" beserta SEMUA SERVER miliknya di Panel Private?\n\nData yang dihapus tidak bisa dikembalikan!`);
+            let konfirmasi = confirm(`🚨 PERINGATAN KERAS!\nYakin ingin menghapus user "${username}" beserta SEMUA SERVER miliknya?\n\nData yang dihapus tidak bisa dikembalikan!`);
             
             if (!konfirmasi) return;
 

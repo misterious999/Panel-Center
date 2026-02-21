@@ -7,202 +7,173 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
         :root { 
-            --bg-color: #0f172a; 
-            --card-bg: #1e293b; 
             --primary: #3b82f6; 
             --text-main: #f8fafc; 
             --text-sub: #94a3b8; 
-            --input-bg: #0f172a;
-            --border-color: rgba(255,255,255,0.1);
+            --input-bg: rgba(15, 23, 42, 0.6);
+            --border-color: rgba(255,255,255,0.15);
         }
         
         body { 
             font-family: 'Inter', sans-serif; 
-            background-color: var(--bg-color); 
             color: var(--text-main); 
             margin: 0; 
-            /* Bikin kotak loginnya persis di tengah layar (Vertikal & Horizontal) */
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
             padding: 20px;
             box-sizing: border-box;
+            overflow: hidden; 
         }
 
+        /* VIDEO BACKGROUND */
+        .bg-video { position: fixed; top: 50%; left: 50%; min-width: 100%; min-height: 100%; width: auto; height: auto; z-index: -2; transform: translateX(-50%) translateY(-50%); object-fit: cover; }
+        .bg-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(4px); z-index: -1; }
+
+        /* KOTAK LOGIN KACA */
         .login-box {
-            background: var(--card-bg);
+            background: rgba(30, 41, 59, 0.65); 
+            backdrop-filter: blur(15px); 
             padding: 40px 30px;
             border-radius: 20px;
             border: 1px solid var(--border-color);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
             width: 100%;
             max-width: 350px;
             text-align: center;
+            z-index: 1;
+            animation: fadeIn 0.8s ease-out forwards;
         }
 
-        .login-box h2 {
-            margin-top: 0;
-            margin-bottom: 5px;
-            font-size: 28px;
-            color: var(--text-main);
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        .login-box p {
+        /* LOGO ESTETIK */
+        .login-logo { width: 85px; height: 85px; border-radius: 50%; object-fit: cover; margin: 0 auto 15px auto; display: block; border: 2px solid var(--primary); box-shadow: 0 0 20px rgba(59, 130, 246, 0.5); }
+        .login-box h2 { margin-top: 0; margin-bottom: 5px; font-size: 26px; color: var(--text-main); letter-spacing: 0.5px; }
+        .login-box p { color: var(--text-sub); font-size: 13px; margin-bottom: 30px; }
+        .input-group { text-align: left; margin-bottom: 20px; }
+        .input-group label { display: block; margin-bottom: 8px; font-size: 12px; font-weight: 600; color: var(--text-sub); text-transform: uppercase; letter-spacing: 1px; }
+        .input-group input { width: 100%; padding: 14px 15px; background: var(--input-bg); border: 1px solid var(--border-color); border-radius: 12px; color: var(--text-main); font-size: 14px; box-sizing: border-box; outline: none; transition: 0.3s; }
+        .input-group input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3); background: rgba(15, 23, 42, 0.8); }
+
+        .btn-masuk { width: 100%; padding: 15px; background: var(--primary); color: white; border: none; border-radius: 12px; font-size: 16px; font-weight: 700; cursor: pointer; transition: 0.3s; margin-top: 10px; box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3); }
+        .btn-masuk:hover { background: #2563eb; transform: translateY(-3px); box-shadow: 0 8px 25px rgba(59, 130, 246, 0.5); }
+
+        /* TOMBOL MUSIK MELAYANG */
+        .audio-btn { position: fixed; bottom: 25px; right: 25px; background: rgba(30, 41, 59, 0.65); backdrop-filter: blur(10px); border: 1px solid var(--border-color); color: var(--text-main); padding: 12px 20px; border-radius: 50px; cursor: pointer; z-index: 10; font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 8px; transition: 0.3s; box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
+        .audio-btn:hover { background: rgba(59, 130, 246, 0.4); border-color: var(--primary); transform: translateY(-3px); box-shadow: 0 8px 20px rgba(59, 130, 246, 0.4); }
+
+        /* =========================================
+           COPYRIGHT SPESIAL (KAPSUL KACA MELAYANG)
+           ========================================= */
+        .copyright-capsule {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10;
+            text-align: center;
+            opacity: 0; /* Mulai transparan buat animasi */
+            animation: fadeInUp 1s ease-out forwards 0.5s; /* Muncul pelan-pelan setelah 0.5 detik */
+        }
+
+        .copyright-text {
+            display: inline-block;
+            padding: 10px 25px;
+            background: rgba(15, 23, 42, 0.5); /* Latar belakang gelap transparan */
+            backdrop-filter: blur(8px); /* Efek kaca buram */
+            border-radius: 50px; /* Bentuk kapsul */
+            border: 1px solid rgba(59, 130, 246, 0.2); /* Garis tepi biru tipis */
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
             color: var(--text-sub);
-            font-size: 14px;
-            margin-bottom: 30px;
-        }
-
-        .input-group {
-            text-align: left;
-            margin-bottom: 20px;
-        }
-
-        .input-group label {
-            display: block;
-            margin-bottom: 8px;
             font-size: 13px;
-            font-weight: 600;
-            color: var(--text-sub);
-            text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 0.5px;
+            font-weight: 500;
         }
 
-        .input-group input {
-            width: 100%;
-            padding: 14px 15px;
-            background: var(--input-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            color: var(--text-main);
-            font-size: 14px;
-            box-sizing: border-box;
-            outline: none;
-            transition: 0.3s;
-        }
-
-        /* Efek nyala biru pas kolomnya di-klik (Focus) */
-        .input-group input:focus {
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
-        }
-
-        button {
-            width: 100%;
-            padding: 15px;
-            background: var(--primary);
-            color: white;
-            border: none;
-            border-radius: 12px;
-            font-size: 16px;
+        /* Efek Glow pada nama kita */
+        .copyright-text b {
+            color: var(--primary);
+            text-shadow: 0 0 12px rgba(59, 130, 246, 0.6); /* Cahaya biru di sekitar teks */
             font-weight: 700;
-            cursor: pointer;
-            transition: 0.3s;
-            margin-top: 10px;
         }
 
-        button:hover {
-            background: #2563eb;
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(59, 130, 246, 0.4);
+        /* Animasi Muncul dari Bawah */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translate(-50%, 30px); }
+            to { opacity: 1; transform: translate(-50%, 0); }
+        }
+
+        /* Penyesuaian di layar HP kecil biar gak nabrak tombol musik */
+        @media (max-width: 480px) {
+            .copyright-capsule {
+                bottom: 85px; /* Naik sedikit kalau di HP */
+                width: 80%;
+            }
+            .audio-btn {
+                bottom: 20px;
+                right: 50%;
+                transform: translateX(50%);
+                width: auto;
+                justify-content: center;
+            }
+            .audio-btn:hover { transform: translateX(50%) translateY(-3px); }
         }
     </style>
 </head>
 <body>
 
+    <audio id="bgMusic" loop><source src="https://cdn.yupra.my.id/yp/1wl675dd.opus" type="audio/ogg"></audio>
+
+    <div class="copyright-capsule">
+        <div class="copyright-text">
+            ✨ Powered By <b>Ai Mini & Pstar7</b> ✨
+        </div>
+    </div>
+
+    <button id="audioToggle" class="audio-btn" onclick="toggleAudio()">🔇 Putar Musik</button>
+
+    <video autoplay muted loop playsinline class="bg-video"><source src="https://cdn.yupra.my.id/yp/jjt9na1f.mp4" type="video/mp4"></video>
+    <div class="bg-overlay"></div>
+
     <div class="login-box">
+        <img src="https://cdn.yupra.my.id/yp/3agih8wu.jpg" alt="Logo Panel" class="login-logo">
         <h2>Panel Center</h2>
         <p>Masuk untuk mengelola server Pterodactyl</p>
-
         <div class="input-group">
             <label>Username</label>
             <input type="text" id="username" placeholder="Ketik username..." autocomplete="off" required>
         </div>
-        
         <div class="input-group">
             <label>Password</label>
             <input type="password" id="password" placeholder="Ketik password..." required>
         </div>
-
-        <button onclick="prosesLogin()" id="btnLogin">Masuk Sekarang 🚀</button>
+        <button onclick="prosesLogin()" id="btnLogin" class="btn-masuk">Masuk Sekarang 🚀</button>
     </div>
 
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
-
     <script>
-        const firebaseConfig = {
-            databaseURL: "https://cobaaja-ac5d0-default-rtdb.firebaseio.com" 
-        };
+        let music = document.getElementById("bgMusic"); let audioBtn = document.getElementById("audioToggle"); let isPlaying = false;
+        function toggleAudio() { if (isPlaying) { music.pause(); audioBtn.innerHTML = "🔇 Putar Musik"; isPlaying = false; } else { music.play().then(() => { audioBtn.innerHTML = "🎵 Matikan Musik"; isPlaying = true; }).catch((error) => { console.log("Autoplay ditolak browser: ", error); alert("Gagal memutar musik, pastikan volume HP/PC kamu menyala."); }); } }
 
-        if (!firebase.apps.length) {
-            firebase.initializeApp(firebaseConfig);
-        }
-        const database = firebase.database();
-
-        // Bikin akun admin otomatis kalau database kosong
-        database.ref('users').once('value').then((snapshot) => {
-            if (!snapshot.exists()) {
-                database.ref('users/user_001').set({
-                    username: "admin",
-                    password: "pstar7@123",
-                    role: "pemilik"
-                });
-            }
-        });
+        const firebaseConfig = { databaseURL: "https://cobaaja-ac5d0-default-rtdb.firebaseio.com" };
+        if (!firebase.apps.length) { firebase.initializeApp(firebaseConfig); } const database = firebase.database();
+        database.ref('users').once('value').then((snapshot) => { if (!snapshot.exists()) { database.ref('users/user_001').set({ username: "admin", password: "pstar7@123", role: "pemilik" }); } });
 
         function prosesLogin() {
-            let userIn = document.getElementById('username').value;
-            let passIn = document.getElementById('password').value;
-            let btn = document.getElementById('btnLogin');
-
-            if (userIn === "" || passIn === "") {
-                alert("Harap isi Username dan Password!");
-                return;
-            }
-
-            // Ubah teks & gaya tombol pas lagi loading ngecek database
-            btn.innerText = "Mengecek... ⏳";
-            btn.style.opacity = "0.7";
-            btn.style.pointerEvents = "none";
-
+            let userIn = document.getElementById('username').value; let passIn = document.getElementById('password').value; let btn = document.getElementById('btnLogin');
+            if (userIn === "" || passIn === "") { alert("Harap isi Username dan Password!"); return; }
+            btn.innerText = "Mengecek... ⏳"; btn.style.opacity = "0.7"; btn.style.pointerEvents = "none";
             database.ref('users').once('value').then((snapshot) => {
-                let users = snapshot.val();
-                let loginSukses = false;
-
-                if (users !== null) {
-                    for (let id in users) {
-                        if (users[id].username === userIn && users[id].password === passIn) {
-                            // Simpan data login ke memori HP
-                            localStorage.setItem('user_id', id);
-                            localStorage.setItem('role', users[id].role);
-                            
-                            // FITUR BARU: Simpan Nama biar di Dashboard ganti!
-                            localStorage.setItem('username', users[id].username); 
-                            
-                            loginSukses = true;
-                            break;
-                        }
-                    }
-                }
-
-                if (loginSukses) {
-                    // Pindah tanpa alert berisik biar lebih mulus dan profesional
-                    window.location.replace("index.html"); 
-                } else {
-                    alert("Gagal! Username atau Password salah.");
-                    // Kembalikan tombol ke bentuk semula
-                    btn.innerText = "Masuk Sekarang 🚀";
-                    btn.style.opacity = "1";
-                    btn.style.pointerEvents = "auto";
-                }
-            }).catch((error) => {
-                alert("Waduh, gagal konek ke database. Cek internetmu.");
-                btn.innerText = "Masuk Sekarang 🚀";
-                btn.style.opacity = "1";
-                btn.style.pointerEvents = "auto";
-            });
+                let users = snapshot.val(); let loginSukses = false;
+                if (users !== null) { for (let id in users) { if (users[id].username === userIn && users[id].password === passIn) { localStorage.setItem('user_id', id); localStorage.setItem('role', users[id].role); localStorage.setItem('username', users[id].username); loginSukses = true; break; } } }
+                if (loginSukses) { window.location.replace("index.html"); } else { alert("Gagal! Username atau Password salah."); btn.innerText = "Masuk Sekarang 🚀"; btn.style.opacity = "1"; btn.style.pointerEvents = "auto"; }
+            }).catch((error) => { alert("Waduh, gagal konek ke database. Cek internetmu."); btn.innerText = "Masuk Sekarang 🚀"; btn.style.opacity = "1"; btn.style.pointerEvents = "auto"; });
         }
     </script>
 </body>

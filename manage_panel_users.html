@@ -6,115 +6,29 @@
     <title>Kelola Akun Panel</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
-        :root { 
-            --bg-color: #0f172a; 
-            --card-bg: #1e293b; 
-            --primary: #3b82f6; 
-            --success: #10b981; 
-            --danger: #ef4444; 
-            --warning: #f59e0b; 
-            --text-main: #f8fafc; 
-            --text-sub: #94a3b8; 
-            --input-bg: #0f172a;
-            --border-color: rgba(255,255,255,0.1);
-        }
-        
-        body { 
-            font-family: 'Inter', sans-serif; 
-            padding: 20px; 
-            background-color: var(--bg-color); 
-            color: var(--text-main); 
-            margin: 0; 
-        }
-
+        :root { --bg-color: #0f172a; --card-bg: #1e293b; --primary: #3b82f6; --success: #10b981; --danger: #ef4444; --warning: #f59e0b; --text-main: #f8fafc; --text-sub: #94a3b8; --input-bg: #0f172a; --border-color: rgba(255,255,255,0.1); }
+        body { font-family: 'Inter', sans-serif; padding: 20px; background-color: var(--bg-color); color: var(--text-main); margin: 0; }
         h2 { font-weight: 700; margin-bottom: 5px; color: var(--text-main); }
         .sub-title { color: var(--text-sub); margin-bottom: 25px; font-size: 14px; }
-
-        .btn-back {
-            display: inline-block;
-            margin-bottom: 20px;
-            padding: 10px 15px;
-            background: rgba(255,255,255,0.05);
-            color: var(--text-main);
-            text-decoration: none;
-            border-radius: 8px;
-            font-size: 14px;
-            font-weight: 600;
-            border: 1px solid var(--border-color);
-            transition: 0.2s;
-        }
+        .btn-back { display: inline-block; margin-bottom: 20px; padding: 10px 15px; background: rgba(255,255,255,0.05); color: var(--text-main); text-decoration: none; border-radius: 8px; font-size: 14px; font-weight: 600; border: 1px solid var(--border-color); transition: 0.2s; }
         .btn-back:hover { background: var(--card-bg); transform: translateX(-3px); }
-
-        .box { 
-            background: var(--card-bg); 
-            padding: 20px; 
-            border-radius: 16px; 
-            border: 1px solid var(--border-color); 
-            margin-bottom: 20px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-            overflow-x: auto;
-        }
-
+        .box { background: var(--card-bg); padding: 20px; border-radius: 16px; border: 1px solid var(--border-color); margin-bottom: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); overflow-x: auto; }
         .box h3 { margin-top: 0; font-size: 18px; margin-bottom: 15px; display: flex; align-items: center; gap: 8px; }
-
-        label {
-            display: block;
-            margin-bottom: 5px;
-            font-size: 13px;
-            font-weight: 600;
-            color: var(--text-sub);
-        }
-
-        input, select { 
-            width: 100%; 
-            padding: 12px; 
-            margin-bottom: 15px;
-            background: var(--input-bg); 
-            border: 1px solid var(--border-color); 
-            border-radius: 8px; 
-            color: var(--text-main); 
-            font-size: 14px; 
-            box-sizing: border-box;
-            outline: none;
-            transition: 0.2s;
-        }
+        label { display: block; margin-bottom: 5px; font-size: 13px; font-weight: 600; color: var(--text-sub); }
+        input, select { width: 100%; padding: 12px; margin-bottom: 15px; background: var(--input-bg); border: 1px solid var(--border-color); border-radius: 8px; color: var(--text-main); font-size: 14px; box-sizing: border-box; outline: none; transition: 0.2s; }
         input:focus, select:focus { border-color: var(--primary); box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2); }
-
-        .btn-tambah { 
-            width: 100%;
-            background: var(--primary); 
-            color: white; 
-            border: none; 
-            cursor: pointer; 
-            border-radius: 8px; 
-            padding: 12px; 
-            font-weight: bold; 
-            transition: 0.2s;
-        }
+        .btn-tambah { width: 100%; background: var(--primary); color: white; border: none; cursor: pointer; border-radius: 8px; padding: 12px; font-weight: bold; transition: 0.2s; }
         .btn-tambah:hover { background: #2563eb; transform: translateY(-2px); }
-
-        /* Styling Tabel Premium */
         table { width: 100%; border-collapse: collapse; min-width: 500px; margin-top: 10px; }
         th, td { padding: 12px 15px; text-align: left; border-bottom: 1px solid var(--border-color); font-size: 14px; }
         th { background: rgba(255,255,255,0.02); color: var(--text-sub); font-weight: 600; text-transform: uppercase; font-size: 12px; letter-spacing: 1px; }
         tr:hover { background: rgba(255,255,255,0.02); }
-
-        .btn-hapus { 
-            background: rgba(239, 68, 68, 0.1); 
-            color: var(--danger); 
-            border: 1px solid var(--danger); 
-            cursor: pointer; 
-            border-radius: 6px; 
-            padding: 6px 12px; 
-            font-weight: 600;
-            font-size: 12px;
-            transition: 0.2s;
-        }
+        .btn-hapus { background: rgba(239, 68, 68, 0.1); color: var(--danger); border: 1px solid var(--danger); cursor: pointer; border-radius: 6px; padding: 6px 12px; font-weight: 600; font-size: 12px; transition: 0.2s; white-space: nowrap; }
         .btn-hapus:hover { background: var(--danger); color: white; }
-
-        .badge { padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.5px; }
+        .badge { padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.5px; white-space: nowrap; display: inline-block;}
         .badge-owner { background: rgba(245, 158, 11, 0.2); color: var(--warning); border: 1px solid var(--warning); }
-        .badge-reseller { background: rgba(16, 185, 129, 0.2); color: var(--success); border: 1px solid var(--success); }
+        .badge-private { background: rgba(16, 185, 129, 0.2); color: var(--success); border: 1px solid var(--success); }
+        .badge-public { background: rgba(59, 130, 246, 0.2); color: var(--primary); border: 1px solid var(--primary); }
         .status-online { color: var(--success); font-weight: bold; font-size: 12px;}
         .status-offline { color: var(--text-sub); font-size: 12px;}
     </style>
@@ -123,7 +37,7 @@
     <a href="index.html" class="btn-back">⬅ Kembali ke Dashboard</a>
     
     <h2>Kelola Akun Panel</h2>
-    <p class="sub-title">Tambah atau hapus akses masuk (Reseller/Partner)</p>
+    <p class="sub-title">Tambah atau hapus akses masuk Private & Public</p>
 
     <div class="box">
         <h3>➕ Buat Akses Baru</h3>
@@ -135,8 +49,10 @@
         
         <label>Tipe Akun (Role):</label>
         <select id="newRole">
-            <option value="reseller"> Reseller (Hanya Pterodactyl)</option>
-            <option value="pemilik"> Pemilik (Akses Penuh)</option>
+            <option value="reseller_private">💎 Reseller (Khusus Private)</option>
+            <option value="reseller_public">🌍 Reseller (Khusus Public)</option>
+            <option value="partner_public">🤝 Partner (Khusus Public)</option>
+            <option value="pemilik">👑 Pemilik (Akses Penuh)</option>
         </select>
         
         <button class="btn-tambah" onclick="tambahUser()">🚀 Buat Akun Sekarang</button>
@@ -147,14 +63,11 @@
         <table id="tabelUsers">
             <tr>
                 <th>Username</th>
-                <th>Password</th>
                 <th>Tipe Akun</th>
                 <th>Status</th>
                 <th>Aksi</th>
             </tr>
-            <tr>
-                <td colspan="5" style="text-align: center; color: var(--text-sub);">⏳ Memuat data...</td>
-            </tr>
+            <tr><td colspan="4" style="text-align: center; color: var(--text-sub);">⏳ Memuat data...</td></tr>
         </table>
     </div>
 
@@ -162,12 +75,10 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
     <script>
-        // 1. SETUP FIREBASE
         const firebaseConfig = { databaseURL: "https://cobaaja-ac5d0-default-rtdb.firebaseio.com" };
         if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
 
-        // 2. KEAMANAN HALAMAN (SATPAM)
         const currentUserId = localStorage.getItem('user_id');
         const currentUserRole = localStorage.getItem('role');
 
@@ -176,87 +87,57 @@
             window.location.replace("index.html");
         }
 
-        // 3. TAMPILKAN DATA USER (REAL-TIME)
         function muatDataUsers() {
             database.ref('users').on('value', (snapshot) => {
                 let users = snapshot.val();
-                let tabel = `<tr>
-                    <th>Username</th>
-                    <th>Password</th>
-                    <th>Tipe Akun</th>
-                    <th>Status</th>
-                    <th>Aksi</th>
-                </tr>`;
+                let tabel = `<tr><th>Username</th><th>Tipe Akun</th><th>Status</th><th>Aksi</th></tr>`;
 
                 if (users) {
                     for (let id in users) {
                         let u = users[id];
-                        let roleBadge = u.role === 'pemilik' ? `<span class="badge badge-owner"> Pemilik</span>` : `<span class="badge badge-reseller">Reseller</span>`;
-                        let onlineStatus = u.isOnline ? `<span class="status-online">🟢 Online</span>` : `<span class="status-offline">⚫ Offline</span>`;
+                        let roleBadge = "";
                         
-                        // Sembunyikan tombol hapus untuk akun diri sendiri
-                        let btnHapus = id === currentUserId ? 
-                            `<span style="color:var(--text-sub); font-size:12px;">(Kamu)</span>` : 
-                            `<button class="btn-hapus" onclick="hapusUser('${id}', '${u.username}')">Hapus</button>`;
+                        // Menentukan desain badge berdasarkan role
+                        if (u.role === 'pemilik') roleBadge = `<span class="badge badge-owner">👑 Pemilik</span>`;
+                        else if (u.role === 'reseller_private' || u.role === 'reseller') roleBadge = `<span class="badge badge-private">💎 Private Reseller</span>`;
+                        else if (u.role === 'reseller_public') roleBadge = `<span class="badge badge-public">🌍 Public Reseller</span>`;
+                        else if (u.role === 'partner_public') roleBadge = `<span class="badge badge-public">🤝 Public Partner</span>`;
+
+                        let onlineStatus = u.isOnline ? `<span class="status-online">🟢 Online</span>` : `<span class="status-offline">⚫ Offline</span>`;
+                        let btnHapus = id === currentUserId ? `<span style="color:var(--text-sub); font-size:12px;">(Kamu)</span>` : `<button class="btn-hapus" onclick="hapusUser('${id}', '${u.username}')">Hapus</button>`;
 
                         tabel += `<tr>
-                            <td style="font-weight: 600; color: var(--text-main);">${u.username}</td>
-                            <td style="color: var(--warning); font-family: monospace;">${u.password}</td>
+                            <td style="font-weight: 600; color: var(--text-main);">${u.username}<br><span style="font-size: 10px; color: var(--warning); font-family: monospace;">${u.password}</span></td>
                             <td>${roleBadge}</td>
                             <td>${onlineStatus}</td>
                             <td>${btnHapus}</td>
                         </tr>`;
                     }
-                } else {
-                    tabel += `<tr><td colspan="5" style="text-align: center; color: var(--danger);">Belum ada pengguna!</td></tr>`;
                 }
-                
                 document.getElementById('tabelUsers').innerHTML = tabel;
             });
         }
 
-        // 4. FUNGSI TAMBAH USER
         function tambahUser() {
             let username = document.getElementById('newUsername').value.trim();
             let password = document.getElementById('newPassword').value.trim();
             let role = document.getElementById('newRole').value;
 
-            if (username === "" || password === "") {
-                alert("Harap isi Username dan Password!");
-                return;
-            }
+            if (username === "" || password === "") { alert("Isi Username dan Password!"); return; }
 
-            // Buat ID Unik baru (mirip user_001, user_002, dst)
             let newId = "user_" + Date.now(); 
-
-            database.ref('users/' + newId).set({
-                username: username,
-                password: password,
-                role: role,
-                isOnline: false
-            }).then(() => {
+            database.ref('users/' + newId).set({ username: username, password: password, role: role, isOnline: false })
+            .then(() => {
                 alert(`✅ Berhasil! Akun ${username} siap digunakan.`);
-                document.getElementById('newUsername').value = "";
-                document.getElementById('newPassword').value = "";
-            }).catch((error) => {
-                alert("Gagal menambahkan akun: " + error.message);
-            });
+                document.getElementById('newUsername').value = ""; document.getElementById('newPassword').value = "";
+            }).catch(e => alert("Error: " + e.message));
         }
 
-        // 5. FUNGSI HAPUS USER (Tendang Otomatis)
         function hapusUser(id, username) {
-            let konfirmasi = confirm(`🚨 PERINGATAN!\nYakin mau menghapus akses untuk "${username}"?\n(Sesi login mereka akan langsung terputus secara otomatis).`);
-            
-            if (konfirmasi) {
-                database.ref('users/' + id).remove().then(() => {
-                    alert(`💥 Akun ${username} berhasil dihapus!`);
-                }).catch((error) => {
-                    alert("Gagal menghapus: " + error.message);
-                });
+            if (confirm(`Yakin menghapus akses "${username}"?`)) {
+                database.ref('users/' + id).remove().then(() => alert(`💥 Akun ${username} terhapus!`));
             }
         }
-
-        // Jalankan saat halaman dibuka
         muatDataUsers();
     </script>
 </body>

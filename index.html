@@ -6,76 +6,33 @@
     <title>Dashboard Panel Center</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
-        :root { 
-            --bg-color: #0f172a; 
-            --card-bg: #1e293b; 
-            --primary: #3b82f6; 
-            --success: #10b981; 
-            --danger: #ef4444; 
-            --warning: #f59e0b; 
-            --text-main: #f8fafc; 
-            --text-sub: #94a3b8; 
-        }
-        body { 
-            font-family: 'Inter', sans-serif; 
-            padding: 20px; 
-            background-color: var(--bg-color); 
-            color: var(--text-main); 
-            margin: 0; 
-        }
+        :root { --bg-color: #0f172a; --card-bg: #1e293b; --primary: #3b82f6; --success: #10b981; --danger: #ef4444; --warning: #f59e0b; --text-main: #f8fafc; --text-sub: #94a3b8; }
+        body { font-family: 'Inter', sans-serif; padding: 20px; background-color: var(--bg-color); color: var(--text-main); margin: 0; }
         h2 { font-weight: 700; margin-bottom: 5px; color: var(--text-main); }
         .sub-title { color: var(--text-sub); margin-bottom: 25px; font-size: 14px; }
         
-        /* Grid disesuaikan jadi 2 kotak biar proporsional dan elegan */
         .stats-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; margin-bottom: 25px; }
-        
-        .stat-box { 
-            background: var(--card-bg); 
-            padding: 25px 20px; 
-            border-radius: 16px; 
-            text-align: center; 
-            border: 1px solid rgba(255,255,255,0.05); 
-        }
+        .stat-box { background: var(--card-bg); padding: 25px 20px; border-radius: 16px; text-align: center; border: 1px solid rgba(255,255,255,0.05); }
         .stat-box h3 { margin: 0; font-size: 38px; font-weight: 700; color: var(--text-main); }
         .stat-box p { margin: 8px 0 0; color: var(--text-sub); font-size: 12px; text-transform: uppercase; letter-spacing: 1px; font-weight: 600;}
-        
         .border-total { border-bottom: 4px solid var(--primary); }
         .border-users { border-bottom: 4px solid var(--success); }
         
-        .box { 
-            background: var(--card-bg); 
-            padding: 20px; 
-            border-radius: 20px; 
-            border: 1px solid rgba(255,255,255,0.05); 
-        }
+        .box { background: var(--card-bg); padding: 20px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.05); margin-bottom: 15px; }
+        .box-title { font-size: 15px; margin-bottom: 15px; color: var(--text-sub); text-transform: uppercase; letter-spacing: 1px; font-weight: 700; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 10px;}
         
-        a { 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            gap: 10px; 
-            margin-bottom: 12px; 
-            padding: 14px; 
-            background: rgba(255,255,255,0.05); 
-            color: #fff; 
-            text-decoration: none; 
-            border-radius: 12px; 
-            font-weight: 600; 
-            transition: 0.2s; 
-            border: 1px solid rgba(255,255,255,0.1); 
-        }
+        a { display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 12px; padding: 14px; background: rgba(255,255,255,0.02); color: #fff; text-decoration: none; border-radius: 12px; font-weight: 600; transition: 0.2s; border: 1px solid rgba(255,255,255,0.1); }
         a:hover { background: var(--primary); transform: scale(1.02); }
         
         #menuKelolaPanel { background: var(--warning); color: #000; border: none; }
         #menuKelolaPanel:hover { background: #d97706; color: #fff; }
-        
-        .btn-logout { background: rgba(239, 68, 68, 0.1); color: var(--danger); border: 1px solid var(--danger); margin-top: 20px; }
+        .btn-logout { background: rgba(239, 68, 68, 0.1); color: var(--danger); border: 1px solid var(--danger); margin-top: 10px; }
         .btn-logout:hover { background: var(--danger); color: white; }
     </style>
 </head>
 <body>
     <h2>Selamat Datang, <span id="namaUser" style="color: var(--primary);">Juragan</span>! 👋</h2>
-    <p class="sub-title">Control Panel Utama • Fast Mode</p>
+    <p class="sub-title">Control Panel Utama • Multi-Tier System</p>
     
     <div class="stats-container">
         <div class="stat-box border-total">
@@ -88,78 +45,85 @@
         </div>
     </div>
 
-    <div class="box">
-        <a href="manage_panel_users.html" id="menuKelolaPanel">👤 Kelola Akun Panel (Reseller)</a>
-        <a href="manage_ptero_users.html">👥 Kelola User Pterodactyl</a>
-        <a href="manage_ptero_servers.html">🖥️ Kelola Server Pterodactyl</a>
-        <a href="#" class="btn-logout" onclick="logout()">🚪 Keluar dari Sesi</a>
+    <a href="manage_panel_users.html" id="menuKelolaPanel" style="display: none;">👑 Kelola Akun Panel Utama</a>
+
+    <div class="box" id="boxPrivate" style="display: none;">
+        <div class="box-title">💎 Akses Panel Private</div>
+        <a href="manage_ptero_users.html">👥 Kelola User Pterodactyl (Private)</a>
+        <a href="manage_ptero_servers.html">🖥️ Kelola Server Pterodactyl (Private)</a>
     </div>
+
+    <div class="box" id="boxPublic" style="display: none;">
+        <div class="box-title">🌍 Akses Panel Public</div>
+        <a href="manage_ptero_users_pub.html">👥 Kelola User Pterodactyl (Public)</a>
+        <a href="manage_ptero_servers_pub.html">🖥️ Kelola Server Pterodactyl (Public)</a>
+    </div>
+
+    <a href="#" class="btn-logout" onclick="logout()">🚪 Keluar dari Sesi</a>
 
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
     <script>
-        // ==========================================
-        // 1. SETUP FIREBASE & KEAMANAN DASHBOARD
-        // ==========================================
         const firebaseConfig = { databaseURL: "https://cobaaja-ac5d0-default-rtdb.firebaseio.com" };
         if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
+        
         const currentUserId = localStorage.getItem('user_id');
+        const role = localStorage.getItem('role') || '';
 
         if (!currentUserId) window.location.replace("login.html");
         
         if (localStorage.getItem('username')) document.getElementById('namaUser').innerText = localStorage.getItem('username');
-        if (localStorage.getItem('role') === 'reseller') document.getElementById('menuKelolaPanel').style.display = 'none';
 
         // ==========================================
-        // 2. SISTEM KEHADIRAN & KEAMANAN REAL-TIME (PRESENCE)
+        // LOGIKA PEMBELAHAN MENU BERDASARKAN ROLE
+        // ==========================================
+        if (role === 'pemilik') {
+            document.getElementById('menuKelolaPanel').style.display = 'flex';
+            document.getElementById('boxPrivate').style.display = 'block';
+            document.getElementById('boxPublic').style.display = 'block';
+        } 
+        else if (role === 'reseller_private' || role === 'reseller') {
+            document.getElementById('boxPrivate').style.display = 'block';
+        } 
+        else if (role === 'reseller_public' || role === 'partner_public') {
+            document.getElementById('boxPublic').style.display = 'block';
+        }
+
+        // ==========================================
+        // SISTEM PRESENCE & AUTO-KICK
         // ==========================================
         const userRef = database.ref('users/' + currentUserId);
         const connectedRef = database.ref('.info/connected');
 
-        // Deteksi kalau user konek ke web
         connectedRef.on('value', (snap) => {
             if (snap.val() === true) {
-                // Kalau tiba-tiba browser di-close/internet mati, otomatis ubah isOnline jadi false
                 userRef.child('isOnline').onDisconnect().set(false);
-                // Set isOnline jadi true saat ini
                 userRef.child('isOnline').set(true);
             }
         });
 
-        // Satpam Penendang (Auto-kick kalau akun dihapus)
         userRef.on('value', (s) => { 
-            if (!s.exists()) { 
-                localStorage.clear(); 
-                window.location.replace("login.html"); 
-            }
+            if (!s.exists()) { localStorage.clear(); window.location.replace("login.html"); }
         });
 
-        // Menghitung berapa User Panel yang sedang Online
         database.ref('users').on('value', (snapshot) => {
             let onlineCount = 0;
             let users = snapshot.val();
             if (users) {
-                for (let id in users) {
-                    if (users[id].isOnline === true) onlineCount++;
-                }
+                for (let id in users) if (users[id].isOnline === true) onlineCount++;
             }
             document.getElementById('countActiveUsers').innerText = onlineCount;
         });
 
-        // Fungsi Logout yang Rapih
         function logout() { 
-            // Ubah status jadi offline dulu sebelum keluar
             userRef.child('isOnline').set(false).then(() => {
-                localStorage.clear(); 
-                window.location.replace("login.html"); 
+                localStorage.clear(); window.location.replace("login.html"); 
             });
         }
 
-        // ==========================================
-        // 3. AMBIL TOTAL SERVER PTERODACTYL (INSTAN)
-        // ==========================================
+        // AMBIL TOTAL SERVER PTERO PRIVATE (Sementara)
         const PTERO_DOMAIN = "zeroix.panel-prvt.web.id"; 
         const PTERO_API_APP = "ptla_ZM2Ka67FdLj62khENxUm22bKnsHHDBhUCEnDtXfuHhw"; 
         const WORKER_URL = "https://restless-truth-9b75.amisterious09.workers.dev"; 
@@ -171,12 +135,8 @@
                 });
                 const dataList = await resList.json();
                 document.getElementById('countTotal').innerText = dataList.data.length;
-            } catch (err) { 
-                console.error(err); 
-                document.getElementById('countTotal').innerText = "Err";
-            }
+            } catch (err) { document.getElementById('countTotal').innerText = "Err"; }
         }
-
         loadPteroTotal();
     </script>
 </body>
