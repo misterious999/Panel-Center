@@ -6,138 +6,183 @@
     <title>Dashboard Panel Center</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
-        :root { --bg-color: #0f172a; --card-bg: #1e293b; --primary: #3b82f6; --success: #10b981; --danger: #ef4444; --warning: #f59e0b; --text-main: #f8fafc; --text-sub: #94a3b8; }
-        body { font-family: 'Inter', sans-serif; padding: 20px; background-color: var(--bg-color); color: var(--text-main); margin: 0; }
-        h2 { font-weight: 700; margin-bottom: 5px; color: var(--text-main); }
-        .sub-title { color: var(--text-sub); margin-bottom: 25px; font-size: 14px; }
+        :root { --bg-color: #0f172a; --card-bg: #1e293b; --primary: #3b82f6; --success: #10b981; --danger: #ef4444; --warning: #f59e0b; --text-main: #f8fafc; --text-sub: #94a3b8; --border-color: rgba(255,255,255,0.1); }
+        body { font-family: 'Inter', sans-serif; background-color: var(--bg-color); color: var(--text-main); margin: 0; padding: 20px; box-sizing: border-box; }
         
-        .stats-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; margin-bottom: 25px; }
-        .stat-box { background: var(--card-bg); padding: 25px 20px; border-radius: 16px; text-align: center; border: 1px solid rgba(255,255,255,0.05); }
-        .stat-box h3 { margin: 0; font-size: 38px; font-weight: 700; color: var(--text-main); }
-        .stat-box p { margin: 8px 0 0; color: var(--text-sub); font-size: 12px; text-transform: uppercase; letter-spacing: 1px; font-weight: 600;}
-        .border-total { border-bottom: 4px solid var(--primary); }
-        .border-users { border-bottom: 4px solid var(--success); }
+        /* HEADER */
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; padding-bottom: 20px; border-bottom: 1px solid var(--border-color); }
+        .header h1 { margin: 0; font-size: 24px; color: var(--text-main); }
+        .header p { margin: 5px 0 0 0; color: var(--text-sub); font-size: 14px; }
+        .btn-logout { background: rgba(239, 68, 68, 0.1); color: var(--danger); border: 1px solid var(--danger); padding: 8px 15px; border-radius: 8px; font-weight: 600; cursor: pointer; transition: 0.2s; font-size: 14px; }
+        .btn-logout:hover { background: var(--danger); color: white; box-shadow: 0 4px 15px rgba(239, 68, 68, 0.4); }
+
+        /* STATISTIK BOX */
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 30px; }
+        .stat-card { background: var(--card-bg); padding: 20px; border-radius: 16px; border: 1px solid var(--border-color); text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.2); transition: 0.3s; }
+        .stat-card:hover { transform: translateY(-5px); border-color: var(--primary); }
+        .stat-icon { font-size: 30px; margin-bottom: 10px; display: block; }
+        .stat-value { font-size: 28px; font-weight: 700; color: var(--text-main); margin: 0; }
+        .stat-title { color: var(--text-sub); font-size: 13px; text-transform: uppercase; font-weight: 600; letter-spacing: 1px; margin-top: 5px; }
+
+        /* MENU BOX */
+        h2 { font-size: 18px; margin-bottom: 15px; color: var(--text-main); border-left: 4px solid var(--primary); padding-left: 10px; }
+        .menu-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px; }
+        .menu-card { display: block; background: var(--card-bg); padding: 20px; border-radius: 16px; border: 1px solid var(--border-color); text-decoration: none; transition: 0.3s; }
+        .menu-card:hover { background: rgba(59, 130, 246, 0.1); border-color: var(--primary); transform: translateX(5px); }
+        .menu-card h3 { color: var(--primary); margin: 0 0 5px 0; font-size: 16px; display: flex; align-items: center; gap: 8px; }
+        .menu-card p { color: var(--text-sub); margin: 0; font-size: 13px; line-height: 1.5; }
         
-        .box { background: var(--card-bg); padding: 20px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.05); margin-bottom: 15px; }
-        .box-title { font-size: 15px; margin-bottom: 15px; color: var(--text-sub); text-transform: uppercase; letter-spacing: 1px; font-weight: 700; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 10px;}
-        
-        a { display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 12px; padding: 14px; background: rgba(255,255,255,0.02); color: #fff; text-decoration: none; border-radius: 12px; font-weight: 600; transition: 0.2s; border: 1px solid rgba(255,255,255,0.1); }
-        a:hover { background: var(--primary); transform: scale(1.02); }
-        
-        #menuKelolaPanel { background: var(--warning); color: #000; border: none; }
-        #menuKelolaPanel:hover { background: #d97706; color: #fff; }
-        .btn-logout { background: rgba(239, 68, 68, 0.1); color: var(--danger); border: 1px solid var(--danger); margin-top: 10px; }
-        .btn-logout:hover { background: var(--danger); color: white; }
+        .role-badge { display: inline-block; padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: bold; text-transform: uppercase; margin-bottom: 10px; background: rgba(245, 158, 11, 0.2); color: var(--warning); border: 1px solid var(--warning); }
     </style>
 </head>
 <body>
-    <h2>Selamat Datang, <span id="namaUser" style="color: var(--primary);">Juragan</span>! 👋</h2>
-    <p class="sub-title">Control Panel Utama • Multi-Tier System</p>
-    
-    <div class="stats-container">
-        <div class="stat-box border-total">
-            <h3 id="countTotal">⏳</h3>
-            <p>Total Server Ptero</p>
+
+    <div class="header">
+        <div>
+            <h1>👋 Halo, <span id="namaUser">Juragan</span>!</h1>
+            <p>Selamat datang di Command Center.</p>
+            <span id="roleUser" class="role-badge">Memuat Role...</span>
         </div>
-        <div class="stat-box border-users">
-            <h3 id="countActiveUsers">⏳</h3>
-            <p>User Panel Online</p>
+        <button class="btn-logout" onclick="logout()">Keluar 🚪</button>
+    </div>
+
+    <h2>📊 Statistik Sistem (Real-Time)</h2>
+    <div class="stats-grid">
+        <div class="stat-card">
+            <span class="stat-icon">💎</span>
+            <p class="stat-value" id="countPrivate">⏳</p>
+            <p class="stat-title">Server Private</p>
+        </div>
+        <div class="stat-card">
+            <span class="stat-icon">🌍</span>
+            <p class="stat-value" id="countPublic">⏳</p>
+            <p class="stat-title">Server Public</p>
+        </div>
+        <div class="stat-card" id="boxTotalUserPanel" style="display: none;">
+            <span class="stat-icon">👥</span>
+            <p class="stat-value" id="countUsers">⏳</p>
+            <p class="stat-title">Akun Web Panel</p>
         </div>
     </div>
 
-    <a href="manage_panel_users.html" id="menuKelolaPanel" style="display: none;">👑 Kelola Akun Panel Utama</a>
+    <h2>🚀 Menu Navigasi</h2>
+    <div class="menu-grid">
+        
+        <a href="manage_panel_users.html" class="menu-card" id="menuKelolaWeb" style="display: none;">
+            <h3>🛡️ Kelola Akses Web Panel</h3>
+            <p>Tambah/Hapus Reseller yang bisa login ke web ini.</p>
+        </a>
 
-    <div class="box" id="boxPrivate" style="display: none;">
-        <div class="box-title">💎 Akses Panel Private</div>
-        <a href="manage_ptero_users.html">👥 Kelola User Pterodactyl (Private)</a>
-        <a href="manage_ptero_servers.html">🖥️ Kelola Server Pterodactyl (Private)</a>
+        <a href="manage_ptero_users.html" class="menu-card" id="menuPrivateUser" style="display: none;">
+            <h3>💎 1-Klik Private (User + Server)</h3>
+            <p>Buat akun dan server pelanggan Private sekaligus.</p>
+        </a>
+        
+        <a href="manage_ptero_servers.html" class="menu-card" id="menuPrivateServer" style="display: none;">
+            <h3>🖥️ Kelola Server (Private)</h3>
+            <p>Lihat/Tambah server baru untuk pelanggan Private yang sudah ada.</p>
+        </a>
+
+        <a href="manage_ptero_users_pub.html" class="menu-card" id="menuPublicUser" style="display: none;">
+            <h3>🌍 1-Klik Public (User + Server)</h3>
+            <p>Buat akun dan server pelanggan Public sekaligus.</p>
+        </a>
+        
+        <a href="manage_ptero_servers_pub.html" class="menu-card" id="menuPublicServer" style="display: none;">
+            <h3>🖥️ Kelola Server (Public)</h3>
+            <p>Lihat/Tambah server baru untuk pelanggan Public yang sudah ada.</p>
+        </a>
+        
     </div>
-
-    <div class="box" id="boxPublic" style="display: none;">
-        <div class="box-title">🌍 Akses Panel Public</div>
-        <a href="manage_ptero_users_pub.html">👥 Kelola User Pterodactyl (Public)</a>
-        <a href="manage_ptero_servers_pub.html">🖥️ Kelola Server Pterodactyl (Public)</a>
-    </div>
-
-    <a href="#" class="btn-logout" onclick="logout()">🚪 Keluar dari Sesi</a>
 
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
     <script>
+        // 1. CEK LOGIN
+        const currentUserId = localStorage.getItem('user_id');
+        const role = localStorage.getItem('role');
+        const username = localStorage.getItem('username');
+
+        if (!currentUserId) {
+            window.location.replace("login.html");
+        }
+
+        document.getElementById('namaUser').innerText = username || "Juragan";
+        document.getElementById('roleUser').innerText = "Role: " + (role || "Tidak diketahui");
+
+        // 2. ATUR MENU BERDASARKAN ROLE
+        if (role === 'pemilik') {
+            document.getElementById('menuKelolaWeb').style.display = 'block';
+            document.getElementById('menuPrivateUser').style.display = 'block';
+            document.getElementById('menuPrivateServer').style.display = 'block';
+            document.getElementById('menuPublicUser').style.display = 'block';
+            document.getElementById('menuPublicServer').style.display = 'block';
+            document.getElementById('boxTotalUserPanel').style.display = 'block';
+        } else if (role === 'reseller_private' || role === 'reseller') {
+            document.getElementById('menuPrivateUser').style.display = 'block';
+            document.getElementById('menuPrivateServer').style.display = 'block';
+        } else if (role === 'reseller_public' || role === 'partner_public') {
+            document.getElementById('menuPublicUser').style.display = 'block';
+            document.getElementById('menuPublicServer').style.display = 'block';
+        }
+
+        // 3. INISIALISASI FIREBASE & PRESENCE (BIAR ONLINE TERUS)
         const firebaseConfig = { databaseURL: "https://cobaaja-ac5d0-default-rtdb.firebaseio.com" };
         if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
-        
-        const currentUserId = localStorage.getItem('user_id');
-        const role = localStorage.getItem('role') || '';
 
-        if (!currentUserId) window.location.replace("login.html");
-        
-        if (localStorage.getItem('username')) document.getElementById('namaUser').innerText = localStorage.getItem('username');
-
-        // ==========================================
-        // LOGIKA PEMBELAHAN MENU BERDASARKAN ROLE
-        // ==========================================
-        if (role === 'pemilik') {
-            document.getElementById('menuKelolaPanel').style.display = 'flex';
-            document.getElementById('boxPrivate').style.display = 'block';
-            document.getElementById('boxPublic').style.display = 'block';
-        } 
-        else if (role === 'reseller_private' || role === 'reseller') {
-            document.getElementById('boxPrivate').style.display = 'block';
-        } 
-        else if (role === 'reseller_public' || role === 'partner_public') {
-            document.getElementById('boxPublic').style.display = 'block';
-        }
-
-        // ==========================================
-        // SISTEM PRESENCE & AUTO-KICK
-        // ==========================================
-        const userRef = database.ref('users/' + currentUserId);
         const connectedRef = database.ref('.info/connected');
-
         connectedRef.on('value', (snap) => {
-            if (snap.val() === true) {
+            if (snap.val() === true && currentUserId) {
+                let userRef = database.ref('users/' + currentUserId);
                 userRef.child('isOnline').onDisconnect().set(false);
                 userRef.child('isOnline').set(true);
             }
         });
 
-        userRef.on('value', (s) => { 
-            if (!s.exists()) { localStorage.clear(); window.location.replace("login.html"); }
-        });
-
-        database.ref('users').on('value', (snapshot) => {
-            let onlineCount = 0;
-            let users = snapshot.val();
-            if (users) {
-                for (let id in users) if (users[id].isOnline === true) onlineCount++;
-            }
-            document.getElementById('countActiveUsers').innerText = onlineCount;
-        });
-
-        function logout() { 
-            userRef.child('isOnline').set(false).then(() => {
-                localStorage.clear(); window.location.replace("login.html"); 
-            });
-        }
-
-        // AMBIL TOTAL SERVER PTERO PRIVATE (Sementara)
-        const PTERO_DOMAIN = "zeroix.panel-prvt.web.id"; 
-        const PTERO_API_APP = "ptla_ZM2Ka67FdLj62khENxUm22bKnsHHDBhUCEnDtXfuHhw"; 
-        const WORKER_URL = "https://restless-truth-9b75.amisterious09.workers.dev"; 
-
-        async function loadPteroTotal() {
-            try {
-                const resList = await fetch(`${WORKER_URL}/?https://${PTERO_DOMAIN}/api/application/servers`, {
-                    headers: { 'Authorization': `Bearer ${PTERO_API_APP}`, 'Accept': 'application/json' }
+        // 4. LOGIKA LOGOUT
+        function logout() {
+            if (currentUserId) {
+                database.ref('users/' + currentUserId + '/isOnline').set(false).then(() => {
+                    localStorage.clear();
+                    window.location.replace("login.html");
                 });
-                const dataList = await resList.json();
-                document.getElementById('countTotal').innerText = dataList.data.length;
-            } catch (err) { document.getElementById('countTotal').innerText = "Err"; }
+            } else {
+                localStorage.clear();
+                window.location.replace("login.html");
+            }
         }
-        loadPteroTotal();
+
+        // 5. AUTO-FETCH STATISTIK REAL-TIME API
+        const WORKER_URL = "https://restless-truth-9b75.amisterious09.workers.dev/?"; 
+        const PRVT_DOMAIN = "zeroix.panel-prvt.web.id"; 
+        const PRVT_API = "ptla_ZM2Ka67FdLj62khENxUm22bKnsHHDBhUCEnDtXfuHhw"; 
+        const PUB_DOMAIN = "pteropublik.bypstar7.online"; 
+        const PUB_API = "ptla_jfNBOxsfLDu0Ui9YUZMDANXfuLHglNqSJ3V55gHTKWb"; 
+
+        function ambilStatistik() {
+            fetch(`${WORKER_URL}https://${PRVT_DOMAIN}/api/application/servers`, {
+                headers: { 'Accept': 'application/json', 'Authorization': `Bearer ${PRVT_API}` }
+            }).then(res => res.json()).then(data => {
+                document.getElementById('countPrivate').innerText = data.meta.pagination.total;
+            }).catch(() => document.getElementById('countPrivate').innerText = "❌");
+
+            fetch(`${WORKER_URL}https://${PUB_DOMAIN}/api/application/servers`, {
+                headers: { 'Accept': 'application/json', 'Authorization': `Bearer ${PUB_API}` }
+            }).then(res => res.json()).then(data => {
+                document.getElementById('countPublic').innerText = data.meta.pagination.total;
+            }).catch(() => document.getElementById('countPublic').innerText = "❌");
+
+            if (role === 'pemilik') {
+                database.ref('users').once('value').then(snap => {
+                    let totalUsers = snap.numChildren();
+                    document.getElementById('countUsers').innerText = totalUsers;
+                }).catch(() => document.getElementById('countUsers').innerText = "❌");
+            }
+        }
+
+        ambilStatistik();
     </script>
 </body>
 </html>
