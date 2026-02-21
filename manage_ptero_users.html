@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kelola Server Pterodactyl</title>
+    <title>Kelola User Pterodactyl</title>
     <style>
         body { font-family: Arial, sans-serif; padding: 20px; }
         .box { border: 1px solid #ccc; padding: 15px; margin-bottom: 20px; border-radius: 8px; background: #f9f9f9; overflow-x: auto; }
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; background: white; min-width: 600px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; background: white; min-width: 400px; }
         table, th, td { border: 1px solid #aaa; }
         th, td { padding: 10px; text-align: left; }
         a { text-decoration: none; color: blue; font-weight: bold; }
@@ -15,54 +15,40 @@
         .btn-tambah { background: #28a745; color: white; border: none; cursor: pointer; border-radius: 4px; padding: 10px 15px; font-weight: bold; margin-top: 10px;}
         .btn-hapus { background: #dc3545; color: white; border: none; cursor: pointer; border-radius: 4px; padding: 5px 10px; font-weight: bold; }
         .btn-hapus:hover { background: #c82333; }
-        .badge-spek { background: #17a2b8; color: white; padding: 3px 6px; border-radius: 4px; font-size: 12px; margin-right: 4px;}
-        .form-row { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 10px; }
-        .form-group { flex: 1; min-width: 150px; }
+        .badge-admin { background: #dc3545; color: white; padding: 3px 8px; border-radius: 4px; font-size: 12px;}
+        .badge-user { background: #007bff; color: white; padding: 3px 8px; border-radius: 4px; font-size: 12px;}
     </style>
 </head>
 <body>
-    <h2>Kelola Server Pterodactyl</h2>
+    <h2>Kelola User Pterodactyl</h2>
     <a href="index.html">⬅ Kembali ke Dashboard</a>
 
     <div class="box">
-        <h3>➕ Buat Server Baru (Deploy)</h3>
+        <h3>➕ Buat Akun Pterodactyl Baru</h3>
+        <label>Username (Tanpa Spasi):</label>
+        <input type="text" id="newUsername" placeholder="Ketik username...">
         
-        <label>Nama Server:</label>
-        <input type="text" id="newServerName" placeholder="Contoh: Server Bot WA">
+        <label>Email:</label>
+        <input type="email" id="newEmail" placeholder="Ketik email aktif...">
         
-        <label>ID Pemilik (Lihat ID di menu Kelola User):</label>
-        <input type="number" id="newServerOwner" placeholder="Contoh: 1">
+        <label>Password:</label>
+        <input type="text" id="newPassword" placeholder="Ketik password...">
         
-        <div class="form-row">
-            <div class="form-group">
-                <label>RAM (MB):</label>
-                <input type="number" id="newServerRam" placeholder="Contoh: 1024">
-            </div>
-            <div class="form-group">
-                <label>CPU (%):</label>
-                <input type="number" id="newServerCpu" placeholder="Contoh: 100">
-            </div>
-            <div class="form-group">
-                <label>Disk (MB):</label>
-                <input type="number" id="newServerDisk" placeholder="Contoh: 2048">
-            </div>
-        </div>
-        
-        <button class="btn-tambah" onclick="buatServerPtero()">🚀 Deploy Server Sekarang</button>
+        <button class="btn-tambah" onclick="buatUserPtero()">🚀 Buat User Sekarang</button>
     </div>
 
     <div class="box">
-        <h3>🖥️ Semua Server di Panel</h3>
-        <table id="tabelServer">
+        <h3>📋 Semua User di Panel</h3>
+        <table id="tabelPtero">
             <tr>
                 <th>ID</th>
-                <th>Nama Server</th>
-                <th>Owner (User ID)</th>
-                <th>Spesifikasi</th>
+                <th>Username</th>
+                <th>Email</th>
+                <th>Status</th>
                 <th>Aksi</th>
             </tr>
             <tr>
-                <td colspan="5">⏳ Memanggil data server dari Pterodactyl...</td>
+                <td colspan="5">⏳ Sedang mengambil data dari Pterodactyl...</td>
             </tr>
         </table>
     </div>
@@ -75,15 +61,19 @@
             window.location.replace("login.html");
         }
 
+        // ==========================================
+        // 1. DATA RAHASIA
+        // ==========================================
         const PTERO_DOMAIN = "zeroix.panel-prvt.web.id"; 
         const PTERO_API = "ptla_ZM2Ka67FdLj62khENxUm22bKnsHHDBhUCEnDtXfuHhw"; 
         const WORKER_URL = "https://restless-truth-9b75.amisterious09.workers.dev"; 
-        const targetUrl = `${WORKER_URL}/?https://${PTERO_DOMAIN}/api/application/servers`;
-
+        
         // ==========================================
-        // 1. FUNGSI MENAMPILKAN SERVER (READ)
+        // 2. FUNGSI MENAMPILKAN DATA (READ)
         // ==========================================
-        function ambilDataServer() {
+        function ambilDataPtero() {
+            let targetUrl = `${WORKER_URL}/?https://${PTERO_DOMAIN}/api/application/users`;
+            
             fetch(targetUrl, {
                 method: 'GET',
                 headers: {
@@ -93,93 +83,63 @@
                 }
             })
             .then(async response => {
-                if (!response.ok) throw new Error("Gagal ngambil data server!");
+                if (!response.ok) throw new Error("Gagal ngambil data!");
                 return response.json();
             })
             .then(data => {
-                let servers = data.data;
-                let tabel = `<tr><th>ID</th><th>Nama Server</th><th>Owner (User ID)</th><th>Spesifikasi</th><th>Aksi</th></tr>`;
+                let users = data.data;
+                let tabel = `<tr><th>ID</th><th>Username</th><th>Email</th><th>Status</th><th>Aksi</th></tr>`;
                 
-                if (servers.length === 0) {
-                    tabel += `<tr><td colspan="5" style="text-align:center;">Belum ada server yang dibuat.</td></tr>`;
-                } else {
-                    servers.forEach(server => {
-                        let s = server.attributes;
-                        let ram = s.limits.memory === 0 ? "Unlimited" : s.limits.memory + " MB";
-                        let cpu = s.limits.cpu === 0 ? "Unlimited" : s.limits.cpu + " %";
-                        let disk = s.limits.disk === 0 ? "Unlimited" : s.limits.disk + " MB";
-                        
-                        let spekHtml = `
-                            <span class="badge-spek">RAM: ${ram}</span>
-                            <span class="badge-spek">CPU: ${cpu}</span>
-                            <span class="badge-spek">Disk: ${disk}</span>
-                        `;
+                users.forEach(user => {
+                    let u = user.attributes;
+                    if (userRole === 'reseller' && u.root_admin === true) return; // Sembunyikan admin dari reseller
+                    
+                    let status = u.root_admin ? `<span class="badge-admin">Admin</span>` : `<span class="badge-user">Member</span>`;
+                    
+                    // Tombol hapus (Sembunyikan buat ID 1 biar admin utama aman)
+                    let tombolHapus = "";
+                    if (u.id !== 1) {
+                        tombolHapus = `<button class="btn-hapus" onclick="hapusUserPtero(${u.id}, '${u.username}')">🗑️ Hapus</button>`;
+                    } else {
+                        tombolHapus = `<small style="color:gray;">Bawaan Sistem</small>`;
+                    }
 
-                        let tombolHapus = `<button class="btn-hapus" onclick="hapusServerPtero(${s.id}, '${s.name}')">🗑️ Hapus</button>`;
-
-                        tabel += `<tr>
-                            <td>${s.id}</td>
-                            <td><b>${s.name}</b></td>
-                            <td>User ID: ${s.user}</td>
-                            <td>${spekHtml}</td>
-                            <td>${tombolHapus}</td>
-                        </tr>`;
-                    });
-                }
-                document.getElementById('tabelServer').innerHTML = tabel;
+                    tabel += `<tr>
+                        <td>${u.id}</td>
+                        <td>${u.username}</td>
+                        <td>${u.email}</td>
+                        <td>${status}</td>
+                        <td>${tombolHapus}</td>
+                    </tr>`;
+                });
+                document.getElementById('tabelPtero').innerHTML = tabel;
             })
             .catch(error => {
-                document.getElementById('tabelServer').innerHTML = `<tr><td colspan="5" style="color:red;">❌ Error: ${error.message}</td></tr>`;
+                document.getElementById('tabelPtero').innerHTML = `<tr><td colspan="5" style="color:red;">❌ Error: ${error.message}</td></tr>`;
             });
         }
 
         // ==========================================
-        // 2. FUNGSI MEMBUAT SERVER BARU (CREATE)
+        // 3. FUNGSI MEMBUAT USER BARU (CREATE)
         // ==========================================
-        function buatServerPtero() {
-            let nama = document.getElementById('newServerName').value;
-            let owner = document.getElementById('newServerOwner').value;
-            let ram = document.getElementById('newServerRam').value;
-            let cpu = document.getElementById('newServerCpu').value;
-            let disk = document.getElementById('newServerDisk').value;
+        function buatUserPtero() {
+            let targetUrl = `${WORKER_URL}/?https://${PTERO_DOMAIN}/api/application/users`;
+            let username = document.getElementById('newUsername').value;
+            let email = document.getElementById('newEmail').value;
+            let password = document.getElementById('newPassword').value;
 
-            if(!nama || !owner || !ram || !cpu || !disk) {
-                alert("Wajib isi semua kolom spesifikasi dulu!");
+            if(username === "" || email === "" || password === "") {
+                alert("Semua kolom (Username, Email, Password) wajib diisi ya!");
                 return;
             }
 
-            // ⚠️ TEMPLATE MESIN SERVER (SUDAH DISESUAIKAN DENGAN BOT WA KAMU) ⚠️
             let dataPayload = {
-                "name": nama,
-                "user": parseInt(owner),
-                "egg": 15, // <--- PASTIKAN INI ID EGG NODEJS KAMU
-                "docker_image": "ghcr.io/parkervcp/yolks:nodejs_20", // Diambil dari bot kamu
-                "startup": "if [[ -d .git ]] && [[ {{AUTO_UPDATE}} == \"1\" ]]; then git pull; fi; if [[ ! -z ${NODE_PACKAGES} ]]; then npm install ${NODE_PACKAGES}; fi; if [[ ! -z ${UNNODE_PACKAGES} ]]; then npm uninstall ${UNNODE_PACKAGES}; fi; if [ -f /home/container/package.json ]; then npm install; fi; {{CMD_RUN}}",
-                "environment": {
-                    "INST": "npm",
-                    "USER_UPLOAD": "0",
-                    "AUTO_UPDATE": "0",
-                    "CMD_RUN": "npm start"
-                },
-                "limits": {
-                    "memory": parseInt(ram),
-                    "swap": 0,
-                    "disk": parseInt(disk),
-                    "io": 500,
-                    "cpu": parseInt(cpu)
-                },
-                "feature_limits": {
-                    "databases": 5,   // Samain kayak di bot kamu
-                    "backups": 5,     // Samain kayak di bot kamu
-                    "allocations": 5  // Samain kayak di bot kamu
-                },
-                "deploy": {
-                    "locations": [1], // <--- PASTIKAN INI ID LOCATION PANEL KAMU
-                    "dedicated_ip": false,
-                    "port_range": []
-                }
+                "email": email,
+                "username": username,
+                "first_name": username, 
+                "last_name": "User",    
+                "password": password
             };
-
 
             fetch(targetUrl, {
                 method: 'POST',
@@ -198,46 +158,51 @@
                 return response.json();
             })
             .then(data => {
-                alert(`🎉 MANTAP! Server "${nama}" berhasil dibuat!`);
-                // Kosongin inputan
-                document.getElementById('newServerName').value = "";
-                document.getElementById('newServerOwner').value = "";
-                document.getElementById('newServerRam').value = "";
-                document.getElementById('newServerCpu').value = "";
-                document.getElementById('newServerDisk').value = "";
-                ambilDataServer(); // Refresh tabel
+                alert(`🎉 Mantap! User ${username} berhasil dibuat!`);
+                document.getElementById('newUsername').value = "";
+                document.getElementById('newEmail').value = "";
+                document.getElementById('newPassword').value = "";
+                ambilDataPtero();
             })
             .catch(error => {
-                // Sengaja Mini bikin alertnya munculin pesan error panjang biar ketahuan kalau ditolak Pterodactyl
-                alert("Gagal Bikin Server! Pastikan Egg ID & Environment cocok!\n\nAlasan Asli: " + error.message);
-                console.error(error);
+                alert("Yah, gagal bikin user. Alasan: " + error.message);
             });
         }
 
         // ==========================================
-        // 3. FUNGSI MENGHAPUS SERVER (DELETE)
+        // 4. FUNGSI MENGHAPUS USER (DELETE)
         // ==========================================
-        function hapusServerPtero(serverId, serverName) {
-            let konfirmasi = confirm(`🚨 SUPER PERINGATAN!\nYakin mau MENGHAPUS server "${serverName}" (ID: ${serverId})?`);
+        function hapusUserPtero(userId, username) {
+            let konfirmasi = confirm(`🚨 PERINGATAN!\nYakin mau menghapus user "${username}" (ID: ${userId}) secara permanen dari Pterodactyl?`);
+            
             if (!konfirmasi) return; 
 
-            let deleteUrl = `${WORKER_URL}/?https://${PTERO_DOMAIN}/api/application/servers/${serverId}`;
+            let deleteUrl = `${WORKER_URL}/?https://${PTERO_DOMAIN}/api/application/users/${userId}`;
+
             fetch(deleteUrl, {
                 method: 'DELETE',
-                headers: { 'Accept': 'application/json', 'Content-Type': 'application/json', 'Authorization': `Bearer ${PTERO_API}` }
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${PTERO_API}`
+                }
             })
             .then(async response => {
                 if (!response.ok) {
                     let err = await response.text();
                     throw new Error(err);
                 }
-                alert(`💥 BOOM! Server "${serverName}" berhasil dihapus!`);
-                ambilDataServer(); 
+                alert(`💥 DUAARR! User ${username} berhasil dihapus selamanya dari Pterodactyl!`);
+                ambilDataPtero(); 
             })
-            .catch(error => alert("Gagal menghapus server. Alasan: " + error.message));
+            .catch(error => {
+                alert("Gagal menghapus user. Alasan: " + error.message);
+                console.error(error);
+            });
         }
 
-        ambilDataServer();
+        // Jalankan fungsi nampilin data saat halaman pertama kali dibuka
+        ambilDataPtero();
     </script>
 </body>
 </html>

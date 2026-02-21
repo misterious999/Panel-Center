@@ -11,15 +11,45 @@
         table, th, td { border: 1px solid #aaa; }
         th, td { padding: 10px; text-align: left; }
         a { text-decoration: none; color: blue; font-weight: bold; }
+        input { padding: 8px; margin-top: 5px; width: 90%; max-width: 300px; display: block; border: 1px solid #ccc; border-radius: 4px; }
+        .btn-tambah { background: #28a745; color: white; border: none; cursor: pointer; border-radius: 4px; padding: 10px 15px; font-weight: bold; margin-top: 10px;}
         .btn-hapus { background: #dc3545; color: white; border: none; cursor: pointer; border-radius: 4px; padding: 5px 10px; font-weight: bold; }
         .btn-hapus:hover { background: #c82333; }
         .badge-spek { background: #17a2b8; color: white; padding: 3px 6px; border-radius: 4px; font-size: 12px; margin-right: 4px;}
+        .form-row { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 10px; }
+        .form-group { flex: 1; min-width: 150px; }
     </style>
 </head>
 <body>
     <h2>Kelola Server Pterodactyl</h2>
     <a href="index.html">⬅ Kembali ke Dashboard</a>
-    <p>Di sini kamu bisa melihat dan menghapus server yang ada di panel Pterodactyl.</p>
+
+    <div class="box">
+        <h3>➕ Buat Server Baru (Deploy)</h3>
+        
+        <label>Nama Server:</label>
+        <input type="text" id="newServerName" placeholder="Contoh: Server Bot WA">
+        
+        <label>ID Pemilik (Lihat ID di menu Kelola User):</label>
+        <input type="number" id="newServerOwner" placeholder="Contoh: 1">
+        
+        <div class="form-row">
+            <div class="form-group">
+                <label>RAM (MB):</label>
+                <input type="number" id="newServerRam" placeholder="Contoh: 1024">
+            </div>
+            <div class="form-group">
+                <label>CPU (%):</label>
+                <input type="number" id="newServerCpu" placeholder="Contoh: 100">
+            </div>
+            <div class="form-group">
+                <label>Disk (MB):</label>
+                <input type="number" id="newServerDisk" placeholder="Contoh: 2048">
+            </div>
+        </div>
+        
+        <button class="btn-tambah" onclick="buatServerPtero()">🚀 Deploy Server Sekarang</button>
+    </div>
 
     <div class="box">
         <h3>🖥️ Semua Server di Panel</h3>
@@ -28,7 +58,7 @@
                 <th>ID</th>
                 <th>Nama Server</th>
                 <th>Owner (User ID)</th>
-                <th>Spesifikasi (RAM / CPU / Disk)</th>
+                <th>Spesifikasi</th>
                 <th>Aksi</th>
             </tr>
             <tr>
@@ -45,20 +75,15 @@
             window.location.replace("login.html");
         }
 
-        // ==========================================
-        // 1. DATA RAHASIA (SUDAH DIISI OLEH MINI)
-        // ==========================================
         const PTERO_DOMAIN = "zeroix.panel-prvt.web.id"; 
         const PTERO_API = "ptla_ZM2Ka67FdLj62khENxUm22bKnsHHDBhUCEnDtXfuHhw"; 
         const WORKER_URL = "https://restless-truth-9b75.amisterious09.workers.dev"; 
-        
+        const targetUrl = `${WORKER_URL}/?https://${PTERO_DOMAIN}/api/application/servers`;
+
         // ==========================================
-        // 2. FUNGSI MENAMPILKAN SERVER (READ)
+        // 1. FUNGSI MENAMPILKAN SERVER (READ)
         // ==========================================
         function ambilDataServer() {
-            // URL untuk endpoint Servers
-            let targetUrl = `${WORKER_URL}/?https://${PTERO_DOMAIN}/api/application/servers`;
-            
             fetch(targetUrl, {
                 method: 'GET',
                 headers: {
@@ -80,8 +105,6 @@
                 } else {
                     servers.forEach(server => {
                         let s = server.attributes;
-                        
-                        // Cek spesifikasi
                         let ram = s.limits.memory === 0 ? "Unlimited" : s.limits.memory + " MB";
                         let cpu = s.limits.cpu === 0 ? "Unlimited" : s.limits.cpu + " %";
                         let disk = s.limits.disk === 0 ? "Unlimited" : s.limits.disk + " MB";
@@ -92,8 +115,7 @@
                             <span class="badge-spek">Disk: ${disk}</span>
                         `;
 
-                        // Tombol Hapus Server
-                        let tombolHapus = `<button class="btn-hapus" onclick="hapusServerPtero(${s.id}, '${s.name}')">🗑️ Hapus Server</button>`;
+                        let tombolHapus = `<button class="btn-hapus" onclick="hapusServerPtero(${s.id}, '${s.name}')">🗑️ Hapus</button>`;
 
                         tabel += `<tr>
                             <td>${s.id}</td>
@@ -112,39 +134,109 @@
         }
 
         // ==========================================
-        // 3. FUNGSI MENGHAPUS SERVER (DELETE)
+        // 2. FUNGSI MEMBUAT SERVER BARU (CREATE)
         // ==========================================
-        function hapusServerPtero(serverId, serverName) {
-            let konfirmasi = confirm(`🚨 SUPER PERINGATAN!\n\nYakin mau MENGHAPUS server "${serverName}" (ID: ${serverId})? \nSemua file dan data di dalam server ini akan HANGUS PERMANEN!`);
-            
-            if (!konfirmasi) return; 
+        function buatServerPtero() {
+            let nama = document.getElementById('newServerName').value;
+            let owner = document.getElementById('newServerOwner').value;
+            let ram = document.getElementById('newServerRam').value;
+            let cpu = document.getElementById('newServerCpu').value;
+            let disk = document.getElementById('newServerDisk').value;
 
-            // URL khusus buat hapus server pake ID
-            let deleteUrl = `${WORKER_URL}/?https://${PTERO_DOMAIN}/api/application/servers/${serverId}`;
+            if(!nama || !owner || !ram || !cpu || !disk) {
+                alert("Wajib isi semua kolom spesifikasi dulu!");
+                return;
+            }
 
-            fetch(deleteUrl, {
-                method: 'DELETE',
+            // ⚠️ TEMPLATE MESIN SERVER (SUDAH DISESUAIKAN DENGAN BOT WA KAMU) ⚠️
+            let dataPayload = {
+                "name": nama,
+                "user": parseInt(owner),
+                "egg": 15, // <--- PASTIKAN INI ID EGG NODEJS KAMU
+                "docker_image": "ghcr.io/parkervcp/yolks:nodejs_20", // Diambil dari bot kamu
+                "startup": "if [[ -d .git ]] && [[ {{AUTO_UPDATE}} == \"1\" ]]; then git pull; fi; if [[ ! -z ${NODE_PACKAGES} ]]; then npm install ${NODE_PACKAGES}; fi; if [[ ! -z ${UNNODE_PACKAGES} ]]; then npm uninstall ${UNNODE_PACKAGES}; fi; if [ -f /home/container/package.json ]; then npm install; fi; {{CMD_RUN}}",
+                "environment": {
+                    "INST": "npm",
+                    "USER_UPLOAD": "0",
+                    "AUTO_UPDATE": "0",
+                    "CMD_RUN": "npm start"
+                },
+                "limits": {
+                    "memory": parseInt(ram),
+                    "swap": 0,
+                    "disk": parseInt(disk),
+                    "io": 500,
+                    "cpu": parseInt(cpu)
+                },
+                "feature_limits": {
+                    "databases": 5,   // Samain kayak di bot kamu
+                    "backups": 5,     // Samain kayak di bot kamu
+                    "allocations": 5  // Samain kayak di bot kamu
+                },
+                "deploy": {
+                    "locations": [1], // <--- PASTIKAN INI ID LOCATION PANEL KAMU
+                    "dedicated_ip": false,
+                    "port_range": []
+                }
+            };
+
+
+            fetch(targetUrl, {
+                method: 'POST',
                 headers: {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${PTERO_API}`
-                }
+                },
+                body: JSON.stringify(dataPayload)
             })
             .then(async response => {
                 if (!response.ok) {
                     let err = await response.text();
                     throw new Error(err);
                 }
-                alert(`💥 BOOM! Server "${serverName}" berhasil diratakan dengan tanah!`);
-                ambilDataServer(); // Refresh tabel biar servernya hilang
+                return response.json();
+            })
+            .then(data => {
+                alert(`🎉 MANTAP! Server "${nama}" berhasil dibuat!`);
+                // Kosongin inputan
+                document.getElementById('newServerName').value = "";
+                document.getElementById('newServerOwner').value = "";
+                document.getElementById('newServerRam').value = "";
+                document.getElementById('newServerCpu').value = "";
+                document.getElementById('newServerDisk').value = "";
+                ambilDataServer(); // Refresh tabel
             })
             .catch(error => {
-                alert("Gagal menghapus server. Alasan: " + error.message);
+                // Sengaja Mini bikin alertnya munculin pesan error panjang biar ketahuan kalau ditolak Pterodactyl
+                alert("Gagal Bikin Server! Pastikan Egg ID & Environment cocok!\n\nAlasan Asli: " + error.message);
                 console.error(error);
             });
         }
 
-        // Mulai Panggil Data
+        // ==========================================
+        // 3. FUNGSI MENGHAPUS SERVER (DELETE)
+        // ==========================================
+        function hapusServerPtero(serverId, serverName) {
+            let konfirmasi = confirm(`🚨 SUPER PERINGATAN!\nYakin mau MENGHAPUS server "${serverName}" (ID: ${serverId})?`);
+            if (!konfirmasi) return; 
+
+            let deleteUrl = `${WORKER_URL}/?https://${PTERO_DOMAIN}/api/application/servers/${serverId}`;
+            fetch(deleteUrl, {
+                method: 'DELETE',
+                headers: { 'Accept': 'application/json', 'Content-Type': 'application/json', 'Authorization': `Bearer ${PTERO_API}` }
+            })
+            .then(async response => {
+                if (!response.ok) {
+                    let err = await response.text();
+                    throw new Error(err);
+                }
+                alert(`💥 BOOM! Server "${serverName}" berhasil dihapus!`);
+                ambilDataServer(); 
+            })
+            .catch(error => alert("Gagal menghapus server. Alasan: " + error.message));
+        }
+
         ambilDataServer();
     </script>
 </body>
