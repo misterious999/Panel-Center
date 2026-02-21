@@ -11,7 +11,7 @@
         table, th, td { border: 1px solid #aaa; }
         th, td { padding: 10px; text-align: left; }
         a { text-decoration: none; color: blue; font-weight: bold; }
-        input { padding: 8px; margin-top: 5px; width: 90%; max-width: 300px; display: block; border: 1px solid #ccc; border-radius: 4px; }
+        input, select { padding: 8px; margin-top: 5px; width: 90%; max-width: 300px; display: block; border: 1px solid #ccc; border-radius: 4px; }
         .btn-tambah { background: #28a745; color: white; border: none; cursor: pointer; border-radius: 4px; padding: 10px 15px; font-weight: bold; margin-top: 10px;}
         .btn-hapus { background: #dc3545; color: white; border: none; cursor: pointer; border-radius: 4px; padding: 5px 10px; font-weight: bold; }
         .btn-hapus:hover { background: #c82333; }
@@ -33,6 +33,14 @@
         
         <label>Password:</label>
         <input type="text" id="newPassword" placeholder="Ketik password...">
+
+        <div id="roleContainer">
+            <label style="margin-top: 10px; display: block; font-weight: bold;">Tipe Akun (Role):</label>
+            <select id="newRole">
+                <option value="false">👤 Member Biasa</option>
+                <option value="true">👑 Admin Panel (Akses Penuh)</option>
+            </select>
+        </div>
         
         <button class="btn-tambah" onclick="buatUserPtero()">🚀 Buat User Sekarang</button>
     </div>
@@ -59,6 +67,13 @@
         if (!userRole) {
             alert("Harap login terlebih dahulu!");
             window.location.replace("login.html");
+        }
+
+        // ==========================================
+        // FITUR KEAMANAN: HILANGKAN OPSI ADMIN BUAT RESELLER
+        // ==========================================
+        if (userRole && userRole.toLowerCase() === 'reseller') {
+            document.getElementById('roleContainer').style.display = 'none';
         }
 
         // ==========================================
@@ -92,11 +107,12 @@
                 
                 users.forEach(user => {
                     let u = user.attributes;
-                    if (userRole === 'reseller' && u.root_admin === true) return; // Sembunyikan admin dari reseller
+                    
+                    // Sembunyikan admin dari layar reseller
+                    if (userRole === 'reseller' && u.root_admin === true) return; 
                     
                     let status = u.root_admin ? `<span class="badge-admin">Admin</span>` : `<span class="badge-user">Member</span>`;
                     
-                    // Tombol hapus (Sembunyikan buat ID 1 biar admin utama aman)
                     let tombolHapus = "";
                     if (u.id !== 1) {
                         tombolHapus = `<button class="btn-hapus" onclick="hapusUserPtero(${u.id}, '${u.username}')">🗑️ Hapus</button>`;
@@ -127,6 +143,8 @@
             let username = document.getElementById('newUsername').value;
             let email = document.getElementById('newEmail').value;
             let password = document.getElementById('newPassword').value;
+            
+            let isAdmin = document.getElementById('newRole').value === "true"; 
 
             if(username === "" || email === "" || password === "") {
                 alert("Semua kolom (Username, Email, Password) wajib diisi ya!");
@@ -137,8 +155,9 @@
                 "email": email,
                 "username": username,
                 "first_name": username, 
-                "last_name": "User",    
-                "password": password
+                "last_name": isAdmin ? "Admin" : "User",    
+                "password": password,
+                "root_admin": isAdmin 
             };
 
             fetch(targetUrl, {
@@ -158,10 +177,14 @@
                 return response.json();
             })
             .then(data => {
-                alert(`🎉 Mantap! User ${username} berhasil dibuat!`);
+                let statusTeks = isAdmin ? "sebagai ADMIN 👑" : "sebagai MEMBER 👤";
+                alert(`🎉 Mantap! User ${username} berhasil dibuat ${statusTeks}!`);
+                
                 document.getElementById('newUsername').value = "";
                 document.getElementById('newEmail').value = "";
                 document.getElementById('newPassword').value = "";
+                document.getElementById('newRole').value = "false"; 
+                
                 ambilDataPtero();
             })
             .catch(error => {
@@ -201,7 +224,6 @@
             });
         }
 
-        // Jalankan fungsi nampilin data saat halaman pertama kali dibuka
         ambilDataPtero();
     </script>
 </body>
