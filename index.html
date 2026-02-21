@@ -3,52 +3,96 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Panel</title>
+    <title>Dashboard Panel Center</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
-        body { font-family: Arial, sans-serif; padding: 20px; background-color: #f4f7f6;}
-        .box { border: 1px solid #ccc; padding: 15px; margin-bottom: 20px; border-radius: 8px; background: #fff; box-shadow: 0 4px 6px rgba(0,0,0,0.1);}
-        a { display: block; margin: 10px 0; padding: 12px; background: #007bff; color: white; text-decoration: none; border-radius: 5px; text-align: center; font-weight: bold; }
-        a:hover { background: #0056b3; }
-        .btn-logout { background: #dc3545; }
-        .btn-logout:hover { background: #c82333; }
-
-        /* CSS Tambahan buat Statistik Dashboard */
-        .stats-container { display: flex; gap: 15px; margin-bottom: 25px; flex-wrap: wrap; }
-        .stat-box { background: #fff; border: 1px solid #ddd; padding: 20px; border-radius: 8px; flex: 1; min-width: 100px; text-align: center; box-shadow: 2px 2px 10px rgba(0,0,0,0.05); }
-        .stat-box h3 { margin: 0; font-size: 28px; color: #333; }
-        .stat-box p { margin: 5px 0 0; color: #666; font-size: 14px; font-weight: bold; }
-        .box-total { border-bottom: 5px solid #007bff; }
-        .box-aktif { border-bottom: 5px solid #28a745; }
-        .box-suspend { border-bottom: 5px solid #dc3545; }
+        :root { 
+            --bg-color: #0f172a; 
+            --card-bg: #1e293b; 
+            --primary: #3b82f6; 
+            --success: #10b981; 
+            --danger: #ef4444; 
+            --warning: #f59e0b; 
+            --text-main: #f8fafc; 
+            --text-sub: #94a3b8; 
+        }
+        body { 
+            font-family: 'Inter', sans-serif; 
+            padding: 20px; 
+            background-color: var(--bg-color); 
+            color: var(--text-main); 
+            margin: 0; 
+        }
+        h2 { font-weight: 700; margin-bottom: 5px; color: var(--text-main); }
+        .sub-title { color: var(--text-sub); margin-bottom: 25px; font-size: 14px; }
+        
+        /* Grid disesuaikan jadi 2 kotak biar proporsional dan elegan */
+        .stats-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; margin-bottom: 25px; }
+        
+        .stat-box { 
+            background: var(--card-bg); 
+            padding: 25px 20px; 
+            border-radius: 16px; 
+            text-align: center; 
+            border: 1px solid rgba(255,255,255,0.05); 
+        }
+        .stat-box h3 { margin: 0; font-size: 38px; font-weight: 700; color: var(--text-main); }
+        .stat-box p { margin: 8px 0 0; color: var(--text-sub); font-size: 12px; text-transform: uppercase; letter-spacing: 1px; font-weight: 600;}
+        
+        .border-total { border-bottom: 4px solid var(--primary); }
+        .border-users { border-bottom: 4px solid var(--success); }
+        
+        .box { 
+            background: var(--card-bg); 
+            padding: 20px; 
+            border-radius: 20px; 
+            border: 1px solid rgba(255,255,255,0.05); 
+        }
+        
+        a { 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            gap: 10px; 
+            margin-bottom: 12px; 
+            padding: 14px; 
+            background: rgba(255,255,255,0.05); 
+            color: #fff; 
+            text-decoration: none; 
+            border-radius: 12px; 
+            font-weight: 600; 
+            transition: 0.2s; 
+            border: 1px solid rgba(255,255,255,0.1); 
+        }
+        a:hover { background: var(--primary); transform: scale(1.02); }
+        
+        #menuKelolaPanel { background: var(--warning); color: #000; border: none; }
+        #menuKelolaPanel:hover { background: #d97706; color: #fff; }
+        
+        .btn-logout { background: rgba(239, 68, 68, 0.1); color: var(--danger); border: 1px solid var(--danger); margin-top: 20px; }
+        .btn-logout:hover { background: var(--danger); color: white; }
     </style>
 </head>
 <body>
-    <h2>Selamat Datang, <span id="namaUser">Juragan</span>! 👋</h2>
-    <p>Ini adalah halaman control panel utama.</p>
+    <h2>Selamat Datang, <span id="namaUser" style="color: var(--primary);">Juragan</span>! 👋</h2>
+    <p class="sub-title">Control Panel Utama • Fast Mode</p>
     
     <div class="stats-container">
-        <div class="stat-box box-total">
+        <div class="stat-box border-total">
             <h3 id="countTotal">⏳</h3>
-            <p>Total Server</p>
+            <p>Total Server Ptero</p>
         </div>
-        <div class="stat-box box-aktif">
-            <h3 id="countActive">⏳</h3>
-            <p>Server Aktif</p>
-        </div>
-        <div class="stat-box box-suspend">
-            <h3 id="countSuspended">⏳</h3>
-            <p>Suspended</p>
+        <div class="stat-box border-users">
+            <h3 id="countActiveUsers">⏳</h3>
+            <p>User Panel Online</p>
         </div>
     </div>
 
     <div class="box">
-        <h3>🚀 Menu Navigasi</h3>
-        
-        <a href="manage_panel_users.html" id="menuKelolaPanel" style="background: #ffc107; color: #000;">👤 Kelola Akun Panel (Reseller)</a>
-        
+        <a href="manage_panel_users.html" id="menuKelolaPanel">👤 Kelola Akun Panel (Reseller)</a>
         <a href="manage_ptero_users.html">👥 Kelola User Pterodactyl</a>
         <a href="manage_ptero_servers.html">🖥️ Kelola Server Pterodactyl</a>
-        <a href="#" class="btn-logout" onclick="logout()">🚪 Logout</a>
+        <a href="#" class="btn-logout" onclick="logout()">🚪 Keluar dari Sesi</a>
     </div>
 
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
@@ -56,107 +100,84 @@
 
     <script>
         // ==========================================
-        // 1. AMBIL DATA MEMORI BROWSER DULU
+        // 1. SETUP FIREBASE & KEAMANAN DASHBOARD
         // ==========================================
-        let currentUserId = localStorage.getItem('user_id');
-        let userRole = localStorage.getItem('role');
-        // Ambil nama (kalau nanti kamu tambahin di login.html)
-        let username = localStorage.getItem('username'); 
-
-        // Kalau nggak ada ID di browser, langsung tendang ke login
-        if (!currentUserId) {
-            window.location.replace("login.html");
-        }
-
-        // ==========================================
-        // 2. SATPAM REAL-TIME FIREBASE (AUTO-KICK)
-        // ==========================================
-        const firebaseConfig = {
-            databaseURL: "https://cobaaja-ac5d0-default-rtdb.firebaseio.com" 
-        };
-        
-        // Cek biar Firebase nggak jalan dobel
-        if (!firebase.apps.length) {
-            firebase.initializeApp(firebaseConfig);
-        }
+        const firebaseConfig = { databaseURL: "https://cobaaja-ac5d0-default-rtdb.firebaseio.com" };
+        if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
+        const currentUserId = localStorage.getItem('user_id');
 
-        if (currentUserId) {
-            // Pantau terus data user ini di database secara REAL-TIME
-            database.ref('users/' + currentUserId).on('value', (snapshot) => {
-                if (!snapshot.exists()) {
-                    // BAM! 💥 Data udah dihapus sama Owner
-                    alert("🚨 SESI BERAKHIR!\nAkun kamu telah dihapus atau dinonaktifkan oleh Pemilik Panel.");
-                    localStorage.clear(); // Bersihkan sisa-sisa login
-                    window.location.replace("login.html"); // Tendang ke luar
+        if (!currentUserId) window.location.replace("login.html");
+        
+        if (localStorage.getItem('username')) document.getElementById('namaUser').innerText = localStorage.getItem('username');
+        if (localStorage.getItem('role') === 'reseller') document.getElementById('menuKelolaPanel').style.display = 'none';
+
+        // ==========================================
+        // 2. SISTEM KEHADIRAN & KEAMANAN REAL-TIME (PRESENCE)
+        // ==========================================
+        const userRef = database.ref('users/' + currentUserId);
+        const connectedRef = database.ref('.info/connected');
+
+        // Deteksi kalau user konek ke web
+        connectedRef.on('value', (snap) => {
+            if (snap.val() === true) {
+                // Kalau tiba-tiba browser di-close/internet mati, otomatis ubah isOnline jadi false
+                userRef.child('isOnline').onDisconnect().set(false);
+                // Set isOnline jadi true saat ini
+                userRef.child('isOnline').set(true);
+            }
+        });
+
+        // Satpam Penendang (Auto-kick kalau akun dihapus)
+        userRef.on('value', (s) => { 
+            if (!s.exists()) { 
+                localStorage.clear(); 
+                window.location.replace("login.html"); 
+            }
+        });
+
+        // Menghitung berapa User Panel yang sedang Online
+        database.ref('users').on('value', (snapshot) => {
+            let onlineCount = 0;
+            let users = snapshot.val();
+            if (users) {
+                for (let id in users) {
+                    if (users[id].isOnline === true) onlineCount++;
                 }
+            }
+            document.getElementById('countActiveUsers').innerText = onlineCount;
+        });
+
+        // Fungsi Logout yang Rapih
+        function logout() { 
+            // Ubah status jadi offline dulu sebelum keluar
+            userRef.child('isOnline').set(false).then(() => {
+                localStorage.clear(); 
+                window.location.replace("login.html"); 
             });
         }
 
         // ==========================================
-        // 3. PENGATURAN TAMPILAN
-        // ==========================================
-        // Tampilkan nama user di layar kalau ada
-        if (username) {
-            document.getElementById('namaUser').innerText = username;
-        }
-
-        // GEMBOK KEAMANAN: Hilangkan tombol kuning kalau yang login adalah Reseller
-        if (userRole && userRole.toLowerCase() === 'reseller') {
-            document.getElementById('menuKelolaPanel').style.display = 'none';
-        }
-
-        // Fungsi Logout
-        function logout() {
-            localStorage.clear(); 
-            window.location.replace("login.html");
-        }
-
-        // ==========================================
-        // 4. SCRIPT MESIN PENARIK DATA STATISTIK PTERODACTYL
+        // 3. AMBIL TOTAL SERVER PTERODACTYL (INSTAN)
         // ==========================================
         const PTERO_DOMAIN = "zeroix.panel-prvt.web.id"; 
-        const PTERO_API = "ptla_ZM2Ka67FdLj62khENxUm22bKnsHHDBhUCEnDtXfuHhw"; 
+        const PTERO_API_APP = "ptla_ZM2Ka67FdLj62khENxUm22bKnsHHDBhUCEnDtXfuHhw"; 
         const WORKER_URL = "https://restless-truth-9b75.amisterious09.workers.dev"; 
 
-        function loadDashboardStats() {
-            let targetUrl = `${WORKER_URL}/?https://${PTERO_DOMAIN}/api/application/servers`;
-
-            fetch(targetUrl, {
-                method: 'GET',
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${PTERO_API}`
-                }
-            })
-            .then(res => {
-                if (!res.ok) throw new Error("Gagal mengambil data");
-                return res.json();
-            })
-            .then(data => {
-                let servers = data.data;
-                
-                // Rumus Menghitung Server
-                let total = servers.length;
-                let suspended = servers.filter(s => s.attributes.suspended === true).length;
-                let active = total - suspended;
-
-                // Tembak angkanya ke layar HTML
-                document.getElementById('countTotal').innerText = total;
-                document.getElementById('countActive').innerText = active;
-                document.getElementById('countSuspended').innerText = suspended;
-            })
-            .catch(err => {
-                console.error("Gagal load stats:", err);
+        async function loadPteroTotal() {
+            try {
+                const resList = await fetch(`${WORKER_URL}/?https://${PTERO_DOMAIN}/api/application/servers`, {
+                    headers: { 'Authorization': `Bearer ${PTERO_API_APP}`, 'Accept': 'application/json' }
+                });
+                const dataList = await resList.json();
+                document.getElementById('countTotal').innerText = dataList.data.length;
+            } catch (err) { 
+                console.error(err); 
                 document.getElementById('countTotal').innerText = "Err";
-                document.getElementById('countActive').innerText = "Err";
-                document.getElementById('countSuspended').innerText = "Err";
-            });
+            }
         }
 
-        // Jalankan fungsinya saat halaman dibuka
-        loadDashboardStats();
+        loadPteroTotal();
     </script>
 </body>
 </html>
