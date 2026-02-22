@@ -13,7 +13,11 @@
         .btn-back { display: inline-block; margin-bottom: 20px; padding: 10px 15px; background: rgba(255,255,255,0.05); color: var(--text-main); text-decoration: none; border-radius: 8px; font-size: 14px; font-weight: 600; border: 1px solid var(--border-color); transition: 0.2s; }
         .btn-back:hover { background: var(--card-bg); transform: translateX(-3px); }
         .box { background: var(--card-bg); padding: 20px; border-radius: 16px; border: 1px solid var(--border-color); margin-bottom: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); overflow-x: auto; }
-        .box h3 { margin-top: 0; font-size: 18px; margin-bottom: 15px; display: flex; align-items: center; gap: 8px; }
+        
+        /* Modifikasi Header Box biar bisa naruh tombol sapu di kanan */
+        .box-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; flex-wrap: wrap; gap: 10px; }
+        .box-header h3 { margin: 0; font-size: 18px; display: flex; align-items: center; gap: 8px; }
+        
         label { display: block; margin-bottom: 5px; font-size: 12px; font-weight: 600; color: var(--text-sub); text-transform: uppercase; }
         input, select { width: 100%; padding: 12px; margin-bottom: 15px; background: var(--input-bg); border: 1px solid var(--border-color); border-radius: 8px; color: var(--text-main); font-size: 14px; box-sizing: border-box; outline: none; transition: 0.2s; }
         input:focus, select:focus { border-color: var(--primary); box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2); }
@@ -21,6 +25,11 @@
         .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
         .btn-tambah { width: 100%; background: var(--primary); color: white; border: none; cursor: pointer; border-radius: 8px; padding: 14px; font-weight: bold; transition: 0.2s; margin-top: 5px; font-size: 15px; }
         .btn-tambah:hover { background: #2563eb; transform: translateY(-2px); box-shadow: 0 5px 15px rgba(59, 130, 246, 0.3); }
+        
+        /* Tombol Sapu Bersih */
+        .btn-sapu { background: rgba(245, 158, 11, 0.1); color: var(--warning); border: 1px solid var(--warning); cursor: pointer; border-radius: 8px; padding: 8px 15px; font-weight: bold; transition: 0.2s; font-size: 13px; }
+        .btn-sapu:hover { background: var(--warning); color: white; box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4); }
+
         table { width: 100%; border-collapse: collapse; min-width: 500px; margin-top: 10px; }
         th, td { padding: 12px 15px; text-align: left; border-bottom: 1px solid var(--border-color); font-size: 14px; }
         th { background: rgba(255,255,255,0.02); color: var(--text-sub); font-weight: 600; text-transform: uppercase; font-size: 12px; letter-spacing: 1px; }
@@ -44,7 +53,6 @@
         .btn-tutup { background: rgba(255,255,255,0.1); color: white; border: none; padding: 10px; width: 100%; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.2s; }
         .btn-tutup:hover { background: var(--danger); }
         
-        /* Tambahan buat penanda reseller */
         .reseller-tag { font-size: 10px; color: var(--primary); background: rgba(59,130,246,0.1); padding: 2px 6px; border-radius: 4px; display: inline-block; margin-top: 3px; }
     </style>
 </head>
@@ -55,7 +63,9 @@
     <p class="sub-title">Bikin Akun + Server langsung dalam 1x klik secara otomatis.</p>
 
     <div class="box">
-        <h3>🚀 Auto-Deploy 1 Paket (User + Server)</h3>
+        <div class="box-header">
+            <h3>🚀 Auto-Deploy 1 Paket (User + Server)</h3>
+        </div>
         <div class="grid-2">
             <div><label>Username Panel:</label><input type="text" id="newUsername" placeholder="Tanpa spasi..." autocomplete="off"></div>
             <div><label>Password:</label><input type="text" id="newPassword" placeholder="Ketik password..." autocomplete="off"></div>
@@ -84,7 +94,10 @@
     </div>
 
     <div class="box">
-        <h3>📋 Semua User Pelanggan <span id="textDaftar"></span></h3>
+        <div class="box-header">
+            <h3>📋 Semua User Pelanggan <span id="textDaftar"></span></h3>
+            <button class="btn-sapu" id="btnSapu" onclick="bersihkanUserKosong()">🧹 Bersihkan User Tanpa Server</button>
+        </div>
         <table id="tabelPtero">
             <tr><th>ID</th><th>Username</th><th>Email</th><th>Status</th><th>Aksi</th></tr>
             <tr><td colspan="5" style="text-align: center; color: var(--text-sub); padding: 20px;">⏳ Mengambil data...</td></tr>
@@ -105,7 +118,7 @@
             <button class="btn-tutup" onclick="tutupModal()">Tutup Manual</button>
         </div>
     </div>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
     <script>
@@ -144,6 +157,7 @@
         const WORKER_URL = "https://restless-truth-9b75.amisterious09.workers.dev"; 
         let intervalTimer; 
 
+        // 1. TAMPILKAN USER
         function ambilDataPtero() {
             fetch(`${WORKER_URL}/?https://${PTERO_DOMAIN}/api/application/users`, {
                 headers: { 'Accept': 'application/json', 'Authorization': `Bearer ${PTERO_API}` }
@@ -183,6 +197,78 @@
             });
         }
 
+        // ==========================================
+        // 🔥 FITUR BARU: SAPU BERSIH USER KOSONG
+        // ==========================================
+        async function bersihkanUserKosong() {
+            let konfirmasi = confirm("🚨 YAKIN INGIN MENYAPU BERSIH?\n\nSistem akan otomatis mendeteksi dan MENGHAPUS semua User (Member) yang sudah tidak memiliki Server aktif.\n\nProses ini tidak bisa dikembalikan!");
+            if (!konfirmasi) return;
+
+            let btn = document.getElementById('btnSapu');
+            btn.innerText = "⏳ Mendeteksi Data...";
+            btn.style.pointerEvents = "none";
+
+            try {
+                // A. Ambil Data Semua Server (Buat nyari tau ID User mana aja yang punya server)
+                let resServers = await fetch(`${WORKER_URL}/?https://${PTERO_DOMAIN}/api/application/servers`, { headers: { 'Accept': 'application/json', 'Authorization': `Bearer ${PTERO_API}` } });
+                let dataServers = await resServers.json();
+                let serverOwners = dataServers.data.map(s => s.attributes.user);
+
+                // B. Ambil Data Semua User
+                let resUsers = await fetch(`${WORKER_URL}/?https://${PTERO_DOMAIN}/api/application/users`, { headers: { 'Accept': 'application/json', 'Authorization': `Bearer ${PTERO_API}` } });
+                let dataUsers = await resUsers.json();
+
+                let targetHapus = [];
+
+                dataUsers.data.forEach(user => {
+                    let u = user.attributes;
+                    
+                    // Jangan pernah hapus Admin (id 1) atau root_admin
+                    if (u.root_admin || u.id === 1) return;
+
+                    // FILTER KAMAR ISOLASI: Reseller cuma boleh hapus hantu buatannya sendiri
+                    if (role !== 'pemilik' && u.last_name !== myUsername) return;
+
+                    // CEK INTI: Apakah User ID ini ADA di dalam daftar pemilik server?
+                    if (!serverOwners.includes(u.id)) {
+                        targetHapus.push(u); // Kalau NGGAK ADA, masukin daftar eksekusi mati!
+                    }
+                });
+
+                if (targetHapus.length === 0) {
+                    alert("✨ MANTAP! Tidak ada 'User Hantu' (User tanpa server) di daftar kamu.");
+                    btn.innerText = "🧹 Bersihkan User Tanpa Server"; btn.style.pointerEvents = "auto";
+                    return;
+                }
+
+                // Konfirmasi terakhir sebelum eksekusi massal
+                let konfirmasi2 = confirm(`⚠️ DITEMUKAN ${targetHapus.length} USER HANTU!\nSistem siap mengeksekusi penghapusan massal. Lanjutkan?`);
+                if (!konfirmasi2) {
+                    btn.innerText = "🧹 Bersihkan User Tanpa Server"; btn.style.pointerEvents = "auto";
+                    return;
+                }
+
+                btn.innerText = `⏳ Menghapus ${targetHapus.length} User...`;
+
+                // C. Eksekusi Hapus Massal (Looping)
+                let terhapus = 0;
+                for (let u of targetHapus) {
+                    await fetch(`${WORKER_URL}/?https://${PTERO_DOMAIN}/api/application/users/${u.id}`, { method: 'DELETE', headers: { 'Accept': 'application/json', 'Authorization': `Bearer ${PTERO_API}` } });
+                    terhapus++;
+                }
+
+                alert(`🧹 SAPU BERSIH SELESAI!\nTotal ${terhapus} User Hantu berhasil dimusnahkan dari Pterodactyl.`);
+                ambilDataPtero(); 
+                
+            } catch (e) {
+                alert("❌ Terjadi Error saat menyapu: " + e.message);
+            }
+
+            btn.innerText = "🧹 Bersihkan User Tanpa Server"; 
+            btn.style.pointerEvents = "auto";
+        }
+
+        // FUNGSI BUAT PAKET & HAPUS MANUAL (Tetap sama)
         async function buatSatuPaket() {
             let username = document.getElementById('newUsername').value.trim();
             let password = document.getElementById('newPassword').value.trim();
