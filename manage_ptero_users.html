@@ -25,7 +25,6 @@
         .btn-tambah { width: 100%; background: var(--primary); color: white; border: none; cursor: pointer; border-radius: 8px; padding: 14px; font-weight: bold; transition: 0.2s; margin-top: 5px; font-size: 15px; }
         .btn-tambah:hover { background: #2563eb; transform: translateY(-2px); box-shadow: 0 5px 15px rgba(59, 130, 246, 0.3); }
         
-        /* Tombol Sapu Bersih */
         .btn-sapu { background: rgba(245, 158, 11, 0.1); color: var(--warning); border: 1px solid var(--warning); cursor: pointer; border-radius: 8px; padding: 8px 15px; font-weight: bold; transition: 0.2s; font-size: 13px; }
         .btn-sapu:hover { background: var(--warning); color: white; box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4); }
 
@@ -39,19 +38,13 @@
         .badge-admin { background: rgba(245, 158, 11, 0.2); color: var(--warning); border: 1px solid var(--warning); }
         .badge-user { background: rgba(59, 130, 246, 0.2); color: var(--primary); border: 1px solid var(--primary); }
 
-        /* MODAL POP-UP */
+        /* MODAL POP-UP BARU */
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(5px); z-index: 9999; align-items: center; justify-content: center; padding: 20px; box-sizing: border-box; }
-        .modal-box { background: var(--card-bg); border: 1px solid var(--primary); box-shadow: 0 10px 30px rgba(59, 130, 246, 0.3); border-radius: 16px; padding: 25px; width: 100%; max-width: 350px; text-align: center; animation: popIn 0.3s ease-out forwards; }
+        .modal-box { background: var(--card-bg); border: 1px solid var(--primary); box-shadow: 0 10px 30px rgba(59, 130, 246, 0.3); border-radius: 16px; padding: 25px; width: 100%; text-align: center; animation: popIn 0.3s ease-out forwards; }
         @keyframes popIn { 0% { transform: scale(0.8); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
-        .modal-box h3 { margin-top: 0; color: var(--success); font-size: 22px; margin-bottom: 5px; }
-        .modal-box p { color: var(--text-sub); font-size: 13px; margin-bottom: 15px; }
-        .info-detail { background: rgba(0,0,0,0.3); border: 1px dashed var(--text-sub); border-radius: 10px; padding: 15px; text-align: left; margin-bottom: 20px; }
-        .info-detail p { margin: 5px 0; color: var(--text-main); font-size: 14px; font-family: monospace; }
-        .info-detail span { color: var(--primary); font-weight: bold; }
-        .timer-text { font-size: 14px !important; color: var(--danger) !important; font-weight: bold; margin-bottom: 15px !important; }
-        .btn-tutup { background: rgba(255,255,255,0.1); color: white; border: none; padding: 10px; width: 100%; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.2s; }
-        .btn-tutup:hover { background: var(--danger); }
         
+        .btn-tutup { background: rgba(255,255,255,0.1); color: white; border: none; padding: 10px; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.2s; }
+        .btn-tutup:hover { background: var(--danger); border-color: var(--danger); }
         .reseller-tag { font-size: 10px; color: var(--primary); background: rgba(59,130,246,0.1); padding: 2px 6px; border-radius: 4px; display: inline-block; margin-top: 3px; }
     </style>
 </head>
@@ -104,20 +97,33 @@
     </div>
 
     <div id="modalScreenshot" class="modal-overlay">
-        <div class="modal-box">
-            <h3>✅ 1 Paket Berhasil!</h3>
-            <p>Silakan <b>Screenshot</b> detail ini untuk dikirim ke pembeli:</p>
-            <div class="info-detail">
-                <p>Username : <span id="resUser"></span></p>
-                <p>Password : <span id="resPass"></span></p>
-                <p>Email &nbsp;&nbsp;&nbsp;: <span id="resEmail" style="color:var(--text-sub); font-weight:normal;"></span></p>
-                <p>Server &nbsp;&nbsp;&nbsp;: <span id="resServer" style="color:var(--warning);"></span></p>
+        <div class="modal-box" style="max-width: 380px; border-top: 5px solid var(--success);">
+            <h3 style="color: var(--success); font-size: 20px; margin-bottom: 5px;">✅ Pembuatan Berhasil!</h3>
+            <p style="margin-bottom: 20px; color: var(--text-sub); font-size: 13px;">Silakan salin data ini untuk dikirim ke pembeli:</p>
+            
+            <div class="info-detail" style="background: rgba(15, 23, 42, 0.8); border: 1px solid var(--border-color); border-radius: 12px; padding: 20px; text-align: left; margin-bottom: 20px;">
+                <div style="margin-bottom: 12px; border-bottom: 1px dashed var(--border-color); padding-bottom: 12px;">
+                    <span style="font-size: 11px; color: var(--text-sub); text-transform: uppercase; font-weight: bold;">Detail Akun</span>
+                    <p style="margin: 8px 0 5px 0; font-size: 14px;">👤 User: <span id="resUser" style="color: white; font-weight: bold;"></span></p>
+                    <p style="margin: 0; font-size: 14px;">🔑 Pass: <span id="resPass" style="color: var(--warning); font-weight: bold;"></span></p>
+                </div>
+                <div style="margin-bottom: 12px; border-bottom: 1px dashed var(--border-color); padding-bottom: 12px;">
+                    <span style="font-size: 11px; color: var(--text-sub); text-transform: uppercase; font-weight: bold;">Akses Panel</span>
+                    <p style="margin: 8px 0 0 0; font-size: 13px;">🌐 <a id="resLink" href="#" target="_blank" style="color: var(--primary); text-decoration: none; font-weight: bold; word-break: break-all;"></a></p>
+                </div>
+                <div>
+                    <span style="font-size: 11px; color: var(--text-sub); text-transform: uppercase; font-weight: bold;">Spesifikasi Server</span>
+                    <p style="margin: 8px 0 0 0; font-size: 14px;">🖥️ Server: <span id="resServer" style="color: var(--success); font-weight: bold;"></span></p>
+                </div>
             </div>
-            <p class="timer-text">Pop-up menghilang dalam <span id="timerCountdown">10</span> detik...</p>
-            <button class="btn-tutup" onclick="tutupModal()">Tutup Manual</button>
+
+            <div style="display: flex; gap: 10px;">
+                <button class="btn-tambah" style="margin: 0; flex: 1.5; font-size: 14px; display: flex; align-items: center; justify-content: center; gap: 5px;" onclick="salinDataBuyer()" id="btnSalin">📋 Salin Teks</button>
+                <button class="btn-tutup" style="margin: 0; flex: 1; font-size: 14px; background: rgba(255,255,255,0.05); border: 1px solid var(--border-color);" onclick="tutupModal()">Tutup</button>
+            </div>
         </div>
     </div>
-        <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
     <script>
@@ -157,7 +163,6 @@
         const PTERO_DOMAIN = "zeroix.panel-prvt.web.id"; 
         const PTERO_API = "ptla_ZM2Ka67FdLj62khENxUm22bKnsHHDBhUCEnDtXfuHhw"; 
         const WORKER_URL = "https://restless-truth-9b75.amisterious09.workers.dev"; 
-        let intervalTimer; 
 
         // 1. TAMPILKAN USER
         function ambilDataPtero() {
@@ -199,9 +204,7 @@
             });
         }
 
-        // ==========================================
-        // 🔥 FITUR BARU: SAPU BERSIH USER KOSONG
-        // ==========================================
+        // 2. SAPU BERSIH USER KOSONG
         async function bersihkanUserKosong() {
             let konfirmasi = confirm("🚨 YAKIN INGIN MENYAPU BERSIH?\n\nSistem akan otomatis mendeteksi dan MENGHAPUS semua User (Member) Private yang sudah tidak memiliki Server aktif.\n\nProses ini tidak bisa dikembalikan!");
             if (!konfirmasi) return;
@@ -211,12 +214,10 @@
             btn.style.pointerEvents = "none";
 
             try {
-                // A. Ambil Data Semua Server
                 let resServers = await fetch(`${WORKER_URL}/?https://${PTERO_DOMAIN}/api/application/servers`, { headers: { 'Accept': 'application/json', 'Authorization': `Bearer ${PTERO_API}` } });
                 let dataServers = await resServers.json();
                 let serverOwners = dataServers.data.map(s => s.attributes.user);
 
-                // B. Ambil Data Semua User
                 let resUsers = await fetch(`${WORKER_URL}/?https://${PTERO_DOMAIN}/api/application/users`, { headers: { 'Accept': 'application/json', 'Authorization': `Bearer ${PTERO_API}` } });
                 let dataUsers = await resUsers.json();
 
@@ -224,13 +225,9 @@
 
                 dataUsers.data.forEach(user => {
                     let u = user.attributes;
-                    
                     if (u.root_admin || u.id === 1) return;
                     if (role !== 'pemilik' && u.last_name !== myUsername) return;
-
-                    if (!serverOwners.includes(u.id)) {
-                        targetHapus.push(u); 
-                    }
+                    if (!serverOwners.includes(u.id)) { targetHapus.push(u); }
                 });
 
                 if (targetHapus.length === 0) {
@@ -247,7 +244,6 @@
 
                 btn.innerText = `⏳ Menghapus ${targetHapus.length} User...`;
 
-                // C. Eksekusi Hapus Massal
                 let terhapus = 0;
                 for (let u of targetHapus) {
                     await fetch(`${WORKER_URL}/?https://${PTERO_DOMAIN}/api/application/users/${u.id}`, { method: 'DELETE', headers: { 'Accept': 'application/json', 'Authorization': `Bearer ${PTERO_API}` } });
@@ -265,7 +261,7 @@
             btn.style.pointerEvents = "auto";
         }
 
-        // FUNGSI BUAT PAKET & HAPUS MANUAL (Tetap sama)
+        // 3. BUAT PAKET & HAPUS
         async function buatSatuPaket() {
             let username = document.getElementById('newUsername').value.trim();
             let password = document.getElementById('newPassword').value.trim();
@@ -313,8 +309,11 @@
                 if (!resServer.ok) throw new Error("Akun jadi, TAPI Gagal Deploy Server:\n" + await resServer.text());
 
                 btn.innerText = "💎 Bikin 1 Paket VIP Sekarang"; btn.style.pointerEvents = "auto";
+                
+                // Panggil Modal Pop-up Keren Kita
                 munculkanModal(username, password, email, serverName);
                 
+                // Bersihkan form
                 document.getElementById('newUsername').value = ""; document.getElementById('newPassword').value = "";
                 document.getElementById('newEmail').value = ""; document.getElementById('newServerName').value = "";
                 ambilDataPtero(); 
@@ -350,14 +349,57 @@
             }
         }
 
+        // ==========================================
+        // 🔥 LOGIKA POP-UP STRUK & SALIN TEKS
+        // ==========================================
         function munculkanModal(user, pass, email, serverName) {
-            document.getElementById('resUser').innerText = user; document.getElementById('resPass').innerText = pass;
-            document.getElementById('resEmail').innerText = email; document.getElementById('resServer').innerText = serverName;
+            document.getElementById('resUser').innerText = user; 
+            document.getElementById('resPass').innerText = pass;
+            
+            let panelLink = `https://${PTERO_DOMAIN}`;
+            document.getElementById('resLink').innerText = panelLink;
+            document.getElementById('resLink').href = panelLink;
+            
+            document.getElementById('resServer').innerText = serverName;
+            
             document.getElementById('modalScreenshot').style.display = 'flex';
-            let waktu = 10; document.getElementById('timerCountdown').innerText = waktu;
-            intervalTimer = setInterval(() => { waktu--; document.getElementById('timerCountdown').innerText = waktu; if (waktu <= 0) tutupModal(); }, 1000);
+            
+            // Reset tombol salin
+            let btnSalin = document.getElementById('btnSalin');
+            btnSalin.innerHTML = "📋 Salin Teks";
+            btnSalin.style.background = "var(--primary)";
         }
-        function tutupModal() { clearInterval(intervalTimer); document.getElementById('modalScreenshot').style.display = 'none'; }
+
+        function tutupModal() { 
+            document.getElementById('modalScreenshot').style.display = 'none'; 
+        }
+
+        function salinDataBuyer() {
+            let user = document.getElementById('resUser').innerText;
+            let pass = document.getElementById('resPass').innerText;
+            let link = document.getElementById('resLink').innerText;
+            let server = document.getElementById('resServer').innerText;
+
+            let teksSalin = `✅ *PEMBUATAN AKUN BERHASIL!*\n\n` +
+                            `👤 *Username:* ${user}\n` +
+                            `🔑 *Password:* ${pass}\n` +
+                            `🌐 *Link Login:* ${link}\n` +
+                            `🖥️ *Server Bot:* ${server}\n\n` +
+                            `_Terima kasih telah order! Harap simpan data ini baik-baik._ ✨`;
+
+            navigator.clipboard.writeText(teksSalin).then(() => {
+                let btn = document.getElementById('btnSalin');
+                btn.innerHTML = "✅ Berhasil Disalin!";
+                btn.style.background = "var(--success)";
+                
+                setTimeout(() => {
+                    btn.innerHTML = "📋 Salin Teks";
+                    btn.style.background = "var(--primary)";
+                }, 2000);
+            }).catch(err => {
+                alert("❌ Gagal menyalin otomatis. Silakan screenshot manual.");
+            });
+        }
 
         ambilDataPtero();
     </script>

@@ -118,13 +118,15 @@
             <button class="btn-tutup" onclick="tutupModal()">Tutup Manual</button>
         </div>
     </div>
-        <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+            <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
     <script>
         const currentUserId = localStorage.getItem('user_id');
         const role = localStorage.getItem('role') || '';
         const myUsername = localStorage.getItem('username') || 'Unknown'; 
+        
+        // 🛡️ ROLE KHUSUS DIVISI PUBLIC
         const allowedRoles = ['pemilik', 'reseller_public', 'partner_public'];
 
         if (!currentUserId || !allowedRoles.includes(role)) {
@@ -132,11 +134,13 @@
             window.location.replace("index.html");
         }
         
-        if (role !== 'pemilik') {
+        // 🔥 PERBAIKAN: BUKA AKSES DROPDOWN ADMIN UNTUK PARTNER
+        if (role === 'pemilik' || role === 'partner_public') {
+            document.getElementById('roleContainer').style.display = 'block';
+            document.getElementById('textDaftar').innerText = role === 'pemilik' ? "(Semua Reseller)" : "(Tim Kamu)";
+        } else {
             document.getElementById('roleContainer').style.display = 'none';
             document.getElementById('textDaftar').innerText = "Buatanmu";
-        } else {
-            document.getElementById('textDaftar').innerText = "(Semua Reseller)";
         }
 
         const firebaseConfig = { databaseURL: "https://cobaaja-ac5d0-default-rtdb.firebaseio.com" };
@@ -152,10 +156,10 @@
             }
         });
 
+        // 🔑 API KHUSUS PUBLIC
         const PTERO_DOMAIN = "pteropublik.bypstar7.online"; 
         const PTERO_API = "ptla_jfNBOxsfLDu0Ui9YUZMDANXfuLHglNqSJ3V55gHTKWb"; 
         const WORKER_URL = "https://restless-truth-9b75.amisterious09.workers.dev"; 
-        let intervalTimer; 
 
         // 1. TAMPILKAN USER
         function ambilDataPtero() {
@@ -169,7 +173,8 @@
                     let u = user.attributes;
                     
                     if (role !== 'pemilik') {
-                        if (u.root_admin === true) return; 
+                        // 🔥 PERBAIKAN: Baris blokir Admin udah Mini hapus!
+                        // Jadi Partner sekarang bebas ngelihat akun Admin yang mereka buat sendiri
                         if (u.last_name !== myUsername) return; 
                     }
 
@@ -189,7 +194,7 @@
                 });
 
                 if (countDisplayed === 0) {
-                    tabel += `<tr><td colspan="5" style="text-align: center; color: var(--warning); padding: 20px;">Kamu belum membuat satupun akun pelanggan.</td></tr>`;
+                    tabel += `<tr><td colspan="5" style="text-align: center; color: var(--warning); padding: 20px;">Kamu belum membuat satupun akun pelanggan Public.</td></tr>`;
                 }
                 document.getElementById('tabelPtero').innerHTML = tabel;
             }).catch(e => {
@@ -197,11 +202,9 @@
             });
         }
 
-        // ==========================================
-        // 🔥 FITUR BARU: SAPU BERSIH USER KOSONG
-        // ==========================================
+        // 2. SAPU BERSIH USER KOSONG
         async function bersihkanUserKosong() {
-            let konfirmasi = confirm("🚨 YAKIN INGIN MENYAPU BERSIH?\n\nSistem akan otomatis mendeteksi dan MENGHAPUS semua User (Member) yang sudah tidak memiliki Server aktif.\n\nProses ini tidak bisa dikembalikan!");
+            let konfirmasi = confirm("🚨 YAKIN INGIN MENYAPU BERSIH?\n\nSistem akan otomatis mendeteksi dan MENGHAPUS semua User (Member) Public yang sudah tidak memiliki Server aktif.\n\nProses ini tidak bisa dikembalikan!");
             if (!konfirmasi) return;
 
             let btn = document.getElementById('btnSapu');
@@ -209,12 +212,10 @@
             btn.style.pointerEvents = "none";
 
             try {
-                // A. Ambil Data Semua Server (Buat nyari tau ID User mana aja yang punya server)
                 let resServers = await fetch(`${WORKER_URL}/?https://${PTERO_DOMAIN}/api/application/servers`, { headers: { 'Accept': 'application/json', 'Authorization': `Bearer ${PTERO_API}` } });
                 let dataServers = await resServers.json();
                 let serverOwners = dataServers.data.map(s => s.attributes.user);
 
-                // B. Ambil Data Semua User
                 let resUsers = await fetch(`${WORKER_URL}/?https://${PTERO_DOMAIN}/api/application/users`, { headers: { 'Accept': 'application/json', 'Authorization': `Bearer ${PTERO_API}` } });
                 let dataUsers = await resUsers.json();
 
@@ -222,26 +223,17 @@
 
                 dataUsers.data.forEach(user => {
                     let u = user.attributes;
-                    
-                    // Jangan pernah hapus Admin (id 1) atau root_admin
                     if (u.root_admin || u.id === 1) return;
-
-                    // FILTER KAMAR ISOLASI: Reseller cuma boleh hapus hantu buatannya sendiri
                     if (role !== 'pemilik' && u.last_name !== myUsername) return;
-
-                    // CEK INTI: Apakah User ID ini ADA di dalam daftar pemilik server?
-                    if (!serverOwners.includes(u.id)) {
-                        targetHapus.push(u); // Kalau NGGAK ADA, masukin daftar eksekusi mati!
-                    }
+                    if (!serverOwners.includes(u.id)) { targetHapus.push(u); }
                 });
 
                 if (targetHapus.length === 0) {
-                    alert("✨ MANTAP! Tidak ada 'User Hantu' (User tanpa server) di daftar kamu.");
+                    alert("✨ MANTAP! Tidak ada 'User Hantu' (User tanpa server) di daftar Public kamu.");
                     btn.innerText = "🧹 Bersihkan User Tanpa Server"; btn.style.pointerEvents = "auto";
                     return;
                 }
 
-                // Konfirmasi terakhir sebelum eksekusi massal
                 let konfirmasi2 = confirm(`⚠️ DITEMUKAN ${targetHapus.length} USER HANTU!\nSistem siap mengeksekusi penghapusan massal. Lanjutkan?`);
                 if (!konfirmasi2) {
                     btn.innerText = "🧹 Bersihkan User Tanpa Server"; btn.style.pointerEvents = "auto";
@@ -250,14 +242,13 @@
 
                 btn.innerText = `⏳ Menghapus ${targetHapus.length} User...`;
 
-                // C. Eksekusi Hapus Massal (Looping)
                 let terhapus = 0;
                 for (let u of targetHapus) {
                     await fetch(`${WORKER_URL}/?https://${PTERO_DOMAIN}/api/application/users/${u.id}`, { method: 'DELETE', headers: { 'Accept': 'application/json', 'Authorization': `Bearer ${PTERO_API}` } });
                     terhapus++;
                 }
 
-                alert(`🧹 SAPU BERSIH SELESAI!\nTotal ${terhapus} User Hantu berhasil dimusnahkan dari Pterodactyl.`);
+                alert(`🧹 SAPU BERSIH SELESAI!\nTotal ${terhapus} User Hantu berhasil dimusnahkan dari Pterodactyl Public.`);
                 ambilDataPtero(); 
                 
             } catch (e) {
@@ -268,7 +259,7 @@
             btn.style.pointerEvents = "auto";
         }
 
-        // FUNGSI BUAT PAKET & HAPUS MANUAL (Tetap sama)
+        // 3. BUAT PAKET & HAPUS
         async function buatSatuPaket() {
             let username = document.getElementById('newUsername').value.trim();
             let password = document.getElementById('newPassword').value.trim();
@@ -316,8 +307,11 @@
                 if (!resServer.ok) throw new Error("Akun jadi, TAPI Gagal Deploy Server:\n" + await resServer.text());
 
                 btn.innerText = "🌍 Bikin 1 Paket Sekarang"; btn.style.pointerEvents = "auto";
+                
+                // Panggil Modal Pop-up Keren Kita
                 munculkanModal(username, password, email, serverName);
                 
+                // Bersihkan form
                 document.getElementById('newUsername').value = ""; document.getElementById('newPassword').value = "";
                 document.getElementById('newEmail').value = ""; document.getElementById('newServerName').value = "";
                 ambilDataPtero(); 
@@ -353,14 +347,57 @@
             }
         }
 
+        // ==========================================
+        // 🔥 LOGIKA POP-UP STRUK & SALIN TEKS
+        // ==========================================
         function munculkanModal(user, pass, email, serverName) {
-            document.getElementById('resUser').innerText = user; document.getElementById('resPass').innerText = pass;
-            document.getElementById('resEmail').innerText = email; document.getElementById('resServer').innerText = serverName;
+            document.getElementById('resUser').innerText = user; 
+            document.getElementById('resPass').innerText = pass;
+            
+            let panelLink = `https://${PTERO_DOMAIN}`;
+            document.getElementById('resLink').innerText = panelLink;
+            document.getElementById('resLink').href = panelLink;
+            
+            document.getElementById('resServer').innerText = serverName;
+            
             document.getElementById('modalScreenshot').style.display = 'flex';
-            let waktu = 10; document.getElementById('timerCountdown').innerText = waktu;
-            intervalTimer = setInterval(() => { waktu--; document.getElementById('timerCountdown').innerText = waktu; if (waktu <= 0) tutupModal(); }, 1000);
+            
+            // Reset tombol salin
+            let btnSalin = document.getElementById('btnSalin');
+            btnSalin.innerHTML = "📋 Salin Teks";
+            btnSalin.style.background = "var(--primary)";
         }
-        function tutupModal() { clearInterval(intervalTimer); document.getElementById('modalScreenshot').style.display = 'none'; }
+
+        function tutupModal() { 
+            document.getElementById('modalScreenshot').style.display = 'none'; 
+        }
+
+        function salinDataBuyer() {
+            let user = document.getElementById('resUser').innerText;
+            let pass = document.getElementById('resPass').innerText;
+            let link = document.getElementById('resLink').innerText;
+            let server = document.getElementById('resServer').innerText;
+
+            let teksSalin = `✅ *PEMBUATAN AKUN BERHASIL!*\n\n` +
+                            `👤 *Username:* ${user}\n` +
+                            `🔑 *Password:* ${pass}\n` +
+                            `🌐 *Link Login:* ${link}\n` +
+                            `🖥️ *Server Bot:* ${server}\n\n` +
+                            `_Terima kasih telah order! Harap simpan data ini baik-baik._ ✨`;
+
+            navigator.clipboard.writeText(teksSalin).then(() => {
+                let btn = document.getElementById('btnSalin');
+                btn.innerHTML = "✅ Berhasil Disalin!";
+                btn.style.background = "var(--success)";
+                
+                setTimeout(() => {
+                    btn.innerHTML = "📋 Salin Teks";
+                    btn.style.background = "var(--primary)";
+                }, 2000);
+            }).catch(err => {
+                alert("❌ Gagal menyalin otomatis. Silakan screenshot manual.");
+            });
+        }
 
         ambilDataPtero();
     </script>
