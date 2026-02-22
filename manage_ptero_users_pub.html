@@ -8,15 +8,14 @@
     <style>
         :root { --bg-color: #0f172a; --card-bg: #1e293b; --primary: #3b82f6; --success: #10b981; --danger: #ef4444; --warning: #f59e0b; --text-main: #f8fafc; --text-sub: #94a3b8; --input-bg: #0f172a; --border-color: rgba(255,255,255,0.1); }
         body { font-family: 'Inter', sans-serif; padding: 20px; background-color: var(--bg-color); color: var(--text-main); margin: 0; }
-        h2 { font-weight: 700; margin-bottom: 5px; color: var(--text-main); }
+        h2 { font-weight: 700; margin-bottom: 5px; color: var(--text-main); border-left: 4px solid var(--primary); padding-left: 10px; }
         .sub-title { color: var(--text-sub); margin-bottom: 25px; font-size: 14px; }
         .btn-back { display: inline-block; margin-bottom: 20px; padding: 10px 15px; background: rgba(255,255,255,0.05); color: var(--text-main); text-decoration: none; border-radius: 8px; font-size: 14px; font-weight: 600; border: 1px solid var(--border-color); transition: 0.2s; }
         .btn-back:hover { background: var(--card-bg); transform: translateX(-3px); }
         .box { background: var(--card-bg); padding: 20px; border-radius: 16px; border: 1px solid var(--border-color); margin-bottom: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); overflow-x: auto; }
         
-        /* Modifikasi Header Box biar bisa naruh tombol sapu di kanan */
         .box-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; flex-wrap: wrap; gap: 10px; }
-        .box-header h3 { margin: 0; font-size: 18px; display: flex; align-items: center; gap: 8px; }
+        .box-header h3 { margin: 0; font-size: 18px; display: flex; align-items: center; gap: 8px; color: var(--text-main); }
         
         label { display: block; margin-bottom: 5px; font-size: 12px; font-weight: 600; color: var(--text-sub); text-transform: uppercase; }
         input, select { width: 100%; padding: 12px; margin-bottom: 15px; background: var(--input-bg); border: 1px solid var(--border-color); border-radius: 8px; color: var(--text-main); font-size: 14px; box-sizing: border-box; outline: none; transition: 0.2s; }
@@ -26,7 +25,6 @@
         .btn-tambah { width: 100%; background: var(--primary); color: white; border: none; cursor: pointer; border-radius: 8px; padding: 14px; font-weight: bold; transition: 0.2s; margin-top: 5px; font-size: 15px; }
         .btn-tambah:hover { background: #2563eb; transform: translateY(-2px); box-shadow: 0 5px 15px rgba(59, 130, 246, 0.3); }
         
-        /* Tombol Sapu Bersih */
         .btn-sapu { background: rgba(245, 158, 11, 0.1); color: var(--warning); border: 1px solid var(--warning); cursor: pointer; border-radius: 8px; padding: 8px 15px; font-weight: bold; transition: 0.2s; font-size: 13px; }
         .btn-sapu:hover { background: var(--warning); color: white; box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4); }
 
@@ -40,27 +38,21 @@
         .badge-admin { background: rgba(245, 158, 11, 0.2); color: var(--warning); border: 1px solid var(--warning); }
         .badge-user { background: rgba(59, 130, 246, 0.2); color: var(--primary); border: 1px solid var(--primary); }
 
-        /* MODAL POP-UP */
+        /* MODAL POP-UP VIP */
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(5px); z-index: 9999; align-items: center; justify-content: center; padding: 20px; box-sizing: border-box; }
-        .modal-box { background: var(--card-bg); border: 1px solid var(--primary); box-shadow: 0 10px 30px rgba(59, 130, 246, 0.3); border-radius: 16px; padding: 25px; width: 100%; max-width: 350px; text-align: center; animation: popIn 0.3s ease-out forwards; }
+        .modal-box { background: var(--card-bg); border: 1px solid var(--primary); box-shadow: 0 10px 30px rgba(59, 130, 246, 0.3); border-radius: 16px; padding: 25px; width: 100%; text-align: center; animation: popIn 0.3s ease-out forwards; }
         @keyframes popIn { 0% { transform: scale(0.8); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
-        .modal-box h3 { margin-top: 0; color: var(--success); font-size: 22px; margin-bottom: 5px; }
-        .modal-box p { color: var(--text-sub); font-size: 13px; margin-bottom: 15px; }
-        .info-detail { background: rgba(0,0,0,0.3); border: 1px dashed var(--text-sub); border-radius: 10px; padding: 15px; text-align: left; margin-bottom: 20px; }
-        .info-detail p { margin: 5px 0; color: var(--text-main); font-size: 14px; font-family: monospace; }
-        .info-detail span { color: var(--primary); font-weight: bold; }
-        .timer-text { font-size: 14px !important; color: var(--danger) !important; font-weight: bold; margin-bottom: 15px !important; }
-        .btn-tutup { background: rgba(255,255,255,0.1); color: white; border: none; padding: 10px; width: 100%; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.2s; }
-        .btn-tutup:hover { background: var(--danger); }
         
+        .btn-tutup { background: rgba(255,255,255,0.1); color: white; border: none; padding: 10px; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.2s; }
+        .btn-tutup:hover { background: var(--danger); border-color: var(--danger); }
         .reseller-tag { font-size: 10px; color: var(--primary); background: rgba(59,130,246,0.1); padding: 2px 6px; border-radius: 4px; display: inline-block; margin-top: 3px; }
     </style>
 </head>
 <body>
     <a href="index.html" class="btn-back">⬅ Kembali ke Dashboard</a>
     
-    <h2>Kelola User & Server (Public)</h2>
-    <p class="sub-title">Bikin Akun + Server langsung dalam 1x klik secara otomatis.</p>
+    <h2>🌍 Kelola User & Server (Public)</h2>
+    <p class="sub-title">Bikin Akun + Server pelanggan langsung dalam 1x klik secara otomatis.</p>
 
     <div class="box">
         <div class="box-header">
@@ -105,20 +97,33 @@
     </div>
 
     <div id="modalScreenshot" class="modal-overlay">
-        <div class="modal-box">
-            <h3>✅ 1 Paket Berhasil!</h3>
-            <p>Silakan <b>Screenshot</b> detail ini untuk dikirim ke pembeli:</p>
-            <div class="info-detail">
-                <p>Username : <span id="resUser"></span></p>
-                <p>Password : <span id="resPass"></span></p>
-                <p>Email &nbsp;&nbsp;&nbsp;: <span id="resEmail" style="color:var(--text-sub); font-weight:normal;"></span></p>
-                <p>Server &nbsp;&nbsp;&nbsp;: <span id="resServer" style="color:var(--warning);"></span></p>
+        <div class="modal-box" style="max-width: 380px; border-top: 5px solid var(--success);">
+            <h3 style="color: var(--success); font-size: 20px; margin-bottom: 5px;">✅ Pembuatan Berhasil!</h3>
+            <p style="margin-bottom: 20px; color: var(--text-sub); font-size: 13px;">Silakan salin data ini untuk dikirim ke pembeli:</p>
+            
+            <div class="info-detail" style="background: rgba(15, 23, 42, 0.8); border: 1px solid var(--border-color); border-radius: 12px; padding: 20px; text-align: left; margin-bottom: 20px;">
+                <div style="margin-bottom: 12px; border-bottom: 1px dashed var(--border-color); padding-bottom: 12px;">
+                    <span style="font-size: 11px; color: var(--text-sub); text-transform: uppercase; font-weight: bold;">Detail Akun</span>
+                    <p style="margin: 8px 0 5px 0; font-size: 14px;">👤 User: <span id="resUser" style="color: white; font-weight: bold;"></span></p>
+                    <p style="margin: 0; font-size: 14px;">🔑 Pass: <span id="resPass" style="color: var(--warning); font-weight: bold;"></span></p>
+                </div>
+                <div style="margin-bottom: 12px; border-bottom: 1px dashed var(--border-color); padding-bottom: 12px;">
+                    <span style="font-size: 11px; color: var(--text-sub); text-transform: uppercase; font-weight: bold;">Akses Panel</span>
+                    <p style="margin: 8px 0 0 0; font-size: 13px;">🌐 <a id="resLink" href="#" target="_blank" style="color: var(--primary); text-decoration: none; font-weight: bold; word-break: break-all;"></a></p>
+                </div>
+                <div>
+                    <span style="font-size: 11px; color: var(--text-sub); text-transform: uppercase; font-weight: bold;">Spesifikasi Server</span>
+                    <p style="margin: 8px 0 0 0; font-size: 14px;">🖥️ Server: <span id="resServer" style="color: var(--success); font-weight: bold;"></span></p>
+                </div>
             </div>
-            <p class="timer-text">Pop-up menghilang dalam <span id="timerCountdown">10</span> detik...</p>
-            <button class="btn-tutup" onclick="tutupModal()">Tutup Manual</button>
+
+            <div style="display: flex; gap: 10px;">
+                <button class="btn-tambah" style="margin: 0; flex: 1.5; font-size: 14px; display: flex; align-items: center; justify-content: center; gap: 5px;" onclick="salinDataBuyer()" id="btnSalin">📋 Salin Teks</button>
+                <button class="btn-tutup" style="margin: 0; flex: 1; font-size: 14px; background: rgba(255,255,255,0.05); border: 1px solid var(--border-color);" onclick="tutupModal()">Tutup</button>
+            </div>
         </div>
     </div>
-            <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
     <script>
@@ -126,7 +131,6 @@
         const role = localStorage.getItem('role') || '';
         const myUsername = localStorage.getItem('username') || 'Unknown'; 
         
-        // 🛡️ ROLE KHUSUS DIVISI PUBLIC
         const allowedRoles = ['pemilik', 'reseller_public', 'partner_public'];
 
         if (!currentUserId || !allowedRoles.includes(role)) {
@@ -134,7 +138,7 @@
             window.location.replace("index.html");
         }
         
-        // 🔥 PERBAIKAN: BUKA AKSES DROPDOWN ADMIN UNTUK PARTNER
+        // Tampilkan/Sembunyikan Role Admin
         if (role === 'pemilik' || role === 'partner_public') {
             document.getElementById('roleContainer').style.display = 'block';
             document.getElementById('textDaftar').innerText = role === 'pemilik' ? "(Semua Reseller)" : "(Tim Kamu)";
@@ -173,8 +177,7 @@
                     let u = user.attributes;
                     
                     if (role !== 'pemilik') {
-                        // 🔥 PERBAIKAN: Baris blokir Admin udah Mini hapus!
-                        // Jadi Partner sekarang bebas ngelihat akun Admin yang mereka buat sendiri
+                        // Partner bisa liat buatan mereka sendiri
                         if (u.last_name !== myUsername) return; 
                     }
 
@@ -348,7 +351,7 @@
         }
 
         // ==========================================
-        // 🔥 LOGIKA POP-UP STRUK & SALIN TEKS
+        // 🔥 LOGIKA POP-UP STRUK & SALIN TEKS (FIXED)
         // ==========================================
         function munculkanModal(user, pass, email, serverName) {
             document.getElementById('resUser').innerText = user; 
@@ -364,8 +367,10 @@
             
             // Reset tombol salin
             let btnSalin = document.getElementById('btnSalin');
-            btnSalin.innerHTML = "📋 Salin Teks";
-            btnSalin.style.background = "var(--primary)";
+            if(btnSalin) {
+                btnSalin.innerHTML = "📋 Salin Teks";
+                btnSalin.style.background = "var(--primary)";
+            }
         }
 
         function tutupModal() { 
