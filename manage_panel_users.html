@@ -8,96 +8,149 @@
     <style>
         :root { --bg-color: #0f172a; --card-bg: #1e293b; --primary: #3b82f6; --success: #10b981; --danger: #ef4444; --warning: #f59e0b; --text-main: #f8fafc; --text-sub: #94a3b8; --input-bg: #0f172a; --border-color: rgba(255,255,255,0.1); }
         body { font-family: 'Inter', sans-serif; padding: 20px; background-color: var(--bg-color); color: var(--text-main); margin: 0; }
-        h2 { font-weight: 700; margin-bottom: 5px; color: var(--text-main); }
+        h2 { font-weight: 700; margin-bottom: 5px; color: var(--text-main); border-left: 4px solid var(--primary); padding-left: 10px; }
         .sub-title { color: var(--text-sub); margin-bottom: 25px; font-size: 14px; }
         .btn-back { display: inline-block; margin-bottom: 20px; padding: 10px 15px; background: rgba(255,255,255,0.05); color: var(--text-main); text-decoration: none; border-radius: 8px; font-size: 14px; font-weight: 600; border: 1px solid var(--border-color); transition: 0.2s; }
         .btn-back:hover { background: var(--card-bg); transform: translateX(-3px); }
+        
         .box { background: var(--card-bg); padding: 20px; border-radius: 16px; border: 1px solid var(--border-color); margin-bottom: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); overflow-x: auto; }
-        .box h3 { margin-top: 0; font-size: 18px; margin-bottom: 15px; display: flex; align-items: center; gap: 8px; }
+        .box-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        .box-header h3 { margin: 0; font-size: 18px; display: flex; align-items: center; gap: 8px; color: var(--text-main); }
         
         label { display: block; margin-bottom: 5px; font-size: 12px; font-weight: 600; color: var(--text-sub); text-transform: uppercase; }
         input, select { width: 100%; padding: 12px; margin-bottom: 15px; background: var(--input-bg); border: 1px solid var(--border-color); border-radius: 8px; color: var(--text-main); font-size: 14px; box-sizing: border-box; outline: none; transition: 0.2s; }
         input:focus, select:focus { border-color: var(--primary); box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2); }
+        .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
         
         .btn-tambah { width: 100%; background: var(--primary); color: white; border: none; cursor: pointer; border-radius: 8px; padding: 14px; font-weight: bold; transition: 0.2s; margin-top: 5px; font-size: 15px; }
         .btn-tambah:hover { background: #2563eb; transform: translateY(-2px); box-shadow: 0 5px 15px rgba(59, 130, 246, 0.3); }
-        
+
         table { width: 100%; border-collapse: collapse; min-width: 500px; margin-top: 10px; }
         th, td { padding: 12px 15px; text-align: left; border-bottom: 1px solid var(--border-color); font-size: 14px; }
         th { background: rgba(255,255,255,0.02); color: var(--text-sub); font-weight: 600; text-transform: uppercase; font-size: 12px; letter-spacing: 1px; }
         tr:hover { background: rgba(255,255,255,0.02); }
         
-        .btn-hapus { background: rgba(239, 68, 68, 0.1); color: var(--danger); border: 1px solid var(--danger); cursor: pointer; border-radius: 6px; padding: 6px 12px; font-weight: 600; font-size: 12px; transition: 0.2s; }
+        .btn-hapus { background: rgba(239, 68, 68, 0.1); color: var(--danger); border: 1px solid var(--danger); cursor: pointer; border-radius: 6px; padding: 6px 12px; font-weight: 600; font-size: 12px; transition: 0.2s; white-space: nowrap; }
         .btn-hapus:hover { background: var(--danger); color: white; }
         
-        .badge { padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: bold; text-transform: uppercase; display: inline-block; white-space: nowrap; }
-        .badge-owner { background: rgba(245, 158, 11, 0.2); color: var(--warning); border: 1px solid var(--warning); }
-        .badge-partner { background: rgba(16, 185, 129, 0.2); color: var(--success); border: 1px solid var(--success); }
-        .badge-private { background: rgba(59, 130, 246, 0.2); color: var(--primary); border: 1px solid var(--primary); }
-        .badge-public { background: rgba(148, 163, 184, 0.2); color: var(--text-main); border: 1px solid var(--text-sub); }
+        .role-badge { padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.5px; display: inline-block; white-space: nowrap; }
+        .role-pemilik { background: rgba(245, 158, 11, 0.2); color: var(--warning); border: 1px solid var(--warning); }
+        .role-partner { background: rgba(16, 185, 129, 0.2); color: var(--success); border: 1px solid var(--success); }
+        .role-reseller { background: rgba(59, 130, 246, 0.2); color: var(--primary); border: 1px solid var(--primary); }
+
+        .status-dot { height: 10px; width: 10px; border-radius: 50%; display: inline-block; margin-right: 5px; }
+        .dot-online { background-color: var(--success); box-shadow: 0 0 8px var(--success); }
+        .dot-offline { background-color: var(--text-sub); }
+
+        /* MODAL POP-UP (VIP STYLE) */
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(5px); z-index: 9999; align-items: center; justify-content: center; padding: 20px; box-sizing: border-box; }
+        .modal-box { background: var(--card-bg); border: 1px solid var(--primary); box-shadow: 0 10px 30px rgba(0,0,0,0.5); border-radius: 16px; padding: 25px; width: 100%; text-align: center; animation: popIn 0.3s ease-out forwards; }
+        @keyframes popIn { 0% { transform: scale(0.8); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
         
-        .status-online { color: var(--success); font-weight: bold; font-size: 12px; display: flex; align-items: center; gap: 4px; }
-        .status-offline { color: var(--text-sub); font-size: 12px; display: flex; align-items: center; gap: 4px; }
+        .btn-tutup { background: rgba(255,255,255,0.1); color: white; border: none; padding: 10px; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.2s; }
+        .btn-tutup:hover { background: var(--danger); border-color: var(--danger); }
     </style>
 </head>
 <body>
     <a href="index.html" class="btn-back">⬅ Kembali ke Dashboard</a>
     
-    <h2>Kelola Akses Web Panel</h2>
-    <p class="sub-title">Tambah atau hapus akses masuk (Login) ke website ini.</p>
+    <h2>🛡️ Kelola Akses Web Panel</h2>
+    <p class="sub-title">Tambah Partner atau Reseller yang diizinkan login ke Command Center ini.</p>
 
     <div class="box">
-        <h3>➕ Buat Akses Baru</h3>
-        <label>Username (Tanpa Spasi):</label>
-        <input type="text" id="newUsername" placeholder="Ketik username login..." autocomplete="off">
-        
-        <label>Password:</label>
-        <input type="text" id="newPassword" placeholder="Ketik password login..." autocomplete="off">
-        
-        <label>Tipe Akun (Role):</label>
-        <select id="newRole">
+        <div class="box-header">
+            <h3>🔑 Buat Akses Login Baru</h3>
+        </div>
+        <div class="grid-2">
+            <div><label>Username (Untuk Login):</label><input type="text" id="webUsername" placeholder="Tanpa spasi..." autocomplete="off"></div>
+            <div><label>Password (Untuk Login):</label><input type="text" id="webPassword" placeholder="Ketik password..." autocomplete="off"></div>
+        </div>
+        <div>
+            <label>Jabatan (Role):</label>
+            <select id="webRole">
+                <option value="partner_public">🤝 Partner Panel (Bisa buat akun Reseller & Admin Ptero)</option>
+                <option value="reseller_private">💎 Reseller Private (Hanya bisa buat akun Ptero VIP)</option>
+                <option value="reseller_public">🌍 Reseller Public (Hanya bisa buat akun Ptero Public)</option>
             </select>
-        
-        <button class="btn-tambah" onclick="tambahUser()">🚀 Buat Akun Sekarang</button>
+        </div>
+        <button class="btn-tambah" onclick="buatAkunWeb()">🚀 Cetak Akses Web Sekarang</button>
     </div>
 
     <div class="box">
-        <h3>👥 Daftar Pengguna Panel <span id="textDaftar"></span></h3>
-        <table id="tabelUsers">
+        <div class="box-header">
+            <h3>👥 Daftar Pengguna Panel</h3>
+        </div>
+        <table id="tabelWebUsers">
             <tr><th>Username & Password</th><th>Tipe Akun</th><th>Status</th><th>Aksi</th></tr>
             <tr><td colspan="4" style="text-align: center; color: var(--text-sub); padding: 20px;">⏳ Memuat data dari Firebase...</td></tr>
         </table>
     </div>
 
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <div id="modalScreenshot" class="modal-overlay">
+        <div class="modal-box" style="max-width: 380px; border-top: 5px solid var(--primary);">
+            <h3 style="color: var(--primary); font-size: 20px; margin-bottom: 5px;">✅ Akses Web Berhasil!</h3>
+            <p style="margin-bottom: 20px; color: var(--text-sub); font-size: 13px;">Kirim data ini agar Reseller bisa login ke Web Panel:</p>
+            
+            <div class="info-detail" style="background: rgba(15, 23, 42, 0.8); border: 1px solid var(--border-color); border-radius: 12px; padding: 20px; text-align: left; margin-bottom: 20px;">
+                <div style="margin-bottom: 12px; border-bottom: 1px dashed var(--border-color); padding-bottom: 12px;">
+                    <span style="font-size: 11px; color: var(--text-sub); text-transform: uppercase; font-weight: bold;">Kredensial Login</span>
+                    <p style="margin: 8px 0 5px 0; font-size: 14px;">👤 User: <span id="resUserWeb" style="color: white; font-weight: bold;"></span></p>
+                    <p style="margin: 0; font-size: 14px;">🔑 Pass: <span id="resPassWeb" style="color: var(--warning); font-weight: bold;"></span></p>
+                </div>
+                <div style="margin-bottom: 12px; border-bottom: 1px dashed var(--border-color); padding-bottom: 12px;">
+                    <span style="font-size: 11px; color: var(--text-sub); text-transform: uppercase; font-weight: bold;">Akses Web Panel</span>
+                    <p style="margin: 8px 0 0 0; font-size: 13px;">🌐 <a id="resLinkWeb" href="#" target="_blank" style="color: var(--primary); text-decoration: none; font-weight: bold; word-break: break-all;"></a></p>
+                </div>
+                <div>
+                    <span style="font-size: 11px; color: var(--text-sub); text-transform: uppercase; font-weight: bold;">Jabatan (Role)</span>
+                    <p style="margin: 8px 0 0 0; font-size: 14px;">🎖️ <span id="resRoleWeb" style="color: var(--success); font-weight: bold; text-transform: uppercase;"></span></p>
+                </div>
+            </div>
+
+            <div style="display: flex; gap: 10px;">
+                <button class="btn-tambah" style="margin: 0; flex: 1.5; font-size: 14px; display: flex; align-items: center; justify-content: center; gap: 5px;" onclick="salinDataWeb()" id="btnSalinWeb">📋 Salin Teks</button>
+                <button class="btn-tutup" style="margin: 0; flex: 1; font-size: 14px; background: rgba(255,255,255,0.05); border: 1px solid var(--border-color);" onclick="tutupModal()">Tutup</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="modalKonfirmasi" class="modal-overlay">
+        <div class="modal-box" style="max-width: 320px; border-top: 5px solid var(--danger); border-color: var(--danger);">
+            <h3 style="color: var(--danger); font-size: 20px; margin-bottom: 5px;">🚨 PERINGATAN!</h3>
+            <p id="teksKonfirmasi" style="margin-bottom: 20px; color: var(--text-main); font-size: 14px; line-height: 1.5;"></p>
+            <div style="display: flex; gap: 10px;">
+                <button class="btn-tutup" style="margin: 0; flex: 1; font-size: 14px; background: rgba(255,255,255,0.05); border: 1px solid var(--border-color);" onclick="tutupKonfirmasi()">Batal</button>
+                <button class="btn-tambah" style="margin: 0; flex: 1; font-size: 14px; background: var(--danger);" onclick="eksekusiHapus()" id="btnGasHapus">Ya, Cabut!</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="modalInfo" class="modal-overlay">
+        <div class="modal-box" style="max-width: 320px; border-top: 5px solid var(--success); border-color: var(--success);">
+            <h3 style="color: var(--success); font-size: 20px; margin-bottom: 5px;">✅ Berhasil!</h3>
+            <p id="teksInfo" style="margin-bottom: 20px; color: var(--text-main); font-size: 14px;"></p>
+            <button class="btn-tambah" style="width: 100%; font-size: 14px; background: var(--success);" onclick="tutupInfo()">Oke, Paham</button>
+        </div>
+    </div>
+        <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
     <script>
         const currentUserId = localStorage.getItem('user_id');
-        const currentUserRole = localStorage.getItem('role');
-        const currentUsername = localStorage.getItem('username');
-
-        // 🔥 SATPAM AKSES: Cuma Pemilik dan Partner yang boleh masuk!
-        const allowedAccess = ['pemilik', 'partner_public'];
-        if (!currentUserId || !allowedAccess.includes(currentUserRole)) {
-            alert("🚨 AKSES DITOLAK!\nHalaman ini khusus Pemilik dan Partner Panel.");
+        const myRole = localStorage.getItem('role') || '';
+        const myUsername = localStorage.getItem('username') || 'Unknown'; 
+        
+        // 🛡️ HANYA PEMILIK YANG BOLEH KELOLA AKSES WEB
+        if (!currentUserId || myRole !== 'pemilik') {
+            alert("🚨 AKSES DITOLAK!\nHalaman ini khusus Komandan (Pemilik).");
             window.location.replace("index.html");
         }
 
-        // Ubah teks judul tabel biar jelas ini lihat data siapa
-        if (currentUserRole !== 'pemilik') {
-            document.getElementById('textDaftar').innerText = "(Buatanmu)";
-        } else {
-            document.getElementById('textDaftar').innerText = "(Semua)";
-        }
-
-        // ==========================================
-        // 🔥 RADAR FIREBASE ONLINE
-        // ==========================================
         const firebaseConfig = { databaseURL: "https://cobaaja-ac5d0-default-rtdb.firebaseio.com" };
         if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
 
+        // 🟢 FUNGSI RADAR ONLINE
         const connectedRef = database.ref('.info/connected');
         connectedRef.on('value', (snap) => {
             if (snap.val() === true && currentUserId) {
@@ -107,127 +160,178 @@
             }
         });
 
-        // ==========================================
-        // 🛠️ FILTER DROPDOWN ROLE (YANG SUDAH DIPERBAIKI)
-        // ==========================================
-        function muatPilihanRole() {
-            let roleSelect = document.getElementById('newRole');
-            let options = '';
+        // 📋 1. TAMPILKAN DAFTAR PENGGUNA WEB DARI FIREBASE
+        function ambilDataWebUsers() {
+            database.ref('users').on('value', (snapshot) => {
+                let tabel = `<tr><th>Username & Password</th><th>Tipe Akun</th><th>Status</th><th>Aksi</th></tr>`;
+                let adaData = false;
+                let dataArray = []; 
 
-            if (currentUserRole === 'pemilik') {
-                // Pemilik bisa bikin SEMUA role
-                options = `
-                    <option value="reseller_private">💎 Reseller (Khusus Private)</option>
-                    <option value="reseller_public">🌍 Reseller (Khusus Public)</option>
-                    <option value="partner_public">🤝 Partner Panel (Public)</option>
-                    <option value="pemilik">👑 Pemilik Panel (Full Akses)</option>
-                `;
-            } else if (currentUserRole === 'partner_public') {
-                // 🔥 PARTNER PUBLIC CUMA BISA BIKIN RESELLER PUBLIC AJA!
-                options = `
-                    <option value="reseller_public">🌍 Reseller (Khusus Public)</option>
-                `;
-            }
-            roleSelect.innerHTML = options;
+                snapshot.forEach((childSnap) => {
+                    let u = childSnap.val();
+                    u.uId = childSnap.key; 
+                    u.waktuDibuat = u.timestamp || 0; 
+                    dataArray.push(u);
+                });
+
+                dataArray.sort((a, b) => a.waktuDibuat - b.waktuDibuat);
+
+                dataArray.forEach((u) => {
+                    adaData = true;
+                    let roleBadge = "";
+                    let roleTeks = u.role.replace('_', ' ').toUpperCase();
+                    if (u.role === 'pemilik') roleBadge = `<span class="role-badge role-pemilik">👑 ${roleTeks}</span>`;
+                    else if (u.role.includes('partner')) roleBadge = `<span class="role-badge role-partner">🤝 ${roleTeks}</span>`;
+                    else roleBadge = `<span class="role-badge role-reseller">💎 ${roleTeks}</span>`;
+
+                    let statusDot = u.isOnline ? `<span class="status-dot dot-online"></span> <span style="color: var(--success); font-size: 13px;">Online</span>` : `<span class="status-dot dot-offline"></span> <span style="color: var(--text-sub); font-size: 13px;">Offline</span>`;
+
+                    let pembuat = u.maker ? `<br><span style="font-size: 10px; color: var(--primary);">Oleh: ${u.maker}</span>` : '';
+                    
+                    // 🔥 PERBAIKAN: Tombol hapus sekarang memanggil Pop-up Keren, bukan confirm() kuno
+                    let tombolHapus = u.role !== 'pemilik' ? `<button class="btn-hapus" onclick="hapusAkunWeb('${u.uId}', '${u.username}')">🗑️ Cabut Akses</button>` : `<span style="color:var(--text-sub); font-size:12px;">Sistem Utama</span>`;
+
+                    tabel += `<tr>
+                        <td><div style="font-weight: 600; color: var(--text-main);">${u.username}</div>
+                            <div style="font-size: 12px; color: var(--warning); margin-top: 3px;">🔑 ${u.password}</div>
+                            ${pembuat}
+                        </td>
+                        <td>${roleBadge}</td>
+                        <td>${statusDot}</td>
+                        <td>${tombolHapus}</td>
+                    </tr>`;
+                });
+
+                if (!adaData) {
+                    tabel += `<tr><td colspan="4" style="text-align: center; color: var(--warning); padding: 20px;">Belum ada pengguna terdaftar.</td></tr>`;
+                }
+                document.getElementById('tabelWebUsers').innerHTML = tabel;
+            });
         }
 
-        // ==========================================
-        // 👥 TAMPILKAN USER (DENGAN ISOLASI KAMAR)
-        // ==========================================
-        function muatDataUsers() {
-            database.ref('users').on('value', (snapshot) => {
-                let users = snapshot.val();
-                let tabel = `<tr><th>Username & Password</th><th>Tipe Akun</th><th>Status</th><th>Aksi</th></tr>`;
-                let countDisplayed = 0;
+        // 🚀 2. FUNGSI BUAT AKUN WEB PANEL BARU
+        function buatAkunWeb() {
+            let uName = document.getElementById('webUsername').value.trim();
+            let pWord = document.getElementById('webPassword').value.trim();
+            let rolePilihan = document.getElementById('webRole').value;
 
-                if (users) {
-                    for (let id in users) {
-                        let u = users[id];
-                        
-                        // 🛡️ LOGIKA ISOLASI PARTNER:
-                        if (currentUserRole === 'partner_public') {
-                            if (id !== currentUserId && u.maker !== currentUsername) {
-                                continue; 
-                            }
-                        }
+            if(!uName || !pWord) {
+                alert("🚨 Username dan Password tidak boleh kosong!"); return;
+            }
 
-                        countDisplayed++;
+            let btn = document.querySelector('.btn-tambah');
+            btn.innerText = "⏳ Memproses Akses..."; btn.style.pointerEvents = "none";
 
-                        let roleBadge = "";
-                        if (u.role === 'pemilik') roleBadge = `<span class="badge badge-owner">👑 Pemilik</span>`;
-                        else if (u.role === 'partner_public') roleBadge = `<span class="badge badge-partner">🤝 Partner</span>`;
-                        else if (u.role === 'reseller_private') roleBadge = `<span class="badge badge-private">💎 Private Reseller</span>`;
-                        else if (u.role === 'reseller_public' || u.role === 'reseller') roleBadge = `<span class="badge badge-public">🌍 Public Reseller</span>`;
-
-                        let onlineStatus = u.isOnline ? `<span class="status-online">🟢 Online</span>` : `<span class="status-offline">⚫ Offline</span>`;
-                        
-                        let btnHapus = "";
-                        if (id === currentUserId) {
-                            btnHapus = `<span style="color:var(--text-sub); font-size:12px;">(Kamu)</span>`;
-                        } else {
-                            btnHapus = `<button class="btn-hapus" onclick="hapusUser('${id}', '${u.username}')">Hapus</button>`;
-                        }
-
-                        let pembuatTag = u.maker && currentUserRole === 'pemilik' ? `<br><span style="font-size:10px; color:var(--primary);">Oleh: ${u.maker}</span>` : '';
-
-                        tabel += `<tr>
-                            <td style="font-weight: 600; color: var(--text-main);">${u.username}<br>
-                                <span style="font-size: 11px; color: var(--warning); font-family: monospace;">🔑 ${u.password}</span>
-                                ${pembuatTag}
-                            </td>
-                            <td>${roleBadge}</td>
-                            <td>${onlineStatus}</td>
-                            <td>${btnHapus}</td>
-                        </tr>`;
-                    }
+            database.ref('users').orderByChild('username').equalTo(uName).once('value', (snap) => {
+                if (snap.exists()) {
+                    alert("❌ Username ini sudah terdaftar! Pilih username lain.");
+                    btn.innerText = "🚀 Cetak Akses Web Sekarang"; btn.style.pointerEvents = "auto";
+                } else {
+                    let newDataRef = database.ref('users').push();
+                    newDataRef.set({
+                        username: uName, password: pWord, role: rolePilihan,
+                        maker: myUsername, isOnline: false, timestamp: Date.now() 
+                    }).then(() => {
+                        munculkanModalWeb(uName, pWord, rolePilihan);
+                        document.getElementById('webUsername').value = ""; document.getElementById('webPassword').value = "";
+                        btn.innerText = "🚀 Cetak Akses Web Sekarang"; btn.style.pointerEvents = "auto";
+                    }).catch((error) => {
+                        alert("❌ Terjadi kesalahan: " + error.message);
+                        btn.innerText = "🚀 Cetak Akses Web Sekarang"; btn.style.pointerEvents = "auto";
+                    });
                 }
-
-                if (countDisplayed === 0) {
-                    tabel += `<tr><td colspan="4" style="text-align: center; color: var(--warning); padding: 20px;">Belum ada data reseller buatanmu.</td></tr>`;
-                }
-
-                document.getElementById('tabelUsers').innerHTML = tabel;
             });
         }
 
         // ==========================================
-        // ➕ TAMBAH USER BARU KE FIREBASE
+        // 🔥 LOGIKA POP-UP PENGHAPUSAN (ANTI KUNO)
         // ==========================================
-        function tambahUser() {
-            let username = document.getElementById('newUsername').value.trim();
-            let password = document.getElementById('newPassword').value.trim();
-            let role = document.getElementById('newRole').value;
+        let targetHapusId = "";
+        let targetHapusName = "";
 
-            if (username === "" || password === "") { alert("Isi Username dan Password!"); return; }
+        function hapusAkunWeb(uid, username) {
+            targetHapusId = uid;
+            targetHapusName = username;
+            document.getElementById('teksKonfirmasi').innerHTML = `Yakin ingin mencabut akses Web Panel untuk user <b style="color:var(--warning);">${username}</b>?<br><br><span style="color:var(--text-sub); font-size: 13px;">Mereka tidak akan bisa login ke Web ini lagi.</span>`;
+            document.getElementById('modalKonfirmasi').style.display = 'flex';
+        }
 
-            let newId = "user_" + Date.now(); 
+        function tutupKonfirmasi() {
+            document.getElementById('modalKonfirmasi').style.display = 'none';
+            targetHapusId = ""; targetHapusName = "";
+        }
+
+        function eksekusiHapus() {
+            if(!targetHapusId) return;
+            let btn = document.getElementById('btnGasHapus');
+            btn.innerText = "⏳ Menghapus..."; btn.style.pointerEvents = "none";
+
+            database.ref('users/' + targetHapusId).remove().then(() => {
+                tutupKonfirmasi();
+                btn.innerText = "Ya, Cabut!"; btn.style.pointerEvents = "auto";
+                
+                // Panggil Modal Info Sukses
+                document.getElementById('teksInfo').innerHTML = `Akses login untuk user <b style="color:var(--warning);">${targetHapusName}</b> telah berhasil dicabut.`;
+                document.getElementById('modalInfo').style.display = 'flex';
+            }).catch((e) => {
+                alert("Gagal menghapus: " + e.message); 
+                btn.innerText = "Ya, Cabut!"; btn.style.pointerEvents = "auto";
+            });
+        }
+
+        function tutupInfo() {
+            document.getElementById('modalInfo').style.display = 'none';
+        }
+
+        // ==========================================
+        // 🔥 LOGIKA POP-UP STRUK & SALIN TEKS (WEB)
+        // ==========================================
+        function munculkanModalWeb(user, pass, role) {
+            document.getElementById('resUserWeb').innerText = user; 
+            document.getElementById('resPassWeb').innerText = pass;
             
-            database.ref('users/' + newId).set({ 
-                username: username, 
-                password: password, 
-                role: role, 
-                isOnline: false,
-                maker: currentUsername 
-            })
-            .then(() => {
-                alert(`✅ Berhasil! Akses untuk "${username}" berhasil dibuat.`);
-                document.getElementById('newUsername').value = ""; 
-                document.getElementById('newPassword').value = "";
-            }).catch(e => alert("Error: " + e.message));
+            let webLink = window.location.origin + window.location.pathname.replace('manage_panel_users.html', '');
+            if(webLink.endsWith('/')) webLink = webLink.slice(0, -1);
+            
+            document.getElementById('resLinkWeb').innerText = webLink;
+            document.getElementById('resLinkWeb').href = webLink;
+            
+            let namaRole = role.replace('_', ' ').toUpperCase();
+            document.getElementById('resRoleWeb').innerText = namaRole;
+            
+            document.getElementById('modalScreenshot').style.display = 'flex';
+            
+            let btnSalin = document.getElementById('btnSalinWeb');
+            btnSalin.innerHTML = "📋 Salin Teks";
+            btnSalin.style.background = "var(--primary)";
         }
 
-        // ==========================================
-        // 🗑️ HAPUS USER DARI FIREBASE
-        // ==========================================
-        function hapusUser(id, username) {
-            if (confirm(`🚨 Yakin menghapus akses login untuk "${username}"?\nMereka tidak akan bisa masuk ke web panel ini lagi.`)) {
-                database.ref('users/' + id).remove().then(() => alert(`💥 Akses untuk "${username}" telah dicabut!`));
-            }
+        function tutupModal() { 
+            document.getElementById('modalScreenshot').style.display = 'none'; 
         }
-        
-        // Jalankan fungsi
-        muatPilihanRole();
-        muatDataUsers();
+
+        function salinDataWeb() {
+            let user = document.getElementById('resUserWeb').innerText;
+            let pass = document.getElementById('resPassWeb').innerText;
+            let link = document.getElementById('resLinkWeb').innerText;
+            let role = document.getElementById('resRoleWeb').innerText;
+
+            let teksSalin = `✅ *AKSES WEB PANEL BERHASIL DIBUAT!*\n\n` +
+                            `👤 *Username:* ${user}\n` +
+                            `🔑 *Password:* ${pass}\n` +
+                            `🎖️ *Jabatan:* ${role}\n` +
+                            `🌐 *Link Login:* ${link}\n\n` +
+                            `_Silakan login menggunakan link di atas untuk mulai membuat server pelanggan!_ ✨`;
+
+            navigator.clipboard.writeText(teksSalin).then(() => {
+                let btn = document.getElementById('btnSalinWeb');
+                btn.innerHTML = "✅ Berhasil Disalin!"; btn.style.background = "var(--success)";
+                setTimeout(() => { btn.innerHTML = "📋 Salin Teks"; btn.style.background = "var(--primary)"; }, 2000);
+            }).catch(err => { alert("❌ Gagal menyalin otomatis. Silakan screenshot manual."); });
+        }
+
+        // Jalankan saat pertama kali buka
+        ambilDataWebUsers();
     </script>
 </body>
 </html>
