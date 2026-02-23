@@ -7,18 +7,43 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
         :root { --bg-color: #0f172a; --card-bg: #1e293b; --primary: #3b82f6; --success: #10b981; --danger: #ef4444; --warning: #f59e0b; --text-main: #f8fafc; --text-sub: #94a3b8; --border-color: rgba(255,255,255,0.1); }
-        body { font-family: 'Inter', sans-serif; background-color: var(--bg-color); color: var(--text-main); margin: 0; padding: 20px; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background-color: var(--bg-color); color: var(--text-main); margin: 0; padding: 20px; box-sizing: border-box; overflow-x: hidden; }
         
-        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; padding-bottom: 20px; border-bottom: 1px solid var(--border-color); flex-wrap: wrap; gap: 15px; }
+        .header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 30px; padding-bottom: 20px; border-bottom: 1px solid var(--border-color); }
+        .header-content { display: flex; flex-direction: column; gap: 5px; }
         .header h1 { margin: 0; font-size: 24px; color: var(--text-main); }
-        .header p { margin: 5px 0 0 0; color: var(--text-sub); font-size: 14px; }
+        .header p { margin: 0; color: var(--text-sub); font-size: 14px; }
         
-        .header-buttons { display: flex; gap: 10px; align-items: center; }
-        .btn-setting, .btn-logout { padding: 8px 15px; border-radius: 8px; font-weight: 600; cursor: pointer; transition: 0.2s; font-size: 14px; }
-        .btn-setting { background: rgba(59, 130, 246, 0.1); color: var(--primary); border: 1px solid var(--primary); }
-        .btn-setting:hover { background: var(--primary); color: white; box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4); }
-        .btn-logout { background: rgba(239, 68, 68, 0.1); color: var(--danger); border: 1px solid var(--danger); }
-        .btn-logout:hover { background: var(--danger); color: white; box-shadow: 0 4px 15px rgba(239, 68, 68, 0.4); }
+        .btn-menu { background: rgba(59, 130, 246, 0.1); color: var(--primary); border: 1px solid var(--primary); font-size: 20px; padding: 8px 12px; border-radius: 8px; cursor: pointer; transition: 0.2s; display: flex; align-items: center; justify-content: center; }
+        .btn-menu:hover { background: var(--primary); color: white; box-shadow: 0 0 15px rgba(59, 130, 246, 0.4); }
+
+        .sidebar-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(4px); z-index: 9998; opacity: 0; visibility: hidden; transition: all 0.3s ease; }
+        .sidebar-overlay.active { opacity: 1; visibility: visible; }
+        
+        .sidebar { position: fixed; top: 0; right: -300px; width: 280px; height: 100%; background: linear-gradient(180deg, #1e293b, #0f172a); border-left: 1px solid var(--primary); box-shadow: -5px 0 25px rgba(0,0,0,0.5); z-index: 9999; transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1); display: flex; flex-direction: column; padding: 25px; box-sizing: border-box; overflow-y: auto; }
+        .sidebar.active { right: 0; }
+        
+        .sidebar-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 15px; margin-bottom: 20px; }
+        .sidebar-header h3 { margin: 0; color: var(--primary); font-size: 18px; text-transform: uppercase; letter-spacing: 1px; }
+        .btn-close-sidebar { background: transparent; color: var(--text-sub); border: none; font-size: 24px; cursor: pointer; transition: 0.2s; padding: 0; line-height: 1; }
+        .btn-close-sidebar:hover { color: var(--danger); transform: scale(1.1); }
+        
+        .sidebar-profile { text-align: center; margin-bottom: 15px; }
+        .sidebar-profile-img { width: 80px; height: 80px; border-radius: 50%; object-fit: cover; border: 2px solid var(--primary); margin-bottom: 10px; box-shadow: 0 0 15px rgba(59, 130, 246, 0.4); background-color: var(--card-bg); }
+        .sidebar-profile-name { font-size: 18px; font-weight: bold; color: var(--text-main); margin: 0 0 5px 0; }
+        
+        .profile-edit-box { background: rgba(0,0,0,0.2); padding: 12px; border-radius: 8px; border: 1px dashed rgba(255,255,255,0.2); margin-bottom: 25px; }
+        .profile-edit-box input { width: 100%; padding: 10px; margin-bottom: 10px; background: var(--bg-color); border: 1px solid var(--border-color); border-radius: 6px; color: var(--text-main); font-size: 12px; box-sizing: border-box; outline: none; transition: 0.2s; }
+        .profile-edit-box input:focus { border-color: var(--primary); box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2); }
+
+        .sidebar-menu { display: flex; flex-direction: column; gap: 12px; flex-grow: 1; }
+        .sidebar-btn { padding: 12px 15px; border-radius: 8px; font-weight: 600; cursor: pointer; transition: 0.2s; font-size: 14px; text-align: left; display: flex; align-items: center; gap: 10px; border: 1px solid transparent; }
+        
+        .sidebar-btn-setting { background: rgba(59, 130, 246, 0.1); color: var(--primary); border-color: rgba(59, 130, 246, 0.3); }
+        .sidebar-btn-setting:hover { background: var(--primary); color: white; box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4); transform: translateX(-5px); }
+        
+        .sidebar-btn-logout { background: rgba(239, 68, 68, 0.1); color: var(--danger); border-color: rgba(239, 68, 68, 0.3); margin-top: auto; }
+        .sidebar-btn-logout:hover { background: var(--danger); color: white; box-shadow: 0 4px 15px rgba(239, 68, 68, 0.4); transform: translateX(-5px); }
 
         .box { background: var(--card-bg); padding: 20px; border-radius: 16px; border: 1px solid var(--warning); margin-bottom: 25px; box-shadow: 0 4px 15px rgba(245, 158, 11, 0.1); }
         .stats-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-bottom: 30px; }
@@ -41,11 +66,14 @@
 
         .role-badge { display: inline-block; padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: bold; text-transform: uppercase; margin-bottom: 10px; background: rgba(245, 158, 11, 0.2); color: var(--warning); border: 1px solid var(--warning); }
 
-        #splash-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-color); z-index: 99999; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: opacity 0.6s ease, visibility 0.6s ease; }
-        .loader-core { width: 50px; height: 50px; border: 4px solid rgba(59, 130, 246, 0.1); border-top-color: var(--primary); border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 20px; box-shadow: 0 0 20px rgba(59, 130, 246, 0.5); }
-        @keyframes spin { 100% { transform: rotate(360deg); } }
-        .loader-text { color: var(--text-main); font-size: 13px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; animation: pulseText 1.5s infinite; }
-        @keyframes pulseText { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+        #splash-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-color); z-index: 99999; display: flex; align-items: center; justify-content: center; transition: opacity 0.6s ease, visibility 0.6s ease; }
+        .loading-container { width: 80%; max-width: 320px; }
+        .loading-logo { font-size: 45px; text-align: center; margin-bottom: 15px; animation: floatAnim 2s ease-in-out infinite; text-shadow: 0 0 20px rgba(59, 130, 246, 0.5); }
+        @keyframes floatAnim { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+        .loading-title { color: var(--text-main); font-size: 18px; text-align: center; font-weight: 800; letter-spacing: 2px; margin-bottom: 25px; text-transform: uppercase; }
+        .progress-bar-bg { width: 100%; height: 8px; background: rgba(255,255,255,0.05); border-radius: 10px; overflow: hidden; margin-bottom: 10px; border: 1px solid rgba(255,255,255,0.1); }
+        .progress-bar-fill { height: 100%; width: 0%; background: linear-gradient(90deg, var(--primary), #00f2fe); border-radius: 10px; transition: width 0.1s ease; box-shadow: 0 0 15px rgba(59, 130, 246, 0.8); }
+        .loading-info { display: flex; justify-content: space-between; font-size: 11px; color: var(--text-sub); font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
 
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(5px); z-index: 9999; align-items: center; justify-content: center; padding: 20px; box-sizing: border-box; }
         .modal-box { background: var(--card-bg); border: 1px solid var(--primary); box-shadow: 0 10px 30px rgba(59, 130, 246, 0.3); border-radius: 16px; padding: 25px; width: 100%; max-width: 350px; text-align: center; animation: popIn 0.3s ease-out forwards; }
@@ -58,42 +86,73 @@
         .btn-action { color: white; border: none; padding: 12px; width: 100%; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.2s; margin-bottom: 10px; font-size: 14px; }
         .btn-success { background: var(--success); } .btn-success:hover { background: #059669; }
         .btn-warning { background: var(--warning); } .btn-warning:hover { background: #d97706; }
+        .btn-danger { background: var(--danger); } .btn-danger:hover { background: #dc2626; }
         .btn-batal { background: rgba(255,255,255,0.05); color: var(--text-sub); border: 1px solid var(--border-color); padding: 10px; width: 100%; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.2s; font-size: 14px; }
         .btn-batal:hover { background: var(--danger); color: white; border-color: var(--danger); }
 
         .footer { text-align: center; margin-top: 40px; padding-bottom: 10px; font-size: 12px; color: var(--text-sub); letter-spacing: 0.5px; border-top: 1px solid var(--border-color); padding-top: 20px; }
         .footer span { color: var(--primary); font-weight: bold; }
     </style>
-</head>
+    </head>
 <body>
 
     <div id="splash-screen">
-        <div class="loader-core"></div>
-        <div class="loader-text">Memasuki Command Center...</div>
+        <div class="loading-container">
+            <div class="loading-logo">🚀</div>
+            <div class="loading-title">Zeroix Center</div>
+            <div class="progress-bar-bg">
+                <div class="progress-bar-fill" id="progressBar"></div>
+            </div>
+            <div class="loading-info">
+                <span id="loadingText">Menghidupkan Mesin...</span>
+                <span id="loadingPercent">0%</span>
+            </div>
+        </div>
     </div>
 
     <div class="header">
-        <div>
+        <div class="header-content">
             <h1>👋 Halo, <span id="namaUser">Juragan</span>!</h1>
-            <p>Selamat datang di Command Center.</p>
+            <p>Selamat datang di Dashboard.</p>
+        </div>
+        <button class="btn-menu" onclick="toggleSidebar()" title="Buka Menu">☰</button>
+    </div>
+
+    <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+    <div class="sidebar" id="sidebarMenu">
+        <div class="sidebar-header">
+            <h3>PENGATURAN</h3>
+            <button class="btn-close-sidebar" onclick="toggleSidebar()">&times;</button>
+        </div>
+        
+        <div class="sidebar-profile">
+            <img id="sidebarProfilePic" src="https://ui-avatars.com/api/?name=User&background=0D8ABC&color=fff" alt="Profile" class="sidebar-profile-img">
+            <p class="sidebar-profile-name" id="sidebarName">Juragan</p>
             <span id="roleUser" class="role-badge">Memuat Role...</span>
         </div>
-        <div class="header-buttons">
-            <button class="btn-setting" onclick="bukaModalPassword()">Ganti Password 🔑</button>
-            <button class="btn-logout" onclick="logout()">Keluar 🚪</button>
+
+        <div class="profile-edit-box">
+            <input type="text" id="inputProfileUrl" placeholder="Tempel Link Foto (http...)" autocomplete="off">
+            <button class="btn-action btn-success" style="margin: 0; padding: 10px; font-size: 12px;" onclick="simpanFotoProfil()">Ubah Foto Profil</button>
+        </div>
+
+        <div class="sidebar-menu">
+            <button class="sidebar-btn sidebar-btn-setting" onclick="bukaModalPassword()">🔑 Ganti Password</button>
+            <button class="sidebar-btn sidebar-btn-logout" onclick="logout()">🚪 Keluar Panel</button>
         </div>
     </div>
 
-            <div id="boxPengumumanAdmin" class="box" style="display: none;">
+    <div id="boxPengumumanAdmin" class="box" style="display: none;">
         <h3 style="color: var(--warning); margin: 0 0 5px 0;">📢 Kirim Pengumuman Global</h3>
         <p style="font-size: 13px; color: var(--text-sub); margin-top: 0;">Pesan ini akan muncul sebagai Pop-Up di layar semua Reseller/Partner yang login.</p>
         <textarea id="inputPengumuman" rows="3" placeholder="Ketik pengumuman update/maintenance di sini..." style="width: 100%; padding: 12px; border-radius: 8px; background: var(--bg-color); color: var(--text-main); border: 1px solid var(--border-color); font-family: 'Inter', sans-serif; resize: vertical; margin-bottom: 10px; outline: none; box-sizing: border-box;"></textarea>
         <div style="display: flex; gap: 10px;">
             <button class="btn-action btn-warning" onclick="terbitkanPengumuman()" style="margin: 0;">Terbitkan Pesan 🚀</button>
-            <button class="btn-batal" onclick="cabutPengumuman()" style="margin: 0; border-color: var(--danger); color: var(--danger);">Cabut Pesan 🗑️</button>
+            <button class="btn-batal" onclick="konfirmasiCabutPengumuman()" style="margin: 0; border-color: var(--danger); color: var(--danger);">Cabut Pesan 🗑️</button>
         </div>
     </div>
-        <h2>📊 Statistik Sistem</h2>
+
+    <h2>📊 Statistik Sistem</h2>
     <div class="stats-grid">
         <div class="stat-card">
             <span class="stat-icon">💎</span>
@@ -118,13 +177,16 @@
     </div>
 
     <h2>🚀 Menu Navigasi</h2>
-
-    <div id="sectionWeb" style="display: none;">
+        <div id="sectionWeb" style="display: none;">
         <div class="section-title">🛡️ Sistem Internal (Kelola Akses)</div>
         <div class="menu-grid">
             <a href="manage_panel_users.html" class="menu-card card-internal">
                 <h3>Kelola Akses Web</h3>
                 <p>Tambah/Hapus Reseller yang bisa login ke web panel ini.</p>
+            </a>
+            <a href="activity_logs.html" id="menuCctvLog" class="menu-card card-internal" style="border-left-color: #ef4444; display: none;">
+                <h3 style="color: #ef4444;">Rekaman CCTV (Log)</h3>
+                <p>Pantau semua aktivitas login, buat server, dan hapus data di panel.</p>
             </a>
         </div>
     </div>
@@ -158,7 +220,7 @@
     </div>
 
     <div class="footer">
-        Command Center <span>v5.1</span> • Build by Pstar7 x Mini 🚀
+        Panel Center <span>v5.2</span> <br>Build by Pstar7 x Mini 🚀
     </div>
 
     <div id="modalPassword" class="modal-overlay">
@@ -167,12 +229,12 @@
             <p>Masukkan password baru untuk akun kamu.</p>
             <input type="text" id="inputPassBaru" placeholder="Ketik password baru..." autocomplete="off">
             <button class="btn-action btn-success" onclick="simpanPassword()">Simpan Perubahan</button>
-            <button class="btn-batal" onclick="tutupModalPassword()">Batal</button>
+            <button class="btn-batal" onclick="tutupModal('modalPassword')">Batal</button>
         </div>
     </div>
 
     <div id="modalPengumumanPop" class="modal-overlay" style="z-index: 999999;">
-        <div class="modal-box" style="border-color: var(--warning); box-shadow: 0 10px 30px rgba(245, 158, 11, 0.3);">
+        <div class="modal-box" style="border-top: 5px solid var(--warning); border-color: var(--warning); box-shadow: 0 10px 30px rgba(245, 158, 11, 0.3);">
             <h3 style="color: var(--warning);">📢 INFORMASI PENTING</h3>
             <div style="background: rgba(245, 158, 11, 0.05); padding: 15px; border-radius: 8px; border: 1px dashed var(--warning); margin-bottom: 20px; text-align: left;">
                 <p id="teksIsiPengumuman" style="color: var(--text-main); margin: 0; line-height: 1.6; white-space: pre-wrap; font-size: 14px;"></p>
@@ -180,16 +242,73 @@
             <button class="btn-action btn-warning" onclick="tutupPengumuman()">Siap, Paham! 🫡</button>
         </div>
     </div>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+
+    <div id="modalAlert" class="modal-overlay" style="z-index: 999999;">
+        <div class="modal-box" style="border-top: 5px solid var(--warning); border-color: var(--warning);">
+            <h3 style="color: var(--warning);" id="alertTitle">🚨 PERHATIAN!</h3>
+            <p id="alertBody" style="color: var(--text-main); font-size: 14px; margin-bottom: 20px;"></p>
+            <button class="btn-batal" style="width: 100%; border-color: var(--warning); color: var(--warning);" onclick="tutupModal('modalAlert')">Mengerti</button>
+        </div>
+    </div>
+
+    <div id="modalSuccess" class="modal-overlay" style="z-index: 999999;">
+        <div class="modal-box" style="border-top: 5px solid var(--success); border-color: var(--success);">
+            <h3 style="color: var(--success);">✅ BERHASIL!</h3>
+            <p id="successBody" style="color: var(--text-main); font-size: 14px; margin-bottom: 20px;"></p>
+            <button class="btn-action btn-success" onclick="tutupModal('modalSuccess')">Tutup</button>
+        </div>
+    </div>
+
+    <div id="modalConfirm" class="modal-overlay" style="z-index: 999999;">
+        <div class="modal-box" style="border-top: 5px solid var(--danger); border-color: var(--danger);">
+            <h3 style="color: var(--danger);">🚨 PERINGATAN KERAS!</h3>
+            <p id="confirmBody" style="color: var(--text-main); font-size: 14px; margin-bottom: 20px;">Yakin ingin melakukan ini?</p>
+            <div style="display: flex; gap: 10px;">
+                <button class="btn-action btn-danger" style="margin: 0; flex: 1;" onclick="eksekusiCabutPengumuman()">Ya, Hapus!</button>
+                <button class="btn-batal" style="margin: 0; flex: 1;" onclick="tutupModal('modalConfirm')">Batal</button>
+            </div>
+        </div>
+    </div>
+       <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
     <script>
         window.addEventListener('load', () => {
-            setTimeout(() => {
-                const splash = document.getElementById('splash-screen');
-                splash.style.opacity = '0';
-                splash.style.visibility = 'hidden';
-            }, 1200); 
+            const progressBar = document.getElementById('progressBar');
+            const loadingText = document.getElementById('loadingText');
+            const loadingPercent = document.getElementById('loadingPercent');
+            const splash = document.getElementById('splash-screen');
+
+            let progress = 0;
+            const textPhases = [
+                "Menghubungkan ke Pterodactyl...",
+                "Memuat Database Firebase...",
+                "Autentikasi Kredensial...",
+                "Membangun Antarmuka...",
+                "Sistem Siap!"
+            ];
+            
+            let interval = setInterval(() => {
+                progress += Math.floor(Math.random() * 5) + 1; 
+                if (progress >= 100) progress = 100;
+                
+                progressBar.style.width = progress + '%';
+                loadingPercent.innerText = progress + '%';
+
+                if (progress < 25) loadingText.innerText = textPhases[0];
+                else if (progress < 50) loadingText.innerText = textPhases[1];
+                else if (progress < 75) loadingText.innerText = textPhases[2];
+                else if (progress < 95) loadingText.innerText = textPhases[3];
+                else loadingText.innerText = textPhases[4];
+
+                if (progress === 100) {
+                    clearInterval(interval);
+                    setTimeout(() => {
+                        splash.style.opacity = '0';
+                        splash.style.visibility = 'hidden';
+                    }, 500); 
+                }
+            }, 30); 
         });
 
         const currentUserId = localStorage.getItem('user_id');
@@ -199,18 +318,41 @@
         if (!currentUserId) { window.location.replace("login.html"); }
 
         document.getElementById('namaUser').innerText = username;
+        document.getElementById('sidebarName').innerText = username;
         document.getElementById('roleUser').innerText = "Role: " + (role || "Tidak diketahui");
 
-        // ATUR MENU & BOX PENGUMUMAN
+        // FUNGSI UMUM UNTUK MODAL AI
+        function tutupModal(id) { document.getElementById(id).style.display = 'none'; }
+        
+        function showAiAlert(pesan, judul = "🚨 PERHATIAN!") {
+            document.getElementById('alertTitle').innerText = judul;
+            document.getElementById('alertBody').innerHTML = pesan;
+            document.getElementById('modalAlert').style.display = 'flex';
+        }
+
+        function showAiSuccess(pesan) {
+            document.getElementById('successBody').innerHTML = pesan;
+            document.getElementById('modalSuccess').style.display = 'flex';
+        }
+
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebarMenu');
+            const overlay = document.getElementById('sidebarOverlay');
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+        }
+
+        // ATUR MENU KHUSUS OWNER VS PARTNER VS RESELLER
         if (role === 'pemilik') {
             document.getElementById('sectionWeb').style.display = 'block';
+            document.getElementById('menuCctvLog').style.display = 'block'; // CCTV CUMA BUAT OWNER
             document.getElementById('sectionPrivate').style.display = 'block';
             document.getElementById('sectionPublic').style.display = 'block';
             document.getElementById('boxTotalUserPanel').style.display = 'block';
             document.getElementById('boxOnlineUser').style.display = 'block';
             document.getElementById('titleTotalUser').innerText = "Total Akun Web";
             document.getElementById('titleOnlineUser').innerText = "Web Online";
-            document.getElementById('boxPengumumanAdmin').style.display = 'block'; // Tampilkan kotak ketik pengumuman
+            document.getElementById('boxPengumumanAdmin').style.display = 'block'; 
         } else if (role === 'partner_public') {
             document.getElementById('sectionWeb').style.display = 'block';
             document.getElementById('sectionPublic').style.display = 'block';
@@ -228,14 +370,33 @@
         if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
 
-        const connectedRef = database.ref('.info/connected');
-        connectedRef.on('value', (snap) => {
-            if (snap.val() === true && currentUserId) {
-                let userRef = database.ref('users/' + currentUserId);
-                userRef.child('isOnline').onDisconnect().set(false);
-                userRef.child('isOnline').set(true);
+        database.ref('users/' + currentUserId).on('value', (snap) => {
+            if (snap.exists()) {
+                let userData = snap.val();
+                
+                database.ref('users/' + currentUserId + '/isOnline').onDisconnect().set(false);
+                database.ref('users/' + currentUserId + '/isOnline').set(true);
+
+                if (userData.profilePic && userData.profilePic !== "") {
+                    document.getElementById('sidebarProfilePic').src = userData.profilePic;
+                } else {
+                    document.getElementById('sidebarProfilePic').src = `https://ui-avatars.com/api/?name=${username}&background=0D8ABC&color=fff&size=150`;
+                }
             }
         });
+
+        function simpanFotoProfil() {
+            let linkFoto = document.getElementById('inputProfileUrl').value.trim();
+            if(linkFoto === "") { 
+                showAiAlert("Harap tempelkan link URL foto terlebih dahulu!"); 
+                return; 
+            }
+            
+            database.ref('users/' + currentUserId).update({ profilePic: linkFoto }).then(() => {
+                showAiSuccess("Mantap! Foto profil berhasil diperbarui.");
+                document.getElementById('inputProfileUrl').value = ""; 
+            }).catch((error) => showAiAlert("Gagal merubah foto: " + error.message, "❌ ERROR"));
+        }
 
         function logout() {
             if (currentUserId) {
@@ -245,78 +406,68 @@
             } else { localStorage.clear(); window.location.replace("login.html"); }
         }
 
-        function bukaModalPassword() { document.getElementById('modalPassword').style.display = 'flex'; }
-        function tutupModalPassword() { document.getElementById('modalPassword').style.display = 'none'; document.getElementById('inputPassBaru').value = ''; }
-        function simpanPassword() {
-            let passBaru = document.getElementById('inputPassBaru').value.trim();
-            if (passBaru === "") { alert("🚨 Password tidak boleh kosong!"); return; }
-            if (passBaru.length < 5) { alert("🚨 Keamanan kurang! Password minimal 5 karakter."); return; }
-
-            database.ref('users/' + currentUserId).update({ password: passBaru }).then(() => {
-                alert(`✅ MANTAP! Password berhasil diperbarui!`);
-                tutupModalPassword();
-            }).catch((error) => alert("❌ Gagal merubah password: " + error.message));
+        function bukaModalPassword() { 
+            toggleSidebar(); 
+            document.getElementById('modalPassword').style.display = 'flex'; 
         }
 
-        // ==========================================
-        // 🔥 LOGIKA PENGUMUMAN POP-UP GLOBAL
-        // ==========================================
-        
-        // 1. Fungsi Terbitkan (Khusus Owner)
+        function simpanPassword() {
+            let passBaru = document.getElementById('inputPassBaru').value.trim();
+            if (passBaru === "") { showAiAlert("Password tidak boleh kosong!"); return; }
+            if (passBaru.length < 5) { showAiAlert("Keamanan kurang! Password minimal 5 karakter."); return; }
+
+            database.ref('users/' + currentUserId).update({ password: passBaru }).then(() => {
+                tutupModal('modalPassword');
+                showAiSuccess("Mantap! Password berhasil diperbarui!");
+            }).catch((error) => showAiAlert("Gagal merubah password: " + error.message, "❌ ERROR"));
+        }
+
         function terbitkanPengumuman() {
             let teks = document.getElementById('inputPengumuman').value.trim();
-            if(!teks) return alert("Ketik pesannya dulu Komandan!");
+            if(!teks) return showAiAlert("Ketik pesannya dulu Komandan!");
             
-            // Simpan ke Firebase Database
             database.ref('pengumuman_global').set({
-                pesan: teks,
-                timestamp: Date.now() // Pakai waktu buat nandain pengumuman baru
+                pesan: teks, timestamp: Date.now() 
             }).then(() => {
-                alert("📢 Pengumuman berhasil diterbitkan ke seluruh Reseller/Partner!");
+                showAiSuccess("Pengumuman berhasil diterbitkan ke seluruh Reseller/Partner!");
                 document.getElementById('inputPengumuman').value = "";
             });
         }
 
-        // 2. Fungsi Cabut/Hapus (Khusus Owner)
-        function cabutPengumuman() {
-            if(confirm("Yakin ingin mencabut pengumuman yang sedang aktif?")) {
-                database.ref('pengumuman_global').remove().then(() => alert("🗑️ Pengumuman berhasil dihapus."));
-            }
+        function konfirmasiCabutPengumuman() {
+            document.getElementById('confirmBody').innerText = "Yakin ingin mencabut pengumuman global yang sedang aktif saat ini?";
+            document.getElementById('modalConfirm').style.display = 'flex';
         }
 
-        // 3. Radar Deteksi Pengumuman Baru (Berlaku buat semua role)
+        function eksekusiCabutPengumuman() {
+            database.ref('pengumuman_global').remove().then(() => {
+                tutupModal('modalConfirm');
+                showAiSuccess("Pengumuman berhasil dicabut/dihapus.");
+            });
+        }
+
         database.ref('pengumuman_global').on('value', (snap) => {
             let data = snap.val();
             let modal = document.getElementById('modalPengumumanPop');
             let teksArea = document.getElementById('teksIsiPengumuman');
 
             if (data && data.pesan) {
-                // Cek apakah user ini udah pernah baca pengumuman yang INI (berdasarkan timestamp)
                 let lastRead = localStorage.getItem('last_read_announcement');
-                
                 if (lastRead != data.timestamp) {
-                    // Kalau belum baca, munculkan pop-up!
                     teksArea.innerText = data.pesan;
                     modal.style.display = 'flex';
-                    // Simpan sementara ID pengumumannya di elemen modal
                     modal.dataset.time = data.timestamp; 
                 }
-            } else {
-                // Kalau pengumuman dihapus sama owner, sembunyikan pop-up (kalau lagi buka)
-                modal.style.display = 'none';
-            }
+            } else { modal.style.display = 'none'; }
         });
 
-        // 4. Tombol Tutup Pengumuman
         function tutupPengumuman() {
             let modal = document.getElementById('modalPengumumanPop');
             modal.style.display = 'none';
-            // Simpan jejak di HP user kalau dia UDAH BACA pengumuman ini
             let timeId = modal.dataset.time;
             if(timeId) localStorage.setItem('last_read_announcement', timeId);
         }
 
-        // AUTO-FETCH STATISTIK (YANG SEBELUMNYA MATI, SEKARANG HIDUP LAGI!)
         const WORKER_URL = "https://restless-truth-9b75.amisterious09.workers.dev/?"; 
         const PRVT_DOMAIN = "zeroix.panel-prvt.web.id"; 
         const PRVT_API = "ptla_ZM2Ka67FdLj62khENxUm22bKnsHHDBhUCEnDtXfuHhw"; 
@@ -347,3 +498,4 @@
     </script>
 </body>
 </html>
+    

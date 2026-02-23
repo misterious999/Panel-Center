@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Riwayat Aktivitas (Log)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root { --bg-color: #0f172a; --card-bg: #1e293b; --primary: #3b82f6; --success: #10b981; --danger: #ef4444; --warning: #f59e0b; --text-main: #f8fafc; --text-sub: #94a3b8; --border-color: rgba(255,255,255,0.1); }
+        body { font-family: 'Inter', sans-serif; padding: 20px; background-color: var(--bg-color); color: var(--text-main); margin: 0; }
+        h2 { font-weight: 700; margin-bottom: 5px; color: var(--text-main); border-left: 4px solid var(--primary); padding-left: 10px; }
+        .sub-title { color: var(--text-sub); margin-bottom: 25px; font-size: 14px; }
+        .btn-back { display: inline-block; margin-bottom: 20px; padding: 10px 15px; background: rgba(255,255,255,0.05); color: var(--text-main); text-decoration: none; border-radius: 8px; font-size: 14px; font-weight: 600; border: 1px solid var(--border-color); transition: 0.2s; }
+        .btn-back:hover { background: var(--card-bg); transform: translateX(-3px); }
+        
+        .box { background: var(--card-bg); padding: 20px; border-radius: 16px; border: 1px solid var(--border-color); box-shadow: 0 4px 15px rgba(0,0,0,0.2); overflow-x: auto; }
+        
+        table { width: 100%; border-collapse: collapse; min-width: 600px; margin-top: 10px; }
+        th, td { padding: 12px 15px; text-align: left; border-bottom: 1px solid var(--border-color); font-size: 14px; }
+        th { background: rgba(255,255,255,0.02); color: var(--text-sub); font-weight: 600; text-transform: uppercase; font-size: 12px; letter-spacing: 1px; white-space: nowrap; }
+        tr:hover { background: rgba(255,255,255,0.02); }
+        
+        .time-badge { font-size: 11px; color: var(--text-sub); background: rgba(255,255,255,0.05); padding: 4px 8px; border-radius: 6px; white-space: nowrap; }
+        .user-text { font-weight: bold; color: var(--primary); }
+        .action-text { color: var(--text-main); }
+        
+        /* Tombol Hapus Log */
+        .btn-clear { background: rgba(239, 68, 68, 0.1); color: var(--danger); border: 1px solid var(--danger); padding: 8px 15px; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.2s; font-size: 13px; float: right; }
+        .btn-clear:hover { background: var(--danger); color: white; }
+    </style>
+</head>
+<body>
+    <a href="index.html" class="btn-back">⬅ Kembali ke Dashboard</a>
+    
+    <h2>📝 Riwayat Aktivitas Panel</h2>
+    <p class="sub-title">Memantau seluruh aktivitas User, Reseller, dan Partner di dalam sistem.</p>
+
+    <div class="box">
+        <div style="margin-bottom: 20px; overflow: hidden;">
+            <h3 style="margin: 0; float: left; display: flex; align-items: center; gap: 8px;">📷 Log CCTV (100 Aktivitas Terakhir)</h3>
+            <button class="btn-clear" onclick="hapusSemuaLog()">🗑️ Bersihkan Log</button>
+        </div>
+
+        <table id="tabelLog">
+            <tr><th>Waktu (WIB)</th><th>Pelaku (User)</th><th>Aktivitas yang Dilakukan</th></tr>
+            <tr><td colspan="3" style="text-align: center; color: var(--text-sub); padding: 20px;">⏳ Memuat rekaman CCTV...</td></tr>
+        </table>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+    <script>
+        const currentUserId = localStorage.getItem('user_id');
+        const role = localStorage.getItem('role') || '';
+
+        // Halaman ini khusus Komandan (Pemilik)
+        if (!currentUserId || role !== 'pemilik') {
+            alert("🚨 AKSES DITOLAK!\nHalaman log CCTV ini sangat rahasia, hanya untuk Pemilik.");
+            window.location.replace("index.html");
+        }
+
+        const firebaseConfig = { databaseURL: "https://cobaaja-ac5d0-default-rtdb.firebaseio.com" };
+        if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+
+        // Mengambil data Log
+        function ambilLog() {
+            // Ambil 100 log terbaru biar gak ngelag
+            database.ref('activity_logs').orderByChild('timestamp').limitToLast(100).on('value', (snap) => {
+                let tabel = `<tr><th>Waktu (WIB)</th><th>Pelaku (User)</th><th>Aktivitas yang Dilakukan</th></tr>`;
+                let adaData = false;
+                let dataArray = [];
+
+                snap.forEach((child) => { dataArray.push(child.val()); });
+                
+                // Urutkan dari yang paling baru ke paling lama
+                dataArray.sort((a, b) => b.timestamp - a.timestamp);
+
+                dataArray.forEach(log => {
+                    adaData = true;
+                    // Format waktu
+                    let date = new Date(log.timestamp);
+                    let waktu = date.toLocaleString('id-ID', { day: '2-digit', month: 'short', hour: '2-digit', minute:'2-digit', second:'2-digit' });
+
+                    tabel += `<tr>
+                        <td><span class="time-badge">🕒 ${waktu}</span></td>
+                        <td><span class="user-text">👤 ${log.username}</span><br><span style="font-size:10px; color:var(--text-sub); text-transform:uppercase;">${log.role.replace('_', ' ')}</span></td>
+                        <td class="action-text">${log.action}</td>
+                    </tr>`;
+                });
+
+                if (!adaData) tabel += `<tr><td colspan="3" style="text-align: center; color: var(--warning); padding: 20px;">Sistem bersih. Belum ada aktivitas yang terekam.</td></tr>`;
+                document.getElementById('tabelLog').innerHTML = tabel;
+            });
+        }
+
+        function hapusSemuaLog() {
+            if(confirm("🚨 YAKIN INGIN MENGHAPUS SEMUA REKAMAN CCTV?\n\nLog yang dihapus tidak bisa dikembalikan!")) {
+                database.ref('activity_logs').remove().then(() => {
+                    alert("✅ Semua log berhasil dibersihkan!");
+                });
+            }
+        }
+
+        ambilLog();
+    </script>
+</body>
+</html>

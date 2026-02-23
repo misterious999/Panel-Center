@@ -18,10 +18,26 @@
         .box-header h3 { margin: 0; font-size: 18px; display: flex; align-items: center; gap: 8px; color: var(--text-main); }
         
         label { display: block; margin-bottom: 5px; font-size: 12px; font-weight: 600; color: var(--text-sub); text-transform: uppercase; }
-        input, select { width: 100%; padding: 12px; margin-bottom: 15px; background: var(--input-bg); border: 1px solid var(--border-color); border-radius: 8px; color: var(--text-main); font-size: 14px; box-sizing: border-box; outline: none; transition: 0.2s; }
-        input:focus, select:focus { border-color: var(--primary); box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2); }
+        input { width: 100%; padding: 12px; margin-bottom: 15px; background: var(--input-bg); border: 1px solid var(--border-color); border-radius: 8px; color: var(--text-main); font-size: 14px; box-sizing: border-box; outline: none; transition: 0.2s; }
+        input:focus { border-color: var(--primary); box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2); }
         .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
         .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+        
+        /* =========================================
+           CUSTOM SELECT DROPDOWN (GELAP & ELEGAN)
+           ========================================= */
+        .custom-select-wrapper { position: relative; user-select: none; margin-bottom: 15px; }
+        .custom-select-trigger { width: 100%; padding: 12px 15px; background: var(--input-bg); border: 1px solid var(--border-color); border-radius: 8px; color: var(--text-main); font-size: 14px; box-sizing: border-box; cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: 0.2s; }
+        .custom-select-trigger:hover, .custom-select-trigger.active { border-color: var(--primary); box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2); }
+        .custom-select-trigger .arrow { transition: transform 0.3s ease; font-size: 12px; }
+        .custom-select-trigger.active .arrow { transform: rotate(180deg); }
+        
+        .custom-options { position: absolute; display: none; top: calc(100% + 5px); left: 0; right: 0; background: linear-gradient(145deg, #1a1a2e, #16213e); border: 1px solid var(--primary); border-radius: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.6); z-index: 99; overflow: hidden; animation: fadeIn 0.2s ease; }
+        .custom-options.open { display: block; }
+        .custom-option { padding: 14px 15px; font-size: 13px; color: #e0e0e0; cursor: pointer; transition: 0.2s; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .custom-option:last-child { border-bottom: none; }
+        .custom-option:hover, .custom-option.selected { background: rgba(59, 130, 246, 0.2); color: #fff; padding-left: 20px; border-left: 3px solid var(--primary); }
+
         .btn-tambah { width: 100%; background: var(--primary); color: white; border: none; cursor: pointer; border-radius: 8px; padding: 14px; font-weight: bold; transition: 0.2s; margin-top: 5px; font-size: 15px; }
         .btn-tambah:hover { background: #2563eb; transform: translateY(-2px); box-shadow: 0 5px 15px rgba(59, 130, 246, 0.3); }
         
@@ -30,7 +46,7 @@
 
         table { width: 100%; border-collapse: collapse; min-width: 500px; margin-top: 10px; }
         th, td { padding: 12px 15px; text-align: left; border-bottom: 1px solid var(--border-color); font-size: 14px; }
-        th { background: rgba(255,255,255,0.02); color: var(--text-sub); font-weight: 600; text-transform: uppercase; font-size: 12px; letter-spacing: 1px; }
+        th { background: rgba(255,255,255,0.02); color: var(--text-sub); font-weight: 600; text-transform: uppercase; font-size: 12px; letter-spacing: 1px; white-space: nowrap; }
         tr:hover { background: rgba(255,255,255,0.02); }
         .btn-hapus { background: rgba(239, 68, 68, 0.1); color: var(--danger); border: 1px solid var(--danger); cursor: pointer; border-radius: 6px; padding: 6px 12px; font-weight: 600; font-size: 12px; transition: 0.2s; white-space: nowrap; }
         .btn-hapus:hover { background: var(--danger); color: white; }
@@ -46,16 +62,16 @@
         .mini-ai-popup { background: linear-gradient(145deg, #1a1a2e, #16213e); border-radius: 15px; width: 100%; max-width: 420px; padding: 30px 25px; text-align: center; color: #fff; position: relative; box-shadow: 0 15px 40px rgba(0,0,0,0.6); }
         .mini-ai-popup::before { content: ''; position: absolute; top: -2px; left: -2px; right: -2px; bottom: -2px; background: linear-gradient(45deg, #00f2fe, #4facfe, #00f2fe); z-index: -1; border-radius: 17px; animation: glowingAi 3s linear infinite; background-size: 200%; }
         
-        /* Tema Warna Pop-up */
         .mini-ai-popup.danger-mode::before { background: linear-gradient(45deg, #ef4444, #f87171, #ef4444); }
         .mini-ai-popup.warning-mode::before { background: linear-gradient(45deg, #f59e0b, #fbbf24, #f59e0b); }
+        .mini-ai-popup.success-mode::before { background: linear-gradient(45deg, #10b981, #34d399, #10b981); }
         
         .mini-ai-header { font-size: 22px; font-weight: 800; color: #4facfe; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 2px; text-shadow: 0 0 10px rgba(79, 172, 254, 0.5); }
         .mini-ai-header.danger { color: #ef4444; text-shadow: 0 0 10px rgba(239, 68, 68, 0.5); }
         .mini-ai-header.warning { color: #f59e0b; text-shadow: 0 0 10px rgba(245, 158, 11, 0.5); }
+        .mini-ai-header.success { color: #10b981; text-shadow: 0 0 10px rgba(16, 185, 129, 0.5); }
         
         .mini-ai-body { font-size: 15px; color: #e0e0e0; line-height: 1.6; margin-bottom: 25px; }
-        
         .info-detail-ai { background: rgba(15, 23, 42, 0.8); border: 1px solid rgba(0, 242, 254, 0.3); border-radius: 12px; padding: 20px; text-align: left; margin-bottom: 20px; color: #e0e0e0; }
         .info-detail-ai p { margin: 8px 0; font-size: 14px; }
         
@@ -65,6 +81,9 @@
         
         .mini-ai-btn-danger { background: linear-gradient(45deg, #ef4444, #dc2626); color: white; }
         .mini-ai-btn-danger:hover { box-shadow: 0 5px 15px rgba(239, 68, 68, 0.4); }
+        
+        .mini-ai-btn-warning { background: linear-gradient(45deg, #f59e0b, #d97706); color: white; }
+        .mini-ai-btn-warning:hover { box-shadow: 0 5px 15px rgba(245, 158, 11, 0.4); }
 
         .mini-ai-btn-close { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: white; padding: 12px; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.2s; flex: 1; }
         .mini-ai-btn-close:hover { background: rgba(255,255,255,0.2); }
@@ -100,21 +119,35 @@
             <input type="number" id="newLocId" value="1">
             <input type="number" id="newEggId" value="15">
         </div>
+        
         <div id="roleContainer">
             <label>Tipe Akun (Pterodactyl Role):</label>
-            <select id="newRole">
-                <option value="false">👤 Member Biasa</option>
-                <option value="true">👑 Admin Panel (Akses Penuh)</option>
-            </select>
+            <div class="custom-select-wrapper">
+                <div class="custom-select-trigger" onclick="toggleRoleSelect()">
+                    <span id="customSelectText">👤 Member Biasa</span>
+                    <span class="arrow">▼</span>
+                </div>
+                <div class="custom-options" id="customRoleOptions">
+                    <div class="custom-option selected" onclick="pilihRole('false', '👤 Member Biasa')">👤 Member Biasa</div>
+                    <div class="custom-option" onclick="pilihRole('true', '👑 Admin Panel (Akses Penuh)')">👑 Admin Panel (Akses Penuh)</div>
+                </div>
+            </div>
+            <input type="hidden" id="newRole" value="false">
         </div>
+        
         <button class="btn-tambah" onclick="buatSatuPaket()">🌍 Bikin 1 Paket Sekarang</button>
     </div>
 
     <div class="box">
-        <div class="box-header">
+                <div class="box-header">
             <h3>📋 Semua User Pelanggan <span id="textDaftar"></span></h3>
-            <button class="btn-sapu" id="btnSapu" onclick="bersihkanUserKosong()">🧹 Bersihkan User Tanpa Server</button>
+            <button class="btn-sapu" id="btnSapu" onclick="konfirmasiSapuAwal()">🧹 Bersihkan User Tanpa Server</button>
         </div>
+        <div style="margin-bottom: 15px; position: relative;">
+            <span style="position: absolute; left: 15px; top: 14px; color: var(--text-sub);">🔍</span>
+            <input type="text" id="searchInput" onkeyup="cariDataTabel()" placeholder="Cari username, email, atau ID..." style="padding-left: 40px; margin-bottom: 0; border-color: rgba(59, 130, 246, 0.4); box-shadow: 0 0 10px rgba(0,0,0,0.2);">
+        </div>
+
         <table id="tabelPtero">
             <tr><th>ID</th><th>Username</th><th>Email</th><th>Status</th><th>Aksi</th></tr>
             <tr><td colspan="5" style="text-align: center; color: var(--text-sub); padding: 20px;">⏳ Mengambil data...</td></tr>
@@ -123,9 +156,8 @@
 
     <div id="modalScreenshot" class="mini-ai-overlay">
         <div class="mini-ai-popup">
-            <div class="mini-ai-header">✨ VIP ACCESS ✨</div>
+            <div class="mini-ai-header">✨ PUBLIC ACCESS ✨</div>
             <p style="margin-bottom: 20px; color: #a0aec0; font-size: 13px;">Proses berhasil dijalankan. Detail akun Pterodactyl telah tersimpan di sistem.</p>
-            
             <div class="info-detail-ai">
                 <div style="margin-bottom: 12px; border-bottom: 1px dashed rgba(255,255,255,0.2); padding-bottom: 12px;">
                     <span style="font-size: 11px; color: #4facfe; text-transform: uppercase; font-weight: bold;">Detail Akun</span>
@@ -141,7 +173,6 @@
                     <p style="margin-top:8px;">🖥️ Server: <span id="resServer" style="color: #10b981; font-weight: bold;"></span></p>
                 </div>
             </div>
-
             <div class="ai-btn-group">
                 <button class="mini-ai-btn" onclick="salinDataBuyer()" id="btnSalin">📋 Salin Teks</button>
                 <button class="mini-ai-btn-close" onclick="tutupModal('modalScreenshot')">Tutup</button>
@@ -163,14 +194,13 @@
         </div>
     </div>
 
-    <div id="modalHapusSuccess" class="mini-ai-overlay">
-        <div class="mini-ai-popup danger-mode">
-            <div class="mini-ai-header danger">💥 DUAARR!! MUSNAH!</div>
-            <div class="mini-ai-body">
-                User <b style="color: #ef4444;" id="delSuccessUsername"></b> beserta <b id="delSuccessServerCount"></b> Server miliknya telah berhasil dihapus dari sistem.
-            </div>
+    <div id="modalSapuConfirm" class="mini-ai-overlay">
+        <div class="mini-ai-popup warning-mode">
+            <div class="mini-ai-header warning">⚠️ SAPU BERSIH!</div>
+            <div class="mini-ai-body" id="sapuConfirmBody"></div>
             <div class="ai-btn-group">
-                <button class="mini-ai-btn-close" style="flex: 1; background: var(--danger); border-color: var(--danger);" onclick="tutupModal('modalHapusSuccess')">Tutup Panel</button>
+                <button id="btnEksekusiSapu" class="mini-ai-btn mini-ai-btn-warning" onclick="eksekusiSapuBersih()">🧹 Lanjutkan Eksekusi</button>
+                <button class="mini-ai-btn-close" onclick="tutupModal('modalSapuConfirm')">Batal</button>
             </div>
         </div>
     </div>
@@ -184,7 +214,17 @@
             </div>
         </div>
     </div>
-        <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+
+    <div id="modalAiSuccess" class="mini-ai-overlay">
+        <div class="mini-ai-popup success-mode" id="popupSuccessMode">
+            <div class="mini-ai-header success" id="aiSuccessTitle">BERHASIL</div>
+            <div class="mini-ai-body" id="aiSuccessBody">Proses sukses dilakukan.</div>
+            <div class="ai-btn-group">
+                <button class="mini-ai-btn-close" id="btnTutupSuccess" style="flex: 1; background: var(--success); border-color: var(--success);" onclick="tutupModal('modalAiSuccess')">Tutup</button>
+            </div>
+        </div>
+    </div>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
     <script>
@@ -195,11 +235,11 @@
         const allowedRoles = ['pemilik', 'reseller_public', 'partner_public'];
 
         if (!currentUserId || !allowedRoles.includes(role)) {
+            // Native alert disini buat blokir langsung
             alert("🚨 AKSES DITOLAK!\nHalaman ini khusus divisi Public.");
             window.location.replace("index.html");
         }
         
-        // Tampilkan/Sembunyikan Role Admin
         if (role === 'pemilik' || role === 'partner_public') {
             document.getElementById('roleContainer').style.display = 'block';
             document.getElementById('textDaftar').innerText = role === 'pemilik' ? "(Semua Reseller)" : "(Tim Kamu)";
@@ -226,7 +266,34 @@
         const PTERO_API = "ptla_jfNBOxsfLDu0Ui9YUZMDANXfuLHglNqSJ3V55gHTKWb"; 
         const WORKER_URL = "https://restless-truth-9b75.amisterious09.workers.dev"; 
 
-        // Fungsi Penolong Modal AI
+        // ==========================================
+        // 🛠️ FUNGSI CUSTOM DROPDOWN
+        // ==========================================
+        function toggleRoleSelect() {
+            document.getElementById('customRoleOptions').classList.toggle('open');
+            document.querySelector('.custom-select-trigger').classList.toggle('active');
+        }
+
+        function pilihRole(value, text) {
+            document.getElementById('newRole').value = value;
+            document.getElementById('customSelectText').innerText = text;
+            let options = document.querySelectorAll('.custom-option');
+            options.forEach(opt => opt.classList.remove('selected'));
+            event.target.classList.add('selected');
+            toggleRoleSelect();
+        }
+
+        document.addEventListener('click', function(e) {
+            const select = document.querySelector('.custom-select-wrapper');
+            if (select && !select.contains(e.target)) {
+                document.getElementById('customRoleOptions').classList.remove('open');
+                document.querySelector('.custom-select-trigger').classList.remove('active');
+            }
+        });
+
+        // ==========================================
+        // 🛠️ FUNGSI PENOLONG MODAL AI
+        // ==========================================
         function tutupModal(id) { document.getElementById(id).style.display = 'none'; }
         
         function showAiAlert(pesan, judul = "PERHATIAN") {
@@ -235,7 +302,30 @@
             document.getElementById('modalAiAlert').style.display = 'flex';
         }
 
-        // 1. TAMPILKAN USER
+        function showAiSuccess(pesan, judul = "BERHASIL", isDanger = false) {
+            document.getElementById('aiSuccessTitle').innerText = judul;
+            document.getElementById('aiSuccessBody').innerHTML = pesan;
+            
+            let popup = document.getElementById('popupSuccessMode');
+            let header = document.getElementById('aiSuccessTitle');
+            let btn = document.getElementById('btnTutupSuccess');
+
+            if(isDanger) {
+                popup.className = "mini-ai-popup danger-mode";
+                header.className = "mini-ai-header danger";
+                btn.style.background = "var(--danger)"; btn.style.borderColor = "var(--danger)";
+            } else {
+                popup.className = "mini-ai-popup success-mode";
+                header.className = "mini-ai-header success";
+                btn.style.background = "var(--success)"; btn.style.borderColor = "var(--success)";
+            }
+
+            document.getElementById('modalAiSuccess').style.display = 'flex';
+        }
+
+        // ==========================================
+        // 📋 1. TAMPILKAN USER PTERO PUBLIC
+        // ==========================================
         function ambilDataPtero() {
             fetch(`${WORKER_URL}/?https://${PTERO_DOMAIN}/api/application/users`, {
                 headers: { 'Accept': 'application/json', 'Authorization': `Bearer ${PTERO_API}` }
@@ -249,7 +339,6 @@
                     if (role !== 'pemilik') {
                         if (u.last_name !== myUsername) return; 
                     }
-
                     countDisplayed++;
                     
                     let status = u.root_admin ? `<span class="badge badge-admin">👑 Admin</span>` : `<span class="badge badge-user">👤 Member</span>`;
@@ -265,20 +354,31 @@
                     </tr>`;
                 });
 
-                if (countDisplayed === 0) tabel += `<tr><td colspan="5" style="text-align: center; color: var(--warning); padding: 20px;">Kamu belum membuat satupun akun pelanggan Public.</td></tr>`;
+                if (countDisplayed === 0) {
+                    tabel += `<tr><td colspan="5" style="text-align: center; color: var(--warning); padding: 20px;">Kamu belum membuat satupun akun pelanggan Public.</td></tr>`;
+                }
                 document.getElementById('tabelPtero').innerHTML = tabel;
             }).catch(e => {
                 document.getElementById('tabelPtero').innerHTML = `<tr><td colspan="5" style="text-align: center; color: var(--danger);">❌ Error: ${e.message}</td></tr>`;
             });
         }
+                // ==========================================
+        // 🧹 2. LOGIKA SAPU BERSIH (FULL MODAL AI)
+        // ==========================================
+        let targetHantuGlobal = []; 
 
-        // 2. SAPU BERSIH USER KOSONG
-        async function bersihkanUserKosong() {
-            let konfirmasi = confirm("🚨 YAKIN INGIN MENYAPU BERSIH?\n\nSistem akan otomatis mendeteksi dan MENGHAPUS semua User (Member) Public yang sudah tidak memiliki Server aktif.\n\nProses ini tidak bisa dikembalikan!");
-            if (!konfirmasi) return;
+        function konfirmasiSapuAwal() {
+            document.getElementById('sapuConfirmBody').innerHTML = "Sistem akan mendeteksi dan MENGHAPUS semua User (Member) Public yang sudah tidak memiliki Server aktif.<br><br>Proses ini <u>tidak bisa dikembalikan</u>. Lanjutkan pemindaian?";
+            let btnExec = document.getElementById('btnEksekusiSapu');
+            btnExec.innerText = "🔍 Pindai Data";
+            btnExec.onclick = prosesPindaiHantu; 
+            document.getElementById('modalSapuConfirm').style.display = 'flex';
+        }
 
+        async function prosesPindaiHantu() {
+            tutupModal('modalSapuConfirm');
             let btn = document.getElementById('btnSapu');
-            btn.innerText = "⏳ Mendeteksi Data..."; btn.style.pointerEvents = "none";
+            btn.innerText = "⏳ Memindai Hantu..."; btn.style.pointerEvents = "none";
 
             try {
                 let resServers = await fetch(`${WORKER_URL}/?https://${PTERO_DOMAIN}/api/application/servers`, { headers: { 'Accept': 'application/json', 'Authorization': `Bearer ${PTERO_API}` } });
@@ -287,8 +387,8 @@
 
                 let resUsers = await fetch(`${WORKER_URL}/?https://${PTERO_DOMAIN}/api/application/users`, { headers: { 'Accept': 'application/json', 'Authorization': `Bearer ${PTERO_API}` } });
                 let dataUsers = await resUsers.json();
+                
                 let targetHapus = [];
-
                 dataUsers.data.forEach(user => {
                     let u = user.attributes;
                     if (u.root_admin || u.id === 1) return;
@@ -297,29 +397,48 @@
                 });
 
                 if (targetHapus.length === 0) {
-                    showAiAlert("✨ MANTAP! Tidak ada 'User Hantu' (User tanpa server) di daftar Public kamu.", "BERSIH");
+                    showAiSuccess("Tidak ada <b>'User Hantu'</b> (User tanpa server) di daftar Public kamu.", "✨ PANEL BERSIH!");
                     btn.innerText = "🧹 Bersihkan User Tanpa Server"; btn.style.pointerEvents = "auto";
                     return;
                 }
 
-                let konfirmasi2 = confirm(`⚠️ DITEMUKAN ${targetHapus.length} USER HANTU!\nSistem siap mengeksekusi penghapusan massal. Lanjutkan?`);
-                if (!konfirmasi2) { btn.innerText = "🧹 Bersihkan User Tanpa Server"; btn.style.pointerEvents = "auto"; return; }
+                targetHantuGlobal = targetHapus;
+                document.getElementById('sapuConfirmBody').innerHTML = `Ditemukan <b style="color:var(--danger); font-size:18px;">${targetHapus.length} USER HANTU!</b><br><br>Sistem siap mengeksekusi penghapusan massal. Lanjutkan eksekusi?`;
+                
+                let btnExec = document.getElementById('btnEksekusiSapu');
+                btnExec.innerText = "💥 Ya, Eksekusi!";
+                btnExec.onclick = eksekusiHapusHantu; 
 
-                btn.innerText = `⏳ Menghapus ${targetHapus.length} User...`;
+                document.getElementById('modalSapuConfirm').style.display = 'flex';
+                btn.innerText = "🧹 Bersihkan User Tanpa Server"; btn.style.pointerEvents = "auto";
+
+            } catch (e) { 
+                showAiAlert("Terjadi Error saat menyapu: " + e.message, "❌ ERROR"); 
+                btn.innerText = "🧹 Bersihkan User Tanpa Server"; btn.style.pointerEvents = "auto";
+            }
+        }
+
+        async function eksekusiHapusHantu() {
+            tutupModal('modalSapuConfirm');
+            let btn = document.getElementById('btnSapu');
+            btn.innerText = `⏳ Menghapus ${targetHantuGlobal.length} User...`; btn.style.pointerEvents = "none";
+
+            try {
                 let terhapus = 0;
-                for (let u of targetHapus) {
+                for (let u of targetHantuGlobal) {
                     await fetch(`${WORKER_URL}/?https://${PTERO_DOMAIN}/api/application/users/${u.id}`, { method: 'DELETE', headers: { 'Accept': 'application/json', 'Authorization': `Bearer ${PTERO_API}` } });
                     terhapus++;
                 }
-
-                alert(`🧹 SAPU BERSIH SELESAI!\nTotal ${terhapus} User Hantu berhasil dimusnahkan dari Pterodactyl Public.`);
+                showAiSuccess(`Sapu bersih selesai!<br>Total <b>${terhapus} User Hantu</b> berhasil dimusnahkan.`, "🧹 CLEAR!", false);
                 ambilDataPtero(); 
-            } catch (e) { showAiAlert("Terjadi Error saat menyapu: " + e.message, "ERROR"); }
-
+            } catch (e) { showAiAlert("Terjadi error: " + e.message, "❌ ERROR"); }
+            
             btn.innerText = "🧹 Bersihkan User Tanpa Server"; btn.style.pointerEvents = "auto";
         }
 
-        // 3. BUAT PAKET & HAPUS
+        // ==========================================
+        // 🚀 3. BUAT 1 PAKET 
+        // ==========================================
         async function buatSatuPaket() {
             let username = document.getElementById('newUsername').value.trim();
             let password = document.getElementById('newPassword').value.trim();
@@ -335,7 +454,8 @@
             let isAdmin = roleElem ? roleElem.value === "true" : false;
 
             if(!username || !password || !email || !serverName || !ram || !cpu || !disk) { 
-                showAiAlert("Harap isi semua kolom formulir secara lengkap!", "DATA KOSONG"); return; 
+                showAiAlert("Harap isi semua kolom formulir secara lengkap!", "🚨 DATA KOSONG"); 
+                return; 
             }
 
             let btn = document.querySelector('.btn-tambah');
@@ -357,8 +477,6 @@
                 let newUserId = dataUser.attributes.id; 
 
                 btn.innerText = "⏳ 2/2: Mendeploy Server...";
-                
-                // ===== PERUBAHAN STARTUP COMMAND DI SINI =====
                 let serverPayload = {
                     "name": serverName, "description": `Dibuat 1 Paket oleh ${myUsername}`, "user": newUserId, "egg": parseInt(eggId),
                     "docker_image": "ghcr.io/parkervcp/yolks:nodejs_20", 
@@ -388,7 +506,7 @@
         }
 
         // ==========================================
-        // 🔥 LOGIKA POP-UP HAPUS & SALIN TEKS
+        // 💥 4. LOGIKA HAPUS 1 PAKET
         // ==========================================
         let userToDeleteId = null;
         let userToDeleteName = null;
@@ -402,7 +520,6 @@
 
         async function prosesHapusUser() {
             tutupModal('modalHapusConfirm'); 
-            
             let userId = userToDeleteId;
             let username = userToDeleteName;
             let btn = document.getElementById(`btnHapus_${userId}`);
@@ -422,20 +539,17 @@
                 let resUser = await fetch(`${WORKER_URL}/?https://${PTERO_DOMAIN}/api/application/users/${userId}`, { method: 'DELETE', headers: { 'Accept': 'application/json', 'Authorization': `Bearer ${PTERO_API}` } });
                 if (!resUser.ok) throw new Error(await resUser.text());
 
-                munculkanModalHapusSuccess(username, serverCount);
+                showAiSuccess(`User <b style="color: #ef4444;">${username}</b> beserta <b>${serverCount}</b> Server miliknya telah musnah!`, "💥 DUAARR!! MUSNAH!", true);
                 ambilDataPtero(); 
             } catch (e) { 
-                showAiAlert("Gagal menghapus: " + e.message, "ERROR"); 
+                showAiAlert("Gagal menghapus: " + e.message, "❌ ERROR"); 
                 btn.innerText = "🗑️ Hapus 1 Paket"; btn.style.pointerEvents = "auto"; 
             }
         }
 
-        function munculkanModalHapusSuccess(username, serverCount) {
-            document.getElementById('delSuccessUsername').innerText = username;
-            document.getElementById('delSuccessServerCount').innerText = serverCount;
-            document.getElementById('modalHapusSuccess').style.display = 'flex';
-        }
-
+        // ==========================================
+        // 📋 5. STRUK & COPY
+        // ==========================================
         function munculkanModalStruk(user, pass, email, serverName) {
             document.getElementById('resUser').innerText = user; 
             document.getElementById('resPass').innerText = pass;
@@ -471,15 +585,46 @@
                 btn.innerHTML = "✅ Berhasil Disalin!";
                 btn.style.background = "#10b981";
                 btn.style.color = "#fff";
-                
                 setTimeout(() => {
                     btn.innerHTML = "📋 Salin Teks";
                     btn.style.background = "linear-gradient(45deg, #00f2fe, #4facfe)";
                     btn.style.color = "#1a1a2e";
                 }, 2000);
-            }).catch(err => {
-                showAiAlert("Gagal menyalin otomatis. Silakan copy manual.", "COPY GAGAL");
-            });
+            }).catch(err => { showAiAlert("Gagal menyalin otomatis. Silakan copy manual.", "📋 COPY GAGAL"); });
+        }
+                // ==========================================
+        // 🔍 FITUR LIVE SEARCH PADA TABEL
+        // ==========================================
+        function cariDataTabel() {
+            // Ambil nilai yang diketik, ubah ke huruf kecil semua biar gampang dicocokkan
+            let input = document.getElementById("searchInput").value.toLowerCase();
+            let table = document.getElementById("tabelPtero");
+            let tr = table.getElementsByTagName("tr");
+
+            // Mulai looping dari index 1 (karena index 0 itu baris judul/header tabel)
+            for (let i = 1; i < tr.length; i++) {
+                // Kalau baris ini adalah baris "loading" atau "kosong", lewati
+                if (tr[i].getElementsByTagName("td").length === 1) continue;
+
+                let tdID = tr[i].getElementsByTagName("td")[0];
+                let tdUsername = tr[i].getElementsByTagName("td")[1];
+                let tdEmail = tr[i].getElementsByTagName("td")[2];
+
+                if (tdID || tdUsername || tdEmail) {
+                    let textID = tdID.textContent || tdID.innerText;
+                    let textUsername = tdUsername.textContent || tdUsername.innerText;
+                    let textEmail = tdEmail.textContent || tdEmail.innerText;
+
+                    // Cek apakah input cocok dengan ID, Username, atau Email
+                    if (textID.toLowerCase().indexOf(input) > -1 || 
+                        textUsername.toLowerCase().indexOf(input) > -1 || 
+                        textEmail.toLowerCase().indexOf(input) > -1) {
+                        tr[i].style.display = ""; // Tampilkan baris
+                    } else {
+                        tr[i].style.display = "none"; // Sembunyikan baris
+                    }
+                }       
+            }
         }
 
         ambilDataPtero();

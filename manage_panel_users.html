@@ -18,16 +18,30 @@
         .box-header h3 { margin: 0; font-size: 18px; display: flex; align-items: center; gap: 8px; color: var(--text-main); }
         
         label { display: block; margin-bottom: 5px; font-size: 12px; font-weight: 600; color: var(--text-sub); text-transform: uppercase; }
-        input, select { width: 100%; padding: 12px; margin-bottom: 15px; background: var(--input-bg); border: 1px solid var(--border-color); border-radius: 8px; color: var(--text-main); font-size: 14px; box-sizing: border-box; outline: none; transition: 0.2s; }
-        input:focus, select:focus { border-color: var(--primary); box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2); }
+        input { width: 100%; padding: 12px; margin-bottom: 15px; background: var(--input-bg); border: 1px solid var(--border-color); border-radius: 8px; color: var(--text-main); font-size: 14px; box-sizing: border-box; outline: none; transition: 0.2s; }
+        input:focus { border-color: var(--primary); box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2); }
         .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
         
+        /* DROPDOWN CUSTOM */
+        .custom-select-wrapper { position: relative; user-select: none; margin-bottom: 15px; }
+        .custom-select-trigger { width: 100%; padding: 12px 15px; background: var(--input-bg); border: 1px solid var(--border-color); border-radius: 8px; color: var(--text-main); font-size: 14px; box-sizing: border-box; cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: 0.2s; }
+        .custom-select-trigger:hover, .custom-select-trigger.active { border-color: var(--primary); box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2); }
+        .custom-select-trigger .arrow { transition: transform 0.3s ease; font-size: 12px; }
+        .custom-select-trigger.active .arrow { transform: rotate(180deg); }
+        
+        .custom-options { position: absolute; display: none; top: calc(100% + 5px); left: 0; right: 0; background: linear-gradient(145deg, #1a1a2e, #16213e); border: 1px solid var(--primary); border-radius: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.6); z-index: 99; overflow: hidden; animation: fadeIn 0.2s ease; }
+        .custom-options.open { display: block; }
+        .custom-option { padding: 14px 15px; font-size: 13px; color: #e0e0e0; cursor: pointer; transition: 0.2s; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .custom-option:last-child { border-bottom: none; }
+        .custom-option:hover, .custom-option.selected { background: rgba(59, 130, 246, 0.2); color: #fff; padding-left: 20px; border-left: 3px solid var(--primary); }
+
         .btn-tambah { width: 100%; background: var(--primary); color: white; border: none; cursor: pointer; border-radius: 8px; padding: 14px; font-weight: bold; transition: 0.2s; margin-top: 5px; font-size: 15px; }
         .btn-tambah:hover { background: #2563eb; transform: translateY(-2px); box-shadow: 0 5px 15px rgba(59, 130, 246, 0.3); }
 
         table { width: 100%; border-collapse: collapse; min-width: 500px; margin-top: 10px; }
         th, td { padding: 12px 15px; text-align: left; border-bottom: 1px solid var(--border-color); font-size: 14px; }
-        th { background: rgba(255,255,255,0.02); color: var(--text-sub); font-weight: 600; text-transform: uppercase; font-size: 12px; letter-spacing: 1px; }
+        th { background: rgba(255,255,255,0.02); color: var(--text-sub); font-weight: 600; text-transform: uppercase; font-size: 12px; letter-spacing: 1px; white-space: nowrap; }
+
         tr:hover { background: rgba(255,255,255,0.02); }
         
         .btn-hapus { background: rgba(239, 68, 68, 0.1); color: var(--danger); border: 1px solid var(--danger); cursor: pointer; border-radius: 6px; padding: 6px 12px; font-weight: 600; font-size: 12px; transition: 0.2s; white-space: nowrap; }
@@ -42,13 +56,37 @@
         .dot-online { background-color: var(--success); box-shadow: 0 0 8px var(--success); }
         .dot-offline { background-color: var(--text-sub); }
 
-        /* MODAL POP-UP (VIP STYLE) */
-        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(5px); z-index: 9999; align-items: center; justify-content: center; padding: 20px; box-sizing: border-box; }
-        .modal-box { background: var(--card-bg); border: 1px solid var(--primary); box-shadow: 0 10px 30px rgba(0,0,0,0.5); border-radius: 16px; padding: 25px; width: 100%; text-align: center; animation: popIn 0.3s ease-out forwards; }
-        @keyframes popIn { 0% { transform: scale(0.8); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+        /* =========================================
+           STYLE POP-UP GAYA MINI AI
+           ========================================= */
+        .mini-ai-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.8); backdrop-filter: blur(8px); z-index: 9999; justify-content: center; align-items: center; padding: 20px; box-sizing: border-box; animation: fadeIn 0.3s ease; }
+        .mini-ai-popup { background: linear-gradient(145deg, #1a1a2e, #16213e); border-radius: 15px; width: 100%; max-width: 420px; padding: 30px 25px; text-align: center; color: #fff; position: relative; box-shadow: 0 15px 40px rgba(0,0,0,0.6); }
+        .mini-ai-popup::before { content: ''; position: absolute; top: -2px; left: -2px; right: -2px; bottom: -2px; background: linear-gradient(45deg, #00f2fe, #4facfe, #00f2fe); z-index: -1; border-radius: 17px; animation: glowingAi 3s linear infinite; background-size: 200%; }
         
-        .btn-tutup { background: rgba(255,255,255,0.1); color: white; border: none; padding: 10px; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.2s; }
-        .btn-tutup:hover { background: var(--danger); border-color: var(--danger); }
+        .mini-ai-popup.danger-mode::before { background: linear-gradient(45deg, #ef4444, #f87171, #ef4444); }
+        .mini-ai-popup.success-mode::before { background: linear-gradient(45deg, #10b981, #34d399, #10b981); }
+        .mini-ai-popup.warning-mode::before { background: linear-gradient(45deg, #f59e0b, #fbbf24, #f59e0b); }
+
+        .mini-ai-header { font-size: 22px; font-weight: 800; color: #4facfe; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 2px; text-shadow: 0 0 10px rgba(79, 172, 254, 0.5); }
+        .mini-ai-header.danger { color: #ef4444; text-shadow: 0 0 10px rgba(239, 68, 68, 0.5); }
+        .mini-ai-header.success { color: #10b981; text-shadow: 0 0 10px rgba(16, 185, 129, 0.5); }
+        .mini-ai-header.warning { color: #f59e0b; text-shadow: 0 0 10px rgba(245, 158, 11, 0.5); }
+        
+        .mini-ai-body { font-size: 15px; color: #e0e0e0; line-height: 1.6; margin-bottom: 25px; }
+        .info-detail-ai { background: rgba(15, 23, 42, 0.8); border: 1px solid rgba(0, 242, 254, 0.3); border-radius: 12px; padding: 20px; text-align: left; margin-bottom: 20px; color: #e0e0e0; }
+        .info-detail-ai p { margin: 8px 0; font-size: 14px; }
+        
+        .ai-btn-group { display: flex; gap: 10px; }
+        .mini-ai-btn { background: linear-gradient(45deg, #00f2fe, #4facfe); border: none; padding: 12px; color: #1a1a2e; font-weight: bold; font-size: 14px; border-radius: 8px; cursor: pointer; transition: all 0.3s ease; text-transform: uppercase; flex: 1.5; display: flex; align-items: center; justify-content: center; gap: 5px; }
+        .mini-ai-btn:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0, 242, 254, 0.4); }
+        
+        .mini-ai-btn-danger { background: linear-gradient(45deg, #ef4444, #dc2626); color: white; }
+        .mini-ai-btn-danger:hover { box-shadow: 0 5px 15px rgba(239, 68, 68, 0.4); }
+        .mini-ai-btn-close { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: white; padding: 12px; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.2s; flex: 1; }
+        .mini-ai-btn-close:hover { background: rgba(255,255,255,0.2); }
+
+        @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+        @keyframes glowingAi { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
     </style>
 </head>
 <body>
@@ -56,23 +94,28 @@
     
     <h2>🛡️ Kelola Akses Web Panel</h2>
     <p class="sub-title">Tambah Partner atau Reseller yang diizinkan login ke Command Center ini.</p>
-
     <div class="box">
         <div class="box-header">
             <h3>🔑 Buat Akses Login Baru</h3>
         </div>
         <div class="grid-2">
-            <div><label>Username (Untuk Login):</label><input type="text" id="webUsername" placeholder="Tanpa spasi..." autocomplete="off"></div>
+            <div><label>Username (Untuk Login):</label><input type="text" id="webUsername" placeholder="Username" autocomplete="off"></div>
             <div><label>Password (Untuk Login):</label><input type="text" id="webPassword" placeholder="Ketik password..." autocomplete="off"></div>
         </div>
+        
         <div>
             <label>Jabatan (Role):</label>
-            <select id="webRole">
-                <option value="partner_public">🤝 Partner Panel (Bisa buat akun Reseller & Admin Ptero)</option>
-                <option value="reseller_private">💎 Reseller Private (Hanya bisa buat akun Ptero VIP)</option>
-                <option value="reseller_public">🌍 Reseller Public (Hanya bisa buat akun Ptero Public)</option>
-            </select>
+            <div class="custom-select-wrapper">
+                <div class="custom-select-trigger" onclick="toggleRoleSelect()">
+                    <span id="customSelectText">Memuat Jabatan...</span>
+                    <span class="arrow">▼</span>
+                </div>
+                <div class="custom-options" id="customRoleOptions">
+                    </div>
+            </div>
+            <input type="hidden" id="webRole" value="">
         </div>
+
         <button class="btn-tambah" onclick="buatAkunWeb()">🚀 Cetak Akses Web Sekarang</button>
     </div>
 
@@ -86,50 +129,60 @@
         </table>
     </div>
 
-    <div id="modalScreenshot" class="modal-overlay">
-        <div class="modal-box" style="max-width: 380px; border-top: 5px solid var(--primary);">
-            <h3 style="color: var(--primary); font-size: 20px; margin-bottom: 5px;">✅ Akses Web Berhasil!</h3>
-            <p style="margin-bottom: 20px; color: var(--text-sub); font-size: 13px;">Kirim data ini agar Reseller bisa login ke Web Panel:</p>
-            
-            <div class="info-detail" style="background: rgba(15, 23, 42, 0.8); border: 1px solid var(--border-color); border-radius: 12px; padding: 20px; text-align: left; margin-bottom: 20px;">
-                <div style="margin-bottom: 12px; border-bottom: 1px dashed var(--border-color); padding-bottom: 12px;">
-                    <span style="font-size: 11px; color: var(--text-sub); text-transform: uppercase; font-weight: bold;">Kredensial Login</span>
-                    <p style="margin: 8px 0 5px 0; font-size: 14px;">👤 User: <span id="resUserWeb" style="color: white; font-weight: bold;"></span></p>
-                    <p style="margin: 0; font-size: 14px;">🔑 Pass: <span id="resPassWeb" style="color: var(--warning); font-weight: bold;"></span></p>
+    <div id="modalScreenshot" class="mini-ai-overlay">
+        <div class="mini-ai-popup">
+            <div class="mini-ai-header">✨ WEB ACCESS ✨</div>
+            <p style="margin-bottom: 20px; color: #a0aec0; font-size: 13px;">Kirim data ini agar Partner/Reseller bisa login ke Web Panel:</p>
+            <div class="info-detail-ai">
+                <div style="margin-bottom: 12px; border-bottom: 1px dashed rgba(255,255,255,0.2); padding-bottom: 12px;">
+                    <span style="font-size: 11px; color: #4facfe; text-transform: uppercase; font-weight: bold;">Kredensial Login</span>
+                    <p>👤 User: <span id="resUserWeb" style="color: white; font-weight: bold;"></span></p>
+                    <p>🔑 Pass: <span id="resPassWeb" style="color: #f59e0b; font-weight: bold;"></span></p>
                 </div>
-                <div style="margin-bottom: 12px; border-bottom: 1px dashed var(--border-color); padding-bottom: 12px;">
-                    <span style="font-size: 11px; color: var(--text-sub); text-transform: uppercase; font-weight: bold;">Akses Web Panel</span>
-                    <p style="margin: 8px 0 0 0; font-size: 13px;">🌐 <a id="resLinkWeb" href="#" target="_blank" style="color: var(--primary); text-decoration: none; font-weight: bold; word-break: break-all;"></a></p>
+                <div style="margin-bottom: 12px; border-bottom: 1px dashed rgba(255,255,255,0.2); padding-bottom: 12px;">
+                    <span style="font-size: 11px; color: #4facfe; text-transform: uppercase; font-weight: bold;">Akses Web Panel</span>
+                    <p style="margin-top:8px;">🌐 <a id="resLinkWeb" href="#" target="_blank" style="color: #00f2fe; text-decoration: none; font-weight: bold; word-break: break-all;"></a></p>
                 </div>
                 <div>
-                    <span style="font-size: 11px; color: var(--text-sub); text-transform: uppercase; font-weight: bold;">Jabatan (Role)</span>
-                    <p style="margin: 8px 0 0 0; font-size: 14px;">🎖️ <span id="resRoleWeb" style="color: var(--success); font-weight: bold; text-transform: uppercase;"></span></p>
+                    <span style="font-size: 11px; color: #4facfe; text-transform: uppercase; font-weight: bold;">Jabatan (Role)</span>
+                    <p style="margin-top:8px;">🎖️ <span id="resRoleWeb" style="color: #10b981; font-weight: bold; text-transform: uppercase;"></span></p>
                 </div>
             </div>
-
-            <div style="display: flex; gap: 10px;">
-                <button class="btn-tambah" style="margin: 0; flex: 1.5; font-size: 14px; display: flex; align-items: center; justify-content: center; gap: 5px;" onclick="salinDataWeb()" id="btnSalinWeb">📋 Salin Teks</button>
-                <button class="btn-tutup" style="margin: 0; flex: 1; font-size: 14px; background: rgba(255,255,255,0.05); border: 1px solid var(--border-color);" onclick="tutupModal()">Tutup</button>
+            <div class="ai-btn-group">
+                <button class="mini-ai-btn" onclick="salinDataWeb()" id="btnSalinWeb">📋 Salin Teks</button>
+                <button class="mini-ai-btn-close" onclick="tutupModal('modalScreenshot')">Tutup</button>
             </div>
         </div>
     </div>
 
-    <div id="modalKonfirmasi" class="modal-overlay">
-        <div class="modal-box" style="max-width: 320px; border-top: 5px solid var(--danger); border-color: var(--danger);">
-            <h3 style="color: var(--danger); font-size: 20px; margin-bottom: 5px;">🚨 PERINGATAN!</h3>
-            <p id="teksKonfirmasi" style="margin-bottom: 20px; color: var(--text-main); font-size: 14px; line-height: 1.5;"></p>
-            <div style="display: flex; gap: 10px;">
-                <button class="btn-tutup" style="margin: 0; flex: 1; font-size: 14px; background: rgba(255,255,255,0.05); border: 1px solid var(--border-color);" onclick="tutupKonfirmasi()">Batal</button>
-                <button class="btn-tambah" style="margin: 0; flex: 1; font-size: 14px; background: var(--danger);" onclick="eksekusiHapus()" id="btnGasHapus">Ya, Cabut!</button>
+    <div id="modalKonfirmasi" class="mini-ai-overlay">
+        <div class="mini-ai-popup danger-mode">
+            <div class="mini-ai-header danger">🚨 PERINGATAN KERAS!</div>
+            <div class="mini-ai-body" id="teksKonfirmasi"></div>
+            <div class="ai-btn-group">
+                <button id="btnGasHapus" class="mini-ai-btn mini-ai-btn-danger" onclick="eksekusiHapus()">🗑️ Ya, Cabut Akses!</button>
+                <button class="mini-ai-btn-close" onclick="tutupKonfirmasi()">Batal</button>
             </div>
         </div>
     </div>
 
-    <div id="modalInfo" class="modal-overlay">
-        <div class="modal-box" style="max-width: 320px; border-top: 5px solid var(--success); border-color: var(--success);">
-            <h3 style="color: var(--success); font-size: 20px; margin-bottom: 5px;">✅ Berhasil!</h3>
-            <p id="teksInfo" style="margin-bottom: 20px; color: var(--text-main); font-size: 14px;"></p>
-            <button class="btn-tambah" style="width: 100%; font-size: 14px; background: var(--success);" onclick="tutupInfo()">Oke, Paham</button>
+    <div id="modalInfo" class="mini-ai-overlay">
+        <div class="mini-ai-popup success-mode">
+            <div class="mini-ai-header success">✅ BERHASIL!</div>
+            <div class="mini-ai-body" id="teksInfo"></div>
+            <div class="ai-btn-group">
+                <button class="mini-ai-btn-close" style="flex: 1; background: var(--success); border-color: var(--success);" onclick="tutupModal('modalInfo')">Oke, Paham</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="modalPeringatan" class="mini-ai-overlay">
+        <div class="mini-ai-popup warning-mode">
+            <div class="mini-ai-header warning">🚨 PERHATIAN!</div>
+            <div class="mini-ai-body" id="teksPeringatan"></div>
+            <div class="ai-btn-group">
+                <button class="mini-ai-btn-close" style="flex: 1; background: var(--warning); border-color: var(--warning);" onclick="tutupModal('modalPeringatan')">Mengerti</button>
+            </div>
         </div>
     </div>
         <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
@@ -140,9 +193,10 @@
         const myRole = localStorage.getItem('role') || '';
         const myUsername = localStorage.getItem('username') || 'Unknown'; 
         
-        // 🛡️ HANYA PEMILIK YANG BOLEH KELOLA AKSES WEB
-        if (!currentUserId || myRole !== 'pemilik') {
-            alert("🚨 AKSES DITOLAK!\nHalaman ini khusus Komandan (Pemilik).");
+        // 🛡️ BUKA AKSES UNTUK PEMILIK & PARTNER SAJA (Reseller Dilarang Masuk)
+        const allowedRoles = ['pemilik', 'partner_public'];
+        if (!currentUserId || !allowedRoles.includes(myRole)) {
+            alert("🚨 AKSES DITOLAK!\nHalaman ini khusus Pemilik dan Partner."); 
             window.location.replace("index.html");
         }
 
@@ -150,7 +204,6 @@
         if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
 
-        // 🟢 FUNGSI RADAR ONLINE
         const connectedRef = database.ref('.info/connected');
         connectedRef.on('value', (snap) => {
             if (snap.val() === true && currentUserId) {
@@ -160,7 +213,66 @@
             }
         });
 
-        // 📋 1. TAMPILKAN DAFTAR PENGGUNA WEB DARI FIREBASE
+        // FUNGSI UMUM MODAL
+        function tutupModal(modalId) { document.getElementById(modalId).style.display = 'none'; }
+        function showPeringatan(pesan) {
+            document.getElementById('teksPeringatan').innerHTML = pesan;
+            document.getElementById('modalPeringatan').style.display = 'flex';
+        }
+
+        // ==========================================
+        // 🔥 LOGIKA KUNCI DROPDOWN (SISTEM KASTA)
+        // ==========================================
+        window.addEventListener('DOMContentLoaded', () => {
+            let optionsContainer = document.getElementById('customRoleOptions');
+            let triggerText = document.getElementById('customSelectText');
+            let roleInput = document.getElementById('webRole');
+            
+            let opsiHtml = "";
+
+            if (myRole === 'pemilik') {
+                // Pemilik bisa bikin semua role
+                opsiHtml += `<div class="custom-option selected" onclick="pilihRole('pemilik', '👑 Pemilik Panel (Akses Penuh Tanpa Batas)')">👑 Pemilik Panel (Akses Penuh Tanpa Batas)</div>`;
+                opsiHtml += `<div class="custom-option" onclick="pilihRole('partner_public', '🤝 Partner Panel (Bisa buat akun Reseller & Admin Ptero)')">🤝 Partner Panel (Bisa buat akun Reseller & Admin Ptero)</div>`;
+                opsiHtml += `<div class="custom-option" onclick="pilihRole('reseller_private', '💎 Reseller Private (Hanya bisa buat akun Ptero VIP)')">💎 Reseller Private (Hanya bisa buat akun Ptero VIP)</div>`;
+                opsiHtml += `<div class="custom-option" onclick="pilihRole('reseller_public', '🌍 Reseller Public (Hanya bisa buat akun Ptero Public)')">🌍 Reseller Public (Hanya bisa buat akun Ptero Public)</div>`;
+                
+                triggerText.innerText = '👑 Pemilik Panel (Akses Penuh Tanpa Batas)';
+                roleInput.value = 'pemilik';
+            } else if (myRole === 'partner_public') {
+                // Partner CUMA BISA bikin Reseller Public
+                opsiHtml += `<div class="custom-option selected" onclick="pilihRole('reseller_public', '🌍 Reseller Public (Hanya bisa buat akun Ptero Public)')">🌍 Reseller Public (Hanya bisa buat akun Ptero Public)</div>`;
+                
+                triggerText.innerText = '🌍 Reseller Public (Hanya bisa buat akun Ptero Public)';
+                roleInput.value = 'reseller_public';
+            }
+
+            optionsContainer.innerHTML = opsiHtml;
+        });
+
+        function toggleRoleSelect() {
+            document.getElementById('customRoleOptions').classList.toggle('open');
+            document.querySelector('.custom-select-trigger').classList.toggle('active');
+        }
+
+        function pilihRole(value, text) {
+            document.getElementById('webRole').value = value;
+            document.getElementById('customSelectText').innerText = text;
+            let options = document.querySelectorAll('.custom-option');
+            options.forEach(opt => opt.classList.remove('selected'));
+            event.target.classList.add('selected');
+            toggleRoleSelect();
+        }
+
+        document.addEventListener('click', function(e) {
+            const select = document.querySelector('.custom-select-wrapper');
+            if (!select.contains(e.target)) {
+                document.getElementById('customRoleOptions').classList.remove('open');
+                document.querySelector('.custom-select-trigger').classList.remove('active');
+            }
+        });
+
+        // TAMPILKAN DAFTAR PENGGUNA WEB (MENGGUNAKAN ATURAN KASTA)
         function ambilDataWebUsers() {
             database.ref('users').on('value', (snapshot) => {
                 let tabel = `<tr><th>Username & Password</th><th>Tipe Akun</th><th>Status</th><th>Aksi</th></tr>`;
@@ -171,7 +283,11 @@
                     let u = childSnap.val();
                     u.uId = childSnap.key; 
                     u.waktuDibuat = u.timestamp || 0; 
-                    dataArray.push(u);
+                    
+                    // Filter: Partner cuma bisa lihat anak buah yang dia bikin sendiri
+                    if (myRole === 'pemilik' || u.maker === myUsername) {
+                        dataArray.push(u);
+                    }
                 });
 
                 dataArray.sort((a, b) => a.waktuDibuat - b.waktuDibuat);
@@ -188,8 +304,12 @@
 
                     let pembuat = u.maker ? `<br><span style="font-size: 10px; color: var(--primary);">Oleh: ${u.maker}</span>` : '';
                     
-                    // 🔥 PERBAIKAN: Tombol hapus sekarang memanggil Pop-up Keren, bukan confirm() kuno
-                    let tombolHapus = u.role !== 'pemilik' ? `<button class="btn-hapus" onclick="hapusAkunWeb('${u.uId}', '${u.username}')">🗑️ Cabut Akses</button>` : `<span style="color:var(--text-sub); font-size:12px;">Sistem Utama</span>`;
+                    let tombolHapus = "";
+                    if (u.role === 'pemilik') {
+                        tombolHapus = `<span style="color:var(--text-sub); font-size:12px; font-weight:bold;">Sistem Utama 👑</span>`;
+                    } else {
+                        tombolHapus = `<button class="btn-hapus" onclick="hapusAkunWeb('${u.uId}', '${u.username}')">🗑️ Cabut Akses</button>`;
+                    }
 
                     tabel += `<tr>
                         <td><div style="font-weight: 600; color: var(--text-main);">${u.username}</div>
@@ -209,14 +329,17 @@
             });
         }
 
-        // 🚀 2. FUNGSI BUAT AKUN WEB PANEL BARU
+        // ==========================================
+        // 🚀 FUNGSI BUAT AKUN WEB PANEL BARU
+        // ==========================================
         function buatAkunWeb() {
             let uName = document.getElementById('webUsername').value.trim();
             let pWord = document.getElementById('webPassword').value.trim();
             let rolePilihan = document.getElementById('webRole').value;
 
             if(!uName || !pWord) {
-                alert("🚨 Username dan Password tidak boleh kosong!"); return;
+                showPeringatan("🚨 Username dan Password tidak boleh kosong!"); 
+                return;
             }
 
             let btn = document.querySelector('.btn-tambah');
@@ -224,7 +347,7 @@
 
             database.ref('users').orderByChild('username').equalTo(uName).once('value', (snap) => {
                 if (snap.exists()) {
-                    alert("❌ Username ini sudah terdaftar! Pilih username lain.");
+                    showPeringatan("❌ Username ini sudah terdaftar! Pilih username lain.");
                     btn.innerText = "🚀 Cetak Akses Web Sekarang"; btn.style.pointerEvents = "auto";
                 } else {
                     let newDataRef = database.ref('users').push();
@@ -236,23 +359,21 @@
                         document.getElementById('webUsername').value = ""; document.getElementById('webPassword').value = "";
                         btn.innerText = "🚀 Cetak Akses Web Sekarang"; btn.style.pointerEvents = "auto";
                     }).catch((error) => {
-                        alert("❌ Terjadi kesalahan: " + error.message);
+                        showPeringatan("❌ Terjadi kesalahan: " + error.message);
                         btn.innerText = "🚀 Cetak Akses Web Sekarang"; btn.style.pointerEvents = "auto";
                     });
                 }
             });
         }
 
-        // ==========================================
-        // 🔥 LOGIKA POP-UP PENGHAPUSAN (ANTI KUNO)
-        // ==========================================
+        // LOGIKA POP-UP PENGHAPUSAN AI
         let targetHapusId = "";
         let targetHapusName = "";
 
         function hapusAkunWeb(uid, username) {
             targetHapusId = uid;
             targetHapusName = username;
-            document.getElementById('teksKonfirmasi').innerHTML = `Yakin ingin mencabut akses Web Panel untuk user <b style="color:var(--warning);">${username}</b>?<br><br><span style="color:var(--text-sub); font-size: 13px;">Mereka tidak akan bisa login ke Web ini lagi.</span>`;
+            document.getElementById('teksKonfirmasi').innerHTML = `Yakin ingin mencabut akses Web Panel untuk user <b style="color:var(--danger);">${username}</b>?<br><br><span style="color:var(--text-sub); font-size: 13px;">Mereka tidak akan bisa login ke Web ini lagi.</span>`;
             document.getElementById('modalKonfirmasi').style.display = 'flex';
         }
 
@@ -268,24 +389,16 @@
 
             database.ref('users/' + targetHapusId).remove().then(() => {
                 tutupKonfirmasi();
-                btn.innerText = "Ya, Cabut!"; btn.style.pointerEvents = "auto";
-                
-                // Panggil Modal Info Sukses
-                document.getElementById('teksInfo').innerHTML = `Akses login untuk user <b style="color:var(--warning);">${targetHapusName}</b> telah berhasil dicabut.`;
+                btn.innerText = "🗑️ Ya, Cabut Akses!"; btn.style.pointerEvents = "auto";
+                document.getElementById('teksInfo').innerHTML = `Akses login untuk user <b style="color:var(--success);">${targetHapusName}</b> telah berhasil dicabut.`;
                 document.getElementById('modalInfo').style.display = 'flex';
             }).catch((e) => {
-                alert("Gagal menghapus: " + e.message); 
-                btn.innerText = "Ya, Cabut!"; btn.style.pointerEvents = "auto";
+                showPeringatan("Gagal menghapus: " + e.message); 
+                btn.innerText = "🗑️ Ya, Cabut Akses!"; btn.style.pointerEvents = "auto";
             });
         }
 
-        function tutupInfo() {
-            document.getElementById('modalInfo').style.display = 'none';
-        }
-
-        // ==========================================
-        // 🔥 LOGIKA POP-UP STRUK & SALIN TEKS (WEB)
-        // ==========================================
+        // LOGIKA POP-UP STRUK & SALIN TEKS
         function munculkanModalWeb(user, pass, role) {
             document.getElementById('resUserWeb').innerText = user; 
             document.getElementById('resPassWeb').innerText = pass;
@@ -303,11 +416,8 @@
             
             let btnSalin = document.getElementById('btnSalinWeb');
             btnSalin.innerHTML = "📋 Salin Teks";
-            btnSalin.style.background = "var(--primary)";
-        }
-
-        function tutupModal() { 
-            document.getElementById('modalScreenshot').style.display = 'none'; 
+            btnSalin.style.background = "linear-gradient(45deg, #00f2fe, #4facfe)";
+            btnSalin.style.color = "#1a1a2e";
         }
 
         function salinDataWeb() {
@@ -325,12 +435,18 @@
 
             navigator.clipboard.writeText(teksSalin).then(() => {
                 let btn = document.getElementById('btnSalinWeb');
-                btn.innerHTML = "✅ Berhasil Disalin!"; btn.style.background = "var(--success)";
-                setTimeout(() => { btn.innerHTML = "📋 Salin Teks"; btn.style.background = "var(--primary)"; }, 2000);
-            }).catch(err => { alert("❌ Gagal menyalin otomatis. Silakan screenshot manual."); });
+                btn.innerHTML = "✅ Berhasil Disalin!"; 
+                btn.style.background = "#10b981";
+                btn.style.color = "#fff";
+                
+                setTimeout(() => { 
+                    btn.innerHTML = "📋 Salin Teks"; 
+                    btn.style.background = "linear-gradient(45deg, #00f2fe, #4facfe)";
+                    btn.style.color = "#1a1a2e";
+                }, 2000);
+            }).catch(err => { showPeringatan("Gagal menyalin otomatis. Silakan screenshot manual."); });
         }
 
-        // Jalankan saat pertama kali buka
         ambilDataWebUsers();
     </script>
 </body>
