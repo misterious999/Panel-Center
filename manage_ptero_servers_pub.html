@@ -38,6 +38,42 @@
         .server-name { font-weight: 600; color: var(--text-main); font-size: 15px; }
         .server-uuid { color: var(--text-sub); font-size: 11px; font-family: monospace; display: block; margin-top: 3px; }
         .reseller-tag { font-size: 10px; color: var(--primary); background: rgba(59,130,246,0.1); padding: 2px 6px; border-radius: 4px; display: inline-block; margin-top: 5px; border: 1px solid rgba(59,130,246,0.2); }
+
+        /* =========================================
+           STYLE POP-UP GAYA MINI AI (GLOBAL)
+           ========================================= */
+        .mini-ai-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.8); backdrop-filter: blur(8px); z-index: 9999; justify-content: center; align-items: center; padding: 20px; box-sizing: border-box; animation: fadeIn 0.3s ease; }
+        .mini-ai-popup { background: linear-gradient(145deg, #1a1a2e, #16213e); border-radius: 15px; width: 100%; max-width: 420px; padding: 30px 25px; text-align: center; color: #fff; position: relative; box-shadow: 0 15px 40px rgba(0,0,0,0.6); }
+        .mini-ai-popup::before { content: ''; position: absolute; top: -2px; left: -2px; right: -2px; bottom: -2px; background: linear-gradient(45deg, #00f2fe, #4facfe, #00f2fe); z-index: -1; border-radius: 17px; animation: glowingAi 3s linear infinite; background-size: 200%; }
+        
+        /* Tema Warna Pop-up */
+        .mini-ai-popup.danger-mode::before { background: linear-gradient(45deg, #ef4444, #f87171, #ef4444); }
+        .mini-ai-popup.warning-mode::before { background: linear-gradient(45deg, #f59e0b, #fbbf24, #f59e0b); }
+        .mini-ai-popup.success-mode::before { background: linear-gradient(45deg, #10b981, #34d399, #10b981); }
+
+        .mini-ai-header { font-size: 22px; font-weight: 800; color: #4facfe; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 2px; text-shadow: 0 0 10px rgba(79, 172, 254, 0.5); }
+        .mini-ai-header.danger { color: #ef4444; text-shadow: 0 0 10px rgba(239, 68, 68, 0.5); }
+        .mini-ai-header.warning { color: #f59e0b; text-shadow: 0 0 10px rgba(245, 158, 11, 0.5); }
+        .mini-ai-header.success { color: #10b981; text-shadow: 0 0 10px rgba(16, 185, 129, 0.5); }
+        
+        .mini-ai-body { font-size: 15px; color: #e0e0e0; line-height: 1.6; margin-bottom: 25px; }
+        
+        .ai-btn-group { display: flex; gap: 10px; }
+        .mini-ai-btn { border: none; padding: 12px; font-weight: bold; font-size: 14px; border-radius: 8px; cursor: pointer; transition: all 0.3s ease; text-transform: uppercase; flex: 1.5; display: flex; align-items: center; justify-content: center; gap: 5px; }
+        .mini-ai-btn:hover { transform: translateY(-2px); }
+        
+        .btn-ai-primary { background: linear-gradient(45deg, #00f2fe, #4facfe); color: #1a1a2e; }
+        .btn-ai-primary:hover { box-shadow: 0 5px 15px rgba(0, 242, 254, 0.4); }
+        .btn-ai-danger { background: linear-gradient(45deg, #ef4444, #dc2626); color: white; }
+        .btn-ai-danger:hover { box-shadow: 0 5px 15px rgba(239, 68, 68, 0.4); }
+        .btn-ai-warning { background: linear-gradient(45deg, #f59e0b, #d97706); color: white; }
+        .btn-ai-warning:hover { box-shadow: 0 5px 15px rgba(245, 158, 11, 0.4); }
+
+        .mini-ai-btn-close { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: white; padding: 12px; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.2s; flex: 1; }
+        .mini-ai-btn-close:hover { background: rgba(255,255,255,0.2); }
+
+        @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+        @keyframes glowingAi { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
     </style>
 </head>
 <body>
@@ -72,13 +108,58 @@
         </table>
     </div>
 
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <div id="modalAiAlert" class="mini-ai-overlay">
+        <div class="mini-ai-popup warning-mode">
+            <div class="mini-ai-header warning" id="aiAlertTitle">PERHATIAN</div>
+            <div class="mini-ai-body" id="aiAlertBody">Pesan peringatan di sini.</div>
+            <div class="ai-btn-group">
+                <button class="mini-ai-btn-close" style="flex: 1; background: var(--warning); border-color: var(--warning);" onclick="tutupModal('modalAiAlert')">Mengerti</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="modalAiSuccess" class="mini-ai-overlay">
+        <div class="mini-ai-popup success-mode">
+            <div class="mini-ai-header success" id="aiSuccessTitle">BERHASIL</div>
+            <div class="mini-ai-body" id="aiSuccessBody">Proses sukses dilakukan.</div>
+            <div class="ai-btn-group">
+                <button class="mini-ai-btn-close" style="flex: 1; background: var(--success); border-color: var(--success);" onclick="tutupModal('modalAiSuccess')">Tutup</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="modalAiConfirmAction" class="mini-ai-overlay">
+        <div class="mini-ai-popup warning-mode">
+            <div class="mini-ai-header warning" id="aiActionTitle">KONFIRMASI</div>
+            <div class="mini-ai-body" id="aiActionBody">Yakin ingin melakukan ini?</div>
+            <div class="ai-btn-group">
+                <button id="btnAiActionConfirm" class="mini-ai-btn btn-ai-warning">Lanjutkan</button>
+                <button class="mini-ai-btn-close" onclick="tutupModal('modalAiConfirmAction')">Batal</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="modalHapusConfirm" class="mini-ai-overlay">
+        <div class="mini-ai-popup danger-mode">
+            <div class="mini-ai-header danger">🚨 PERINGATAN KERAS!</div>
+            <div class="mini-ai-body">
+                Yakin ingin <b>MENGHAPUS</b> server Public <br><b style="color: #ef4444;" id="delServerName"></b> secara permanen?<br><br>
+                Data yang dihapus <u>tidak bisa dikembalikan</u>!
+            </div>
+            <div class="ai-btn-group">
+                <button id="btnKonfirmasiHapus" class="mini-ai-btn btn-ai-danger" onclick="prosesHapusServer()">🗑️ Ya, Hapus Permanen</button>
+                <button class="mini-ai-btn-close" onclick="tutupModal('modalHapusConfirm')">Batal</button>
+            </div>
+        </div>
+    </div>
+        <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
     <script>
         const currentUserId = localStorage.getItem('user_id');
         const role = localStorage.getItem('role') || '';
         const myUsername = localStorage.getItem('username') || 'Unknown';
+        
         // ROLE KHUSUS PUBLIC
         const allowedRoles = ['pemilik', 'reseller_public', 'partner_public'];
 
@@ -114,31 +195,40 @@
         const PTERO_API_APP = "ptla_jfNBOxsfLDu0Ui9YUZMDANXfuLHglNqSJ3V55gHTKWb"; 
         const WORKER_URL = "https://restless-truth-9b75.amisterious09.workers.dev"; 
 
+        // Fungsi Penolong Modal AI
+        function tutupModal(id) { document.getElementById(id).style.display = 'none'; }
+        
+        function showAiAlert(pesan, judul = "PERHATIAN") {
+            document.getElementById('aiAlertTitle').innerText = judul;
+            document.getElementById('aiAlertBody').innerHTML = pesan;
+            document.getElementById('modalAiAlert').style.display = 'flex';
+        }
+
+        function showAiSuccess(pesan, judul = "BERHASIL") {
+            document.getElementById('aiSuccessTitle').innerText = judul;
+            document.getElementById('aiSuccessBody').innerHTML = pesan;
+            document.getElementById('modalAiSuccess').style.display = 'flex';
+        }
+
         // ==========================================
         // TAMPILKAN SERVER DENGAN FILTER SAKTI
         // ==========================================
         async function ambilDataServers() {
             try {
-                // TAHAP 1: Ambil data User dulu buat dicocokkan
                 let resUsers = await fetch(`${WORKER_URL}/?https://${PTERO_DOMAIN}/api/application/users`, {
                     headers: { 'Accept': 'application/json', 'Authorization': `Bearer ${PTERO_API_APP}` }
                 });
                 let dataUsers = await resUsers.json();
                 
-                // Peta (Map) buat nyari tau siapa pembuat user tersebut
                 let userMap = {};
                 let myUserIds = []; 
                 
                 dataUsers.data.forEach(u => {
                     let attr = u.attributes;
                     userMap[attr.id] = { ownerUsername: attr.username, maker: attr.last_name };
-                    
-                    if (attr.last_name === myUsername) {
-                        myUserIds.push(attr.id);
-                    }
+                    if (attr.last_name === myUsername) myUserIds.push(attr.id);
                 });
 
-                // TAHAP 2: Ambil data Server
                 let resServers = await fetch(`${WORKER_URL}/?https://${PTERO_DOMAIN}/api/application/servers`, {
                     headers: { 'Accept': 'application/json', 'Authorization': `Bearer ${PTERO_API_APP}` }
                 });
@@ -152,9 +242,6 @@
                     let serverOwnerId = s.user; 
                     let userInfo = userMap[serverOwnerId] || { ownerUsername: "Unknown", maker: "Unknown" };
                     
-                    // ==========================================
-                    // 🛡️ LOGIKA FILTER KAMAR ISOLASI
-                    // ==========================================
                     if (role !== 'pemilik') {
                         if (!myUserIds.includes(serverOwnerId)) return; 
                     }
@@ -162,10 +249,13 @@
                     countDisplayed++;
 
                     let statusBadge = s.suspended ? `<span class="badge badge-suspend">🔴 Suspended</span>` : `<span class="badge badge-aktif">🟢 Aktif</span>`;
-                    let btnSuspend = s.suspended ? `<button class="btn-action btn-unsuspend" onclick="ubahStatusServer(${s.id}, 'unsuspend', '${s.name}')">▶️ Unsuspend</button>` : `<button class="btn-action btn-suspend" onclick="ubahStatusServer(${s.id}, 'suspend', '${s.name}')">⏸️ Suspend</button>`;
+                    
+                    let btnSuspend = s.suspended ? 
+                        `<button class="btn-action btn-unsuspend" onclick="konfirmasiAksiServer(${s.id}, 'unsuspend', '${s.name}')">▶️ Unsuspend</button>` : 
+                        `<button class="btn-action btn-suspend" onclick="konfirmasiAksiServer(${s.id}, 'suspend', '${s.name}')">⏸️ Suspend</button>`;
+                    
                     let ram = s.limits.memory === 0 ? "Unlimited" : s.limits.memory + " MB";
 
-                    // Tanda Tangan buat Owner
                     let makerTag = "";
                     if (role === 'pemilik') {
                         if (userInfo.maker !== 'User' && userInfo.maker !== 'Admin' && userInfo.maker !== 'Unknown') {
@@ -182,7 +272,7 @@
                         <td><span class="server-name">${s.name}</span><span class="server-uuid">${s.uuid.split('-')[0]}...</span>${makerTag}</td>
                         <td style="color: var(--text-main); font-size: 13px;">${s.node}<br><span style="color: var(--text-sub); font-size: 11px;">RAM: ${ram}</span></td>
                         <td>${statusBadge}</td>
-                        <td>${btnSuspend}<button class="btn-action btn-hapus" onclick="hapusServer(${s.id}, '${s.name}')">🗑️ Hapus</button></td>
+                        <td>${btnSuspend}<button class="btn-action btn-hapus" onclick="munculkanModalHapusServer(${s.id}, '${s.name}')">🗑️ Hapus</button></td>
                     </tr>`;
                 });
 
@@ -197,7 +287,9 @@
             }
         }
 
-        // FUNGSI BUAT SERVER
+        // ==========================================
+        // FUNGSI BUAT SERVER (DENGAN STARTUP BARU)
+        // ==========================================
         function buatServerPtero() {
             let userId = document.getElementById('newServerUserId').value;
             let name = document.getElementById('newServerName').value;
@@ -208,12 +300,14 @@
             let eggId = document.getElementById('newEggId').value;
 
             if (!userId || !name || !ram || !cpu || !disk || !locId || !eggId) {
-                alert("Harap isi semua kolom formulir!"); return;
+                showAiAlert("Harap isi semua kolom formulir!", "DATA TIDAK LENGKAP"); return;
             }
 
+            // ===== STARTUP COMMAND DIPERBARUI =====
             let payload = {
                 "name": name, "description": `Dibuat via Custom Panel oleh ${myUsername}`, "user": parseInt(userId), "egg": parseInt(eggId),
-                "docker_image": "ghcr.io/parkervcp/yolks:nodejs_20", "startup": "npm start",
+                "docker_image": "ghcr.io/parkervcp/yolks:nodejs_20", 
+                "startup": "if [[ -d .git ]] && [[ {{AUTO_UPDATE}} == \"1\" ]]; then git pull; fi; if [[ ! -z ${NODE_PACKAGES} ]]; then /usr/local/bin/npm install ${NODE_PACKAGES}; fi; if [[ ! -z ${UNNODE_PACKAGES} ]]; then /usr/local/bin/npm uninstall ${UNNODE_PACKAGES}; fi; if [ -f /home/container/package.json ]; then /usr/local/bin/npm install; fi; if [[ ! -z ${CUSTOM_ENVIRONMENT_VARIABLES} ]]; then vars=$(echo ${CUSTOM_ENVIRONMENT_VARIABLES} | tr \";\" \"\\n\"); for line in $vars; do export $line; done fi; /usr/local/bin/${CMD_RUN};",
                 "environment": { "INST": "npm", "USER_UPLOAD": "0", "AUTO_UPDATE": "0", "CMD_RUN": "npm start" },
                 "limits": { "memory": parseInt(ram), "swap": 0, "disk": parseInt(disk), "io": 500, "cpu": parseInt(cpu) },
                 "feature_limits": { "databases": 5, "backups": 5, "allocations": 5 },
@@ -228,34 +322,94 @@
             }).then(async res => {
                 btn.innerText = "⚡ Deploy Server Public"; btn.style.pointerEvents = "auto";
                 if (!res.ok) throw new Error(await res.text());
-                alert(`✅ MANTAP! Server "${name}" berhasil di-deploy tanpa Error!`);
+                
+                showAiSuccess(`MANTAP! Server <b>"${name}"</b> berhasil di-deploy tanpa Error!`, "DEPLOY BERHASIL");
+                
                 document.getElementById('newServerName').value = ""; document.getElementById('newServerUserId').value = "";
                 ambilDataServers(); 
             }).catch(e => {
-                btn.innerText = "⚡ Deploy Server Public"; btn.style.pointerEvents = "auto"; alert(`❌ Gagal Deploy Server!\n\nAlasan API: ${e.message}`);
+                btn.innerText = "⚡ Deploy Server Public"; btn.style.pointerEvents = "auto"; 
+                showAiAlert(`Gagal Deploy Server!<br><br>Alasan: ${e.message}`, "API ERROR");
             });
         }
 
-        function ubahStatusServer(id, aksi, namaServer) {
-            if (confirm(`Yakin ingin men-${aksi} server "${namaServer}"?`)) {
-                fetch(`${WORKER_URL}/?https://${PTERO_DOMAIN}/api/application/servers/${id}/${aksi}`, {
-                    method: 'POST', headers: { 'Accept': 'application/json', 'Authorization': `Bearer ${PTERO_API_APP}` }
-                }).then(res => {
-                    if (!res.ok) throw new Error("Gagal mengubah status server!");
-                    alert(`✅ Server "${namaServer}" berhasil di-${aksi}!`); ambilDataServers(); 
-                }).catch(err => alert(`❌ Gagal: ${err.message}`));
-            }
+        // ==========================================
+        // FUNGSI SUSPEND / UNSUSPEND (Via Modal AI)
+        // ==========================================
+        let actionTargetId = null;
+        let actionTargetType = null;
+
+        function konfirmasiAksiServer(id, aksi, namaServer) {
+            actionTargetId = id;
+            actionTargetType = aksi;
+            
+            document.getElementById('aiActionTitle').innerText = aksi === 'suspend' ? "SUSPEND SERVER" : "UNSUSPEND SERVER";
+            document.getElementById('aiActionBody').innerHTML = `Yakin ingin men-<b>${aksi}</b> server <b style="color:var(--warning);">${namaServer}</b>?`;
+            
+            let btnConfirm = document.getElementById('btnAiActionConfirm');
+            btnConfirm.innerText = aksi === 'suspend' ? "⏸️ Suspend Sekarang" : "▶️ Unsuspend Sekarang";
+            btnConfirm.onclick = prosesAksiServer;
+            
+            document.getElementById('modalAiConfirmAction').style.display = 'flex';
         }
 
-        function hapusServer(id, namaServer) {
-            if (confirm(`🚨 PERINGATAN KERAS!\nYakin ingin MENGHAPUS server Public "${namaServer}" secara permanen?`)) {
-                fetch(`${WORKER_URL}/?https://${PTERO_DOMAIN}/api/application/servers/${id}/force`, {
-                    method: 'DELETE', headers: { 'Accept': 'application/json', 'Authorization': `Bearer ${PTERO_API_APP}` }
-                }).then(res => {
-                    if (!res.ok) throw new Error("Gagal menghapus server!");
-                    alert(`💥 Server "${namaServer}" musnah!`); ambilDataServers(); 
-                }).catch(err => alert(`❌ Gagal: ${err.message}`));
-            }
+        function prosesAksiServer() {
+            tutupModal('modalAiConfirmAction');
+            
+            fetch(`${WORKER_URL}/?https://${PTERO_DOMAIN}/api/application/servers/${actionTargetId}/${actionTargetType}`, {
+                method: 'POST', headers: { 'Accept': 'application/json', 'Authorization': `Bearer ${PTERO_API_APP}` }
+            }).then(res => {
+                if (!res.ok) throw new Error("Gagal mengubah status server!");
+                showAiSuccess(`Server berhasil di-${actionTargetType}!`); 
+                ambilDataServers(); 
+            }).catch(err => showAiAlert(`Gagal: ${err.message}`, "ERROR"));
+        }
+
+        // ==========================================
+        // FUNGSI HAPUS SERVER (Via Modal AI Danger)
+        // ==========================================
+        let serverToDeleteId = null;
+
+        function munculkanModalHapusServer(id, namaServer) {
+            serverToDeleteId = id;
+            document.getElementById('delServerName').innerText = namaServer;
+            document.getElementById('modalHapusConfirm').style.display = 'flex';
+        }
+
+        function prosesHapusServer() {
+            tutupModal('modalHapusConfirm');
+            
+            let btn = document.getElementById('btnKonfirmasiHapus');
+            btn.innerText = "Menghancurkan... ⏳"; btn.style.pointerEvents = "none";
+            
+            fetch(`${WORKER_URL}/?https://${PTERO_DOMAIN}/api/application/servers/${serverToDeleteId}/force`, {
+                method: 'DELETE', headers: { 'Accept': 'application/json', 'Authorization': `Bearer ${PTERO_API_APP}` }
+            }).then(res => {
+                btn.innerText = "🗑️ Ya, Hapus Permanen"; btn.style.pointerEvents = "auto";
+                if (!res.ok) throw new Error("Gagal menghapus server!");
+                
+                // Gunakan pop-up success tapi pakai warna merah
+                document.getElementById('aiSuccessTitle').innerText = "💥 DUAARR!! MUSNAH!";
+                document.getElementById('aiSuccessTitle').style.color = "#ef4444";
+                document.getElementById('aiSuccessTitle').style.textShadow = "0 0 10px rgba(239, 68, 68, 0.5)";
+                document.querySelector('.mini-ai-popup.success-mode').className = "mini-ai-popup danger-mode";
+                
+                document.getElementById('aiSuccessBody').innerHTML = `Server telah dihapus dari database.`;
+                document.getElementById('modalAiSuccess').style.display = 'flex';
+                
+                // Reset styling pop-up success setelah ditutup (agar hijau lagi kalau dipakai buat deploy)
+                document.querySelector('#modalAiSuccess .mini-ai-btn-close').onclick = function() {
+                    tutupModal('modalAiSuccess');
+                    document.getElementById('aiSuccessTitle').style.color = "#10b981";
+                    document.getElementById('aiSuccessTitle').style.textShadow = "0 0 10px rgba(16, 185, 129, 0.5)";
+                    document.querySelector('.mini-ai-popup.danger-mode').className = "mini-ai-popup success-mode";
+                };
+
+                ambilDataServers(); 
+            }).catch(err => {
+                btn.innerText = "🗑️ Ya, Hapus Permanen"; btn.style.pointerEvents = "auto";
+                showAiAlert(`Gagal menghapus server!<br>Alasan: ${err.message}`, "GAGAL HAPUS");
+            });
         }
         
         ambilDataServers();

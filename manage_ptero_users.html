@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kelola User Ptero (Private)</title>
+    <title>Kelola User Pterodactyl (Private)</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
         :root { --bg-color: #0f172a; --card-bg: #1e293b; --primary: #3b82f6; --success: #10b981; --danger: #ef4444; --warning: #f59e0b; --text-main: #f8fafc; --text-sub: #94a3b8; --input-bg: #0f172a; --border-color: rgba(255,255,255,0.1); }
@@ -37,15 +37,37 @@
         .badge { padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.5px; display: inline-block; white-space: nowrap; }
         .badge-admin { background: rgba(245, 158, 11, 0.2); color: var(--warning); border: 1px solid var(--warning); }
         .badge-user { background: rgba(59, 130, 246, 0.2); color: var(--primary); border: 1px solid var(--primary); }
-
-        /* MODAL POP-UP BARU */
-        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(5px); z-index: 9999; align-items: center; justify-content: center; padding: 20px; box-sizing: border-box; }
-        .modal-box { background: var(--card-bg); border: 1px solid var(--primary); box-shadow: 0 10px 30px rgba(59, 130, 246, 0.3); border-radius: 16px; padding: 25px; width: 100%; text-align: center; animation: popIn 0.3s ease-out forwards; }
-        @keyframes popIn { 0% { transform: scale(0.8); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
-        
-        .btn-tutup { background: rgba(255,255,255,0.1); color: white; border: none; padding: 10px; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.2s; }
-        .btn-tutup:hover { background: var(--danger); border-color: var(--danger); }
         .reseller-tag { font-size: 10px; color: var(--primary); background: rgba(59,130,246,0.1); padding: 2px 6px; border-radius: 4px; display: inline-block; margin-top: 3px; }
+
+        /* =========================================
+           STYLE POP-UP GAYA MINI AI (GLOBAL)
+           ========================================= */
+        .mini-ai-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.8); backdrop-filter: blur(8px); z-index: 9999; justify-content: center; align-items: center; padding: 20px; box-sizing: border-box; animation: fadeIn 0.3s ease; }
+        .mini-ai-popup { background: linear-gradient(145deg, #1a1a2e, #16213e); border-radius: 15px; width: 100%; max-width: 420px; padding: 30px 25px; text-align: center; color: #fff; position: relative; box-shadow: 0 15px 40px rgba(0,0,0,0.6); }
+        .mini-ai-popup::before { content: ''; position: absolute; top: -2px; left: -2px; right: -2px; bottom: -2px; background: linear-gradient(45deg, #00f2fe, #4facfe, #00f2fe); z-index: -1; border-radius: 17px; animation: glowingAi 3s linear infinite; background-size: 200%; }
+        /* Warna border khusus untuk pop-up hapus */
+        .mini-ai-popup.danger-mode::before { background: linear-gradient(45deg, #ef4444, #f87171, #ef4444); }
+        
+        .mini-ai-header { font-size: 22px; font-weight: 800; color: #4facfe; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 2px; text-shadow: 0 0 10px rgba(79, 172, 254, 0.5); }
+        .mini-ai-header.danger { color: #ef4444; text-shadow: 0 0 10px rgba(239, 68, 68, 0.5); }
+        
+        .mini-ai-body { font-size: 15px; color: #e0e0e0; line-height: 1.6; margin-bottom: 25px; }
+        
+        .info-detail-ai { background: rgba(15, 23, 42, 0.8); border: 1px solid rgba(0, 242, 254, 0.3); border-radius: 12px; padding: 20px; text-align: left; margin-bottom: 20px; color: #e0e0e0; }
+        .info-detail-ai p { margin: 8px 0; font-size: 14px; }
+        
+        .ai-btn-group { display: flex; gap: 10px; }
+        .mini-ai-btn { background: linear-gradient(45deg, #00f2fe, #4facfe); border: none; padding: 12px; color: #1a1a2e; font-weight: bold; font-size: 14px; border-radius: 8px; cursor: pointer; transition: all 0.3s ease; text-transform: uppercase; flex: 1.5; display: flex; align-items: center; justify-content: center; gap: 5px; }
+        .mini-ai-btn:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0, 242, 254, 0.4); }
+        
+        .mini-ai-btn-danger { background: linear-gradient(45deg, #ef4444, #dc2626); color: white; }
+        .mini-ai-btn-danger:hover { box-shadow: 0 5px 15px rgba(239, 68, 68, 0.4); }
+
+        .mini-ai-btn-close { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: white; padding: 12px; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.2s; flex: 1; }
+        .mini-ai-btn-close:hover { background: rgba(255,255,255,0.2); }
+
+        @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+        @keyframes glowingAi { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
     </style>
 </head>
 <body>
@@ -96,34 +118,60 @@
         </table>
     </div>
 
-    <div id="modalScreenshot" class="modal-overlay">
-        <div class="modal-box" style="max-width: 380px; border-top: 5px solid var(--success);">
-            <h3 style="color: var(--success); font-size: 20px; margin-bottom: 5px;">✅ Pembuatan Berhasil!</h3>
-            <p style="margin-bottom: 20px; color: var(--text-sub); font-size: 13px;">Silakan salin data ini untuk dikirim ke pembeli:</p>
+    <div id="modalScreenshot" class="mini-ai-overlay">
+        <div class="mini-ai-popup">
+            <div class="mini-ai-header">✨ VIP ACCESS ✨</div>
+            <p style="margin-bottom: 20px; color: #a0aec0; font-size: 13px;">Proses berhasil dijalankan. Detail akun Pterodactyl telah tersimpan di sistem.</p>
             
-            <div class="info-detail" style="background: rgba(15, 23, 42, 0.8); border: 1px solid var(--border-color); border-radius: 12px; padding: 20px; text-align: left; margin-bottom: 20px;">
-                <div style="margin-bottom: 12px; border-bottom: 1px dashed var(--border-color); padding-bottom: 12px;">
-                    <span style="font-size: 11px; color: var(--text-sub); text-transform: uppercase; font-weight: bold;">Detail Akun</span>
-                    <p style="margin: 8px 0 5px 0; font-size: 14px;">👤 User: <span id="resUser" style="color: white; font-weight: bold;"></span></p>
-                    <p style="margin: 0; font-size: 14px;">🔑 Pass: <span id="resPass" style="color: var(--warning); font-weight: bold;"></span></p>
+            <div class="info-detail-ai">
+                <div style="margin-bottom: 12px; border-bottom: 1px dashed rgba(255,255,255,0.2); padding-bottom: 12px;">
+                    <span style="font-size: 11px; color: #4facfe; text-transform: uppercase; font-weight: bold;">Detail Akun</span>
+                    <p>👤 User: <span id="resUser" style="color: white; font-weight: bold;"></span></p>
+                    <p>🔑 Pass: <span id="resPass" style="color: #f59e0b; font-weight: bold;"></span></p>
                 </div>
-                <div style="margin-bottom: 12px; border-bottom: 1px dashed var(--border-color); padding-bottom: 12px;">
-                    <span style="font-size: 11px; color: var(--text-sub); text-transform: uppercase; font-weight: bold;">Akses Panel</span>
-                    <p style="margin: 8px 0 0 0; font-size: 13px;">🌐 <a id="resLink" href="#" target="_blank" style="color: var(--primary); text-decoration: none; font-weight: bold; word-break: break-all;"></a></p>
+                <div style="margin-bottom: 12px; border-bottom: 1px dashed rgba(255,255,255,0.2); padding-bottom: 12px;">
+                    <span style="font-size: 11px; color: #4facfe; text-transform: uppercase; font-weight: bold;">Akses Panel</span>
+                    <p style="margin-top:8px;">🌐 <a id="resLink" href="#" target="_blank" style="color: #00f2fe; text-decoration: none; font-weight: bold; word-break: break-all;"></a></p>
                 </div>
                 <div>
-                    <span style="font-size: 11px; color: var(--text-sub); text-transform: uppercase; font-weight: bold;">Spesifikasi Server</span>
-                    <p style="margin: 8px 0 0 0; font-size: 14px;">🖥️ Server: <span id="resServer" style="color: var(--success); font-weight: bold;"></span></p>
+                    <span style="font-size: 11px; color: #4facfe; text-transform: uppercase; font-weight: bold;">Spesifikasi Server</span>
+                    <p style="margin-top:8px;">🖥️ Server: <span id="resServer" style="color: #10b981; font-weight: bold;"></span></p>
                 </div>
             </div>
 
-            <div style="display: flex; gap: 10px;">
-                <button class="btn-tambah" style="margin: 0; flex: 1.5; font-size: 14px; display: flex; align-items: center; justify-content: center; gap: 5px;" onclick="salinDataBuyer()" id="btnSalin">📋 Salin Teks</button>
-                <button class="btn-tutup" style="margin: 0; flex: 1; font-size: 14px; background: rgba(255,255,255,0.05); border: 1px solid var(--border-color);" onclick="tutupModal()">Tutup</button>
+            <div class="ai-btn-group">
+                <button class="mini-ai-btn" onclick="salinDataBuyer()" id="btnSalin">📋 Salin Teks</button>
+                <button class="mini-ai-btn-close" onclick="tutupModal('modalScreenshot')">Tutup</button>
             </div>
         </div>
     </div>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+
+    <div id="modalHapusConfirm" class="mini-ai-overlay">
+        <div class="mini-ai-popup danger-mode">
+            <div class="mini-ai-header danger">🚨 PERINGATAN KERAS!</div>
+            <div class="mini-ai-body">
+                Yakin ingin menghapus user <b style="color: #ef4444;" id="delUsername"></b> beserta <b>SEMUA SERVER</b> miliknya?<br><br>
+                Data yang dihapus <u>tidak bisa dikembalikan</u>!
+            </div>
+            <div class="ai-btn-group">
+                <button id="btnKonfirmasiHapus" class="mini-ai-btn mini-ai-btn-danger" onclick="prosesHapusUser()">🗑️ Ya, Hapus Permanen</button>
+                <button class="mini-ai-btn-close" onclick="tutupModal('modalHapusConfirm')">Batal</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="modalHapusSuccess" class="mini-ai-overlay">
+        <div class="mini-ai-popup danger-mode">
+            <div class="mini-ai-header danger">💥 DUAARR!! MUSNAH!</div>
+            <div class="mini-ai-body">
+                User <b style="color: #ef4444;" id="delSuccessUsername"></b> beserta <b id="delSuccessServerCount"></b> Server miliknya telah berhasil dihapus dari sistem.
+            </div>
+            <div class="ai-btn-group">
+                <button class="mini-ai-btn-close" style="flex: 1; background: var(--danger); border-color: var(--danger);" onclick="tutupModal('modalHapusSuccess')">Tutup Panel</button>
+            </div>
+        </div>
+    </div>
+        <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
     <script>
@@ -131,7 +179,6 @@
         const role = localStorage.getItem('role') || '';
         const myUsername = localStorage.getItem('username') || 'Unknown'; 
         
-        // 🛡️ ROLE KHUSUS DIVISI PRIVATE
         const allowedRoles = ['pemilik', 'reseller_private', 'reseller'];
 
         if (!currentUserId || !allowedRoles.includes(role)) {
@@ -143,6 +190,7 @@
             document.getElementById('roleContainer').style.display = 'none';
             document.getElementById('textDaftar').innerText = "Buatanmu";
         } else {
+            document.getElementById('roleContainer').style.display = 'block';
             document.getElementById('textDaftar').innerText = "(Semua Reseller)";
         }
 
@@ -159,12 +207,10 @@
             }
         });
 
-        // 🔑 API KHUSUS PRIVATE
         const PTERO_DOMAIN = "zeroix.panel-prvt.web.id"; 
         const PTERO_API = "ptla_ZM2Ka67FdLj62khENxUm22bKnsHHDBhUCEnDtXfuHhw"; 
         const WORKER_URL = "https://restless-truth-9b75.amisterious09.workers.dev"; 
 
-        // 1. TAMPILKAN USER
         function ambilDataPtero() {
             fetch(`${WORKER_URL}/?https://${PTERO_DOMAIN}/api/application/users`, {
                 headers: { 'Accept': 'application/json', 'Authorization': `Bearer ${PTERO_API}` }
@@ -174,17 +220,18 @@
 
                 data.data.forEach(user => {
                     let u = user.attributes;
-                    
                     if (role !== 'pemilik') {
                         if (u.root_admin === true) return; 
                         if (u.last_name !== myUsername) return; 
                     }
-
                     countDisplayed++;
                     
                     let status = u.root_admin ? `<span class="badge badge-admin">👑 Admin</span>` : `<span class="badge badge-user">👤 Member</span>`;
-                    let makerTag = role === 'pemilik' && u.last_name !== 'User' && u.last_name !== 'Admin' ? `<br><span class="reseller-tag">Oleh: ${u.last_name}</span>` : '';
-                    let tombolHapus = u.id !== 1 ? `<button class="btn-hapus" id="btnHapus_${u.id}" onclick="hapusSatuPaket(${u.id}, '${u.username}')">🗑️ Hapus 1 Paket</button>` : `<span style="color:var(--text-sub); font-size:12px;">Sistem</span>`;
+                    let namaPembuat = u.last_name;
+                    if (namaPembuat === 'User' || namaPembuat === 'Admin') namaPembuat = 'admin'; 
+                    let makerTag = role === 'pemilik' ? `<br><span class="reseller-tag">Oleh: ${namaPembuat}</span>` : '';
+                    
+                    let tombolHapus = u.id !== 1 ? `<button class="btn-hapus" id="btnHapus_${u.id}" onclick="munculkanModalHapusConfirm(${u.id}, '${u.username}')">🗑️ Hapus 1 Paket</button>` : `<span style="color:var(--text-sub); font-size:12px;">Sistem</span>`;
                     
                     tabel += `<tr>
                         <td style="color: var(--text-sub); font-weight: bold;">#${u.id}</td>
@@ -195,23 +242,19 @@
                     </tr>`;
                 });
 
-                if (countDisplayed === 0) {
-                    tabel += `<tr><td colspan="5" style="text-align: center; color: var(--warning); padding: 20px;">Kamu belum membuat satupun akun pelanggan Private.</td></tr>`;
-                }
+                if (countDisplayed === 0) tabel += `<tr><td colspan="5" style="text-align: center; color: var(--warning); padding: 20px;">Kamu belum membuat satupun akun pelanggan Private.</td></tr>`;
                 document.getElementById('tabelPtero').innerHTML = tabel;
             }).catch(e => {
                 document.getElementById('tabelPtero').innerHTML = `<tr><td colspan="5" style="text-align: center; color: var(--danger);">❌ Error: ${e.message}</td></tr>`;
             });
         }
 
-        // 2. SAPU BERSIH USER KOSONG
         async function bersihkanUserKosong() {
             let konfirmasi = confirm("🚨 YAKIN INGIN MENYAPU BERSIH?\n\nSistem akan otomatis mendeteksi dan MENGHAPUS semua User (Member) Private yang sudah tidak memiliki Server aktif.\n\nProses ini tidak bisa dikembalikan!");
             if (!konfirmasi) return;
 
             let btn = document.getElementById('btnSapu');
-            btn.innerText = "⏳ Mendeteksi Data...";
-            btn.style.pointerEvents = "none";
+            btn.innerText = "⏳ Mendeteksi Data..."; btn.style.pointerEvents = "none";
 
             try {
                 let resServers = await fetch(`${WORKER_URL}/?https://${PTERO_DOMAIN}/api/application/servers`, { headers: { 'Accept': 'application/json', 'Authorization': `Bearer ${PTERO_API}` } });
@@ -220,14 +263,13 @@
 
                 let resUsers = await fetch(`${WORKER_URL}/?https://${PTERO_DOMAIN}/api/application/users`, { headers: { 'Accept': 'application/json', 'Authorization': `Bearer ${PTERO_API}` } });
                 let dataUsers = await resUsers.json();
-
                 let targetHapus = [];
 
                 dataUsers.data.forEach(user => {
                     let u = user.attributes;
                     if (u.root_admin || u.id === 1) return;
                     if (role !== 'pemilik' && u.last_name !== myUsername) return;
-                    if (!serverOwners.includes(u.id)) { targetHapus.push(u); }
+                    if (!serverOwners.includes(u.id)) targetHapus.push(u);
                 });
 
                 if (targetHapus.length === 0) {
@@ -237,13 +279,9 @@
                 }
 
                 let konfirmasi2 = confirm(`⚠️ DITEMUKAN ${targetHapus.length} USER HANTU!\nSistem siap mengeksekusi penghapusan massal. Lanjutkan?`);
-                if (!konfirmasi2) {
-                    btn.innerText = "🧹 Bersihkan User Tanpa Server"; btn.style.pointerEvents = "auto";
-                    return;
-                }
+                if (!konfirmasi2) { btn.innerText = "🧹 Bersihkan User Tanpa Server"; btn.style.pointerEvents = "auto"; return; }
 
                 btn.innerText = `⏳ Menghapus ${targetHapus.length} User...`;
-
                 let terhapus = 0;
                 for (let u of targetHapus) {
                     await fetch(`${WORKER_URL}/?https://${PTERO_DOMAIN}/api/application/users/${u.id}`, { method: 'DELETE', headers: { 'Accept': 'application/json', 'Authorization': `Bearer ${PTERO_API}` } });
@@ -252,16 +290,11 @@
 
                 alert(`🧹 SAPU BERSIH SELESAI!\nTotal ${terhapus} User Hantu berhasil dimusnahkan dari Pterodactyl Private.`);
                 ambilDataPtero(); 
-                
-            } catch (e) {
-                alert("❌ Terjadi Error saat menyapu: " + e.message);
-            }
+            } catch (e) { alert("❌ Terjadi Error saat menyapu: " + e.message); }
 
-            btn.innerText = "🧹 Bersihkan User Tanpa Server"; 
-            btn.style.pointerEvents = "auto";
+            btn.innerText = "🧹 Bersihkan User Tanpa Server"; btn.style.pointerEvents = "auto";
         }
 
-        // 3. BUAT PAKET & HAPUS
         async function buatSatuPaket() {
             let username = document.getElementById('newUsername').value.trim();
             let password = document.getElementById('newPassword').value.trim();
@@ -281,11 +314,7 @@
             
             try {
                 btn.innerText = "⏳ 1/2: Membuat Akun User...";
-                let userPayload = { 
-                    "email": email, "username": username, "first_name": username, 
-                    "last_name": role === 'pemilik' ? (isAdmin ? "Admin" : "User") : myUsername, 
-                    "password": password, "root_admin": isAdmin 
-                };
+                let userPayload = { "email": email, "username": username, "first_name": username, "last_name": myUsername, "password": password, "root_admin": isAdmin };
                 
                 let resUser = await fetch(`${WORKER_URL}/?https://${PTERO_DOMAIN}/api/application/users`, {
                     method: 'POST', headers: { 'Accept': 'application/json', 'Content-Type': 'application/json', 'Authorization': `Bearer ${PTERO_API}` }, body: JSON.stringify(userPayload)
@@ -295,14 +324,18 @@
                 let newUserId = dataUser.attributes.id; 
 
                 btn.innerText = "⏳ 2/2: Mendeploy Server...";
+                
+                // ===== PERUBAHAN STARTUP COMMAND DI SINI =====
                 let serverPayload = {
                     "name": serverName, "description": `Dibuat 1 Paket oleh ${myUsername}`, "user": newUserId, "egg": parseInt(eggId),
-                    "docker_image": "ghcr.io/parkervcp/yolks:nodejs_20", "startup": "npm start",
+                    "docker_image": "ghcr.io/parkervcp/yolks:nodejs_20", 
+                    "startup": "if [[ -d .git ]] && [[ {{AUTO_UPDATE}} == \"1\" ]]; then git pull; fi; if [[ ! -z ${NODE_PACKAGES} ]]; then /usr/local/bin/npm install ${NODE_PACKAGES}; fi; if [[ ! -z ${UNNODE_PACKAGES} ]]; then /usr/local/bin/npm uninstall ${UNNODE_PACKAGES}; fi; if [ -f /home/container/package.json ]; then /usr/local/bin/npm install; fi; if [[ ! -z ${CUSTOM_ENVIRONMENT_VARIABLES} ]]; then vars=$(echo ${CUSTOM_ENVIRONMENT_VARIABLES} | tr \";\" \"\\n\"); for line in $vars; do export $line; done fi; /usr/local/bin/${CMD_RUN};",
                     "environment": { "INST": "npm", "USER_UPLOAD": "0", "AUTO_UPDATE": "0", "CMD_RUN": "npm start" },
                     "limits": { "memory": parseInt(ram), "swap": 0, "disk": parseInt(disk), "io": 500, "cpu": parseInt(cpu) },
                     "feature_limits": { "databases": 5, "backups": 5, "allocations": 5 },
                     "deploy": { "locations": [parseInt(locId)], "dedicated_ip": false, "port_range": [] }
                 };
+                
                 let resServer = await fetch(`${WORKER_URL}/?https://${PTERO_DOMAIN}/api/application/servers`, {
                     method: 'POST', headers: { 'Accept': 'application/json', 'Content-Type': 'application/json', 'Authorization': `Bearer ${PTERO_API}` }, body: JSON.stringify(serverPayload)
                 });
@@ -310,10 +343,8 @@
 
                 btn.innerText = "💎 Bikin 1 Paket VIP Sekarang"; btn.style.pointerEvents = "auto";
                 
-                // Panggil Modal Pop-up Keren Kita
-                munculkanModal(username, password, email, serverName);
+                munculkanModalStruk(username, password, email, serverName);
                 
-                // Bersihkan form
                 document.getElementById('newUsername').value = ""; document.getElementById('newPassword').value = "";
                 document.getElementById('newEmail').value = ""; document.getElementById('newServerName').value = "";
                 ambilDataPtero(); 
@@ -322,10 +353,21 @@
             }
         }
 
-        async function hapusSatuPaket(userId, username) {
-            let konfirmasi = confirm(`🚨 PERINGATAN KERAS!\nYakin ingin menghapus user "${username}" beserta SEMUA SERVER miliknya?\n\nData yang dihapus tidak bisa dikembalikan!`);
-            if (!konfirmasi) return;
+        let userToDeleteId = null;
+        let userToDeleteName = null;
 
+        function munculkanModalHapusConfirm(userId, username) {
+            userToDeleteId = userId;
+            userToDeleteName = username;
+            document.getElementById('delUsername').innerText = username;
+            document.getElementById('modalHapusConfirm').style.display = 'flex';
+        }
+
+        async function prosesHapusUser() {
+            tutupModal('modalHapusConfirm'); 
+            
+            let userId = userToDeleteId;
+            let username = userToDeleteName;
             let btn = document.getElementById(`btnHapus_${userId}`);
             btn.innerText = "Menghancurkan... ⏳"; btn.style.pointerEvents = "none";
 
@@ -333,6 +375,7 @@
                 let resServers = await fetch(`${WORKER_URL}/?https://${PTERO_DOMAIN}/api/application/servers`, { headers: { 'Accept': 'application/json', 'Authorization': `Bearer ${PTERO_API}` } });
                 let dataServers = await resServers.json();
                 let serversMilikUser = dataServers.data.filter(s => s.attributes.user === userId);
+                let serverCount = serversMilikUser.length;
 
                 for (let server of serversMilikUser) {
                     let sId = server.attributes.id;
@@ -342,36 +385,39 @@
                 let resUser = await fetch(`${WORKER_URL}/?https://${PTERO_DOMAIN}/api/application/users/${userId}`, { method: 'DELETE', headers: { 'Accept': 'application/json', 'Authorization': `Bearer ${PTERO_API}` } });
                 if (!resUser.ok) throw new Error(await resUser.text());
 
-                alert(`💥 DUAARR!! User "${username}" beserta ${serversMilikUser.length} Server miliknya telah MUSNAH!`);
+                munculkanModalHapusSuccess(username, serverCount);
                 ambilDataPtero(); 
-            } catch (e) {
-                alert("❌ Gagal menghapus: " + e.message); btn.innerText = "🗑️ Hapus 1 Paket"; btn.style.pointerEvents = "auto";
+            } catch (e) { 
+                alert("❌ Gagal menghapus: " + e.message); 
+                btn.innerText = "🗑️ Hapus 1 Paket"; btn.style.pointerEvents = "auto"; 
             }
         }
 
-        // ==========================================
-        // 🔥 LOGIKA POP-UP STRUK & SALIN TEKS
-        // ==========================================
-        function munculkanModal(user, pass, email, serverName) {
+        function munculkanModalHapusSuccess(username, serverCount) {
+            document.getElementById('delSuccessUsername').innerText = username;
+            document.getElementById('delSuccessServerCount').innerText = serverCount;
+            document.getElementById('modalHapusSuccess').style.display = 'flex';
+        }
+
+        function tutupModal(modalId) { 
+            document.getElementById(modalId).style.display = 'none'; 
+        }
+
+        function munculkanModalStruk(user, pass, email, serverName) {
             document.getElementById('resUser').innerText = user; 
             document.getElementById('resPass').innerText = pass;
-            
             let panelLink = `https://${PTERO_DOMAIN}`;
             document.getElementById('resLink').innerText = panelLink;
             document.getElementById('resLink').href = panelLink;
-            
             document.getElementById('resServer').innerText = serverName;
-            
             document.getElementById('modalScreenshot').style.display = 'flex';
             
-            // Reset tombol salin
             let btnSalin = document.getElementById('btnSalin');
-            btnSalin.innerHTML = "📋 Salin Teks";
-            btnSalin.style.background = "var(--primary)";
-        }
-
-        function tutupModal() { 
-            document.getElementById('modalScreenshot').style.display = 'none'; 
+            if(btnSalin) {
+                btnSalin.innerHTML = "📋 Salin Teks";
+                btnSalin.style.background = "linear-gradient(45deg, #00f2fe, #4facfe)";
+                btnSalin.style.color = "#1a1a2e";
+            }
         }
 
         function salinDataBuyer() {
@@ -390,14 +436,16 @@
             navigator.clipboard.writeText(teksSalin).then(() => {
                 let btn = document.getElementById('btnSalin');
                 btn.innerHTML = "✅ Berhasil Disalin!";
-                btn.style.background = "var(--success)";
+                btn.style.background = "#10b981";
+                btn.style.color = "#fff";
                 
                 setTimeout(() => {
                     btn.innerHTML = "📋 Salin Teks";
-                    btn.style.background = "var(--primary)";
+                    btn.style.background = "linear-gradient(45deg, #00f2fe, #4facfe)";
+                    btn.style.color = "#1a1a2e";
                 }, 2000);
             }).catch(err => {
-                alert("❌ Gagal menyalin otomatis. Silakan screenshot manual.");
+                alert("❌ Gagal menyalin otomatis. Silakan copy manual.");
             });
         }
 
