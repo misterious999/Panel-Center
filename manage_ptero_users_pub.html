@@ -23,9 +23,7 @@
         .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
         .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
         
-        /* =========================================
-           CUSTOM SELECT DROPDOWN (GELAP & ELEGAN)
-           ========================================= */
+        /* DROPDOWN CUSTOM */
         .custom-select-wrapper { position: relative; user-select: none; margin-bottom: 15px; }
         .custom-select-trigger { width: 100%; padding: 12px 15px; background: var(--input-bg); border: 1px solid var(--border-color); border-radius: 8px; color: var(--text-main); font-size: 14px; box-sizing: border-box; cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: 0.2s; }
         .custom-select-trigger:hover, .custom-select-trigger.active { border-color: var(--primary); box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2); }
@@ -96,7 +94,7 @@
     <a href="index.html" class="btn-back">⬅ Kembali ke Dashboard</a>
     
     <h2>🌍 Kelola User & Server (Public)</h2>
-    <p class="sub-title">Bikin Akun + Server pelanggan langsung dalam 1x klik secara otomatis.</p>
+    <p class="sub-title">Bikin Akun + Server pelanggan Public langsung dalam 1x klik.</p>
 
     <div class="box">
         <div class="box-header">
@@ -115,8 +113,9 @@
             <div><label>CPU (%):</label><input type="number" id="newCpu" value="60"></div>
             <div><label>Disk (MB):</label><input type="number" id="newDisk" value="1000"></div>
         </div>
+        
         <div class="grid-2" style="display: none;">
-            <input type="number" id="newLocId" value="1">
+            <input type="number" id="newLocId" value="2"> 
             <input type="number" id="newEggId" value="15">
         </div>
         
@@ -135,11 +134,11 @@
             <input type="hidden" id="newRole" value="false">
         </div>
         
-        <button class="btn-tambah" onclick="buatSatuPaket()">🌍 Bikin 1 Paket Sekarang</button>
+        <button class="btn-tambah" onclick="buatSatuPaket()">🌍 Bikin 1 Paket Public Sekarang</button>
     </div>
 
     <div class="box">
-                <div class="box-header">
+        <div class="box-header">
             <h3>📋 Semua User Pelanggan <span id="textDaftar"></span></h3>
             <button class="btn-sapu" id="btnSapu" onclick="konfirmasiSapuAwal()">🧹 Bersihkan User Tanpa Server</button>
         </div>
@@ -147,7 +146,6 @@
             <span style="position: absolute; left: 15px; top: 14px; color: var(--text-sub);">🔍</span>
             <input type="text" id="searchInput" onkeyup="cariDataTabel()" placeholder="Cari username, email, atau ID..." style="padding-left: 40px; margin-bottom: 0; border-color: rgba(59, 130, 246, 0.4); box-shadow: 0 0 10px rgba(0,0,0,0.2);">
         </div>
-
         <table id="tabelPtero">
             <tr><th>ID</th><th>Username</th><th>Email</th><th>Status</th><th>Aksi</th></tr>
             <tr><td colspan="5" style="text-align: center; color: var(--text-sub); padding: 20px;">⏳ Mengambil data...</td></tr>
@@ -224,10 +222,13 @@
             </div>
         </div>
     </div>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
     <script>
+        // ==========================================
+        // INISIALISASI & KEAMANAN AWAL (PUBLIC)
+        // ==========================================
         const currentUserId = localStorage.getItem('user_id');
         const role = localStorage.getItem('role') || '';
         const myUsername = localStorage.getItem('username') || 'Unknown'; 
@@ -235,7 +236,6 @@
         const allowedRoles = ['pemilik', 'reseller_public', 'partner_public'];
 
         if (!currentUserId || !allowedRoles.includes(role)) {
-            // Native alert disini buat blokir langsung
             alert("🚨 AKSES DITOLAK!\nHalaman ini khusus divisi Public.");
             window.location.replace("index.html");
         }
@@ -261,38 +261,13 @@
             }
         });
 
-        // 🔑 API KHUSUS PUBLIC
-        const PTERO_DOMAIN = "pteropublik.bypstar7.online"; 
-        const PTERO_API = "ptla_jfNBOxsfLDu0Ui9YUZMDANXfuLHglNqSJ3V55gHTKWb"; 
+        // 🔥 FIX DOMAIN API BARU
+        const PTERO_DOMAIN = "publik.zero.star.bypstar7.online"; 
+        const PTERO_API = "ptla_UiLem536TIVuWzKHTfv5OOJMXD9jiA3Tvd49FRSTd0q"; 
         const WORKER_URL = "https://restless-truth-9b75.amisterious09.workers.dev"; 
 
         // ==========================================
-        // 🛠️ FUNGSI CUSTOM DROPDOWN
-        // ==========================================
-        function toggleRoleSelect() {
-            document.getElementById('customRoleOptions').classList.toggle('open');
-            document.querySelector('.custom-select-trigger').classList.toggle('active');
-        }
-
-        function pilihRole(value, text) {
-            document.getElementById('newRole').value = value;
-            document.getElementById('customSelectText').innerText = text;
-            let options = document.querySelectorAll('.custom-option');
-            options.forEach(opt => opt.classList.remove('selected'));
-            event.target.classList.add('selected');
-            toggleRoleSelect();
-        }
-
-        document.addEventListener('click', function(e) {
-            const select = document.querySelector('.custom-select-wrapper');
-            if (select && !select.contains(e.target)) {
-                document.getElementById('customRoleOptions').classList.remove('open');
-                document.querySelector('.custom-select-trigger').classList.remove('active');
-            }
-        });
-
-        // ==========================================
-        // 🛠️ FUNGSI PENOLONG MODAL AI
+        // FUNGSI UMUM & MODAL AI
         // ==========================================
         function tutupModal(id) { document.getElementById(id).style.display = 'none'; }
         
@@ -324,7 +299,32 @@
         }
 
         // ==========================================
-        // 📋 1. TAMPILKAN USER PTERO PUBLIC
+        // FUNGSI CUSTOM DROPDOWN
+        // ==========================================
+        function toggleRoleSelect() {
+            document.getElementById('customRoleOptions').classList.toggle('open');
+            document.querySelector('.custom-select-trigger').classList.toggle('active');
+        }
+
+        function pilihRole(value, text) {
+            document.getElementById('newRole').value = value;
+            document.getElementById('customSelectText').innerText = text;
+            let options = document.querySelectorAll('.custom-option');
+            options.forEach(opt => opt.classList.remove('selected'));
+            event.target.classList.add('selected');
+            toggleRoleSelect();
+        }
+
+        document.addEventListener('click', function(e) {
+            const select = document.querySelector('.custom-select-wrapper');
+            if (select && !select.contains(e.target)) {
+                document.getElementById('customRoleOptions').classList.remove('open');
+                document.querySelector('.custom-select-trigger').classList.remove('active');
+            }
+        });
+
+        // ==========================================
+        // FUNGSI AMBIL DATA TABEL
         // ==========================================
         function ambilDataPtero() {
             fetch(`${WORKER_URL}/?https://${PTERO_DOMAIN}/api/application/users`, {
@@ -335,14 +335,16 @@
 
                 data.data.forEach(user => {
                     let u = user.attributes;
-                    
                     if (role !== 'pemilik') {
                         if (u.last_name !== myUsername) return; 
                     }
                     countDisplayed++;
                     
                     let status = u.root_admin ? `<span class="badge badge-admin">👑 Admin</span>` : `<span class="badge badge-user">👤 Member</span>`;
-                    let makerTag = role === 'pemilik' && u.last_name !== 'User' && u.last_name !== 'Admin' ? `<br><span class="reseller-tag">Oleh: ${u.last_name}</span>` : '';
+                    let namaPembuat = u.last_name;
+                    if (namaPembuat === 'User' || namaPembuat === 'Admin') namaPembuat = 'admin'; 
+                    let makerTag = role === 'pemilik' ? `<br><span class="reseller-tag">Oleh: ${namaPembuat}</span>` : '';
+                    
                     let tombolHapus = u.id !== 1 ? `<button class="btn-hapus" id="btnHapus_${u.id}" onclick="munculkanModalHapusConfirm(${u.id}, '${u.username}')">🗑️ Hapus 1 Paket</button>` : `<span style="color:var(--text-sub); font-size:12px;">Sistem</span>`;
                     
                     tabel += `<tr>
@@ -354,21 +356,51 @@
                     </tr>`;
                 });
 
-                if (countDisplayed === 0) {
-                    tabel += `<tr><td colspan="5" style="text-align: center; color: var(--warning); padding: 20px;">Kamu belum membuat satupun akun pelanggan Public.</td></tr>`;
-                }
+                if (countDisplayed === 0) tabel += `<tr><td colspan="5" style="text-align: center; color: var(--warning); padding: 20px;">Kamu belum membuat satupun akun pelanggan Public.</td></tr>`;
                 document.getElementById('tabelPtero').innerHTML = tabel;
             }).catch(e => {
                 document.getElementById('tabelPtero').innerHTML = `<tr><td colspan="5" style="text-align: center; color: var(--danger);">❌ Error: ${e.message}</td></tr>`;
             });
         }
-                // ==========================================
-        // 🧹 2. LOGIKA SAPU BERSIH (FULL MODAL AI)
+
+        // ==========================================
+        // FUNGSI CARI DATA (LIVE SEARCH)
+        // ==========================================
+        function cariDataTabel() {
+            let input = document.getElementById("searchInput").value.toLowerCase();
+            let table = document.getElementById("tabelPtero");
+            let tr = table.getElementsByTagName("tr");
+
+            for (let i = 1; i < tr.length; i++) {
+                if (tr[i].getElementsByTagName("td").length === 1) continue;
+
+                let tdID = tr[i].getElementsByTagName("td")[0];
+                let tdUsername = tr[i].getElementsByTagName("td")[1];
+                let tdEmail = tr[i].getElementsByTagName("td")[2];
+
+                if (tdID || tdUsername || tdEmail) {
+                    let textID = tdID.textContent || tdID.innerText;
+                    let textUsername = tdUsername.textContent || tdUsername.innerText;
+                    let textEmail = tdEmail.textContent || tdEmail.innerText;
+
+                    if (textID.toLowerCase().indexOf(input) > -1 || 
+                        textUsername.toLowerCase().indexOf(input) > -1 || 
+                        textEmail.toLowerCase().indexOf(input) > -1) {
+                        tr[i].style.display = ""; 
+                    } else {
+                        tr[i].style.display = "none"; 
+                    }
+                }       
+            }
+        }
+
+        // ==========================================
+        // LOGIKA SAPU BERSIH
         // ==========================================
         let targetHantuGlobal = []; 
 
         function konfirmasiSapuAwal() {
-            document.getElementById('sapuConfirmBody').innerHTML = "Sistem akan mendeteksi dan MENGHAPUS semua User (Member) Public yang sudah tidak memiliki Server aktif.<br><br>Proses ini <u>tidak bisa dikembalikan</u>. Lanjutkan pemindaian?";
+            document.getElementById('sapuConfirmBody').innerHTML = "Sistem akan mendeteksi dan MENGHAPUS semua User (Member) yang sudah tidak memiliki Server aktif.<br><br>Proses ini <u>tidak bisa dikembalikan</u>. Lanjutkan pemindaian?";
             let btnExec = document.getElementById('btnEksekusiSapu');
             btnExec.innerText = "🔍 Pindai Data";
             btnExec.onclick = prosesPindaiHantu; 
@@ -431,13 +463,15 @@
                 }
                 showAiSuccess(`Sapu bersih selesai!<br>Total <b>${terhapus} User Hantu</b> berhasil dimusnahkan.`, "🧹 CLEAR!", false);
                 ambilDataPtero(); 
-            } catch (e) { showAiAlert("Terjadi error: " + e.message, "❌ ERROR"); }
+            } catch (e) { 
+                showAiAlert("Terjadi error: " + e.message, "❌ ERROR"); 
+            }
             
             btn.innerText = "🧹 Bersihkan User Tanpa Server"; btn.style.pointerEvents = "auto";
         }
 
         // ==========================================
-        // 🚀 3. BUAT 1 PAKET 
+        // BUAT 1 PAKET 
         // ==========================================
         async function buatSatuPaket() {
             let username = document.getElementById('newUsername').value.trim();
@@ -449,13 +483,10 @@
             let disk = document.getElementById('newDisk').value;
             let locId = document.getElementById('newLocId').value;
             let eggId = document.getElementById('newEggId').value;
-            
-            let roleElem = document.getElementById('newRole');
-            let isAdmin = roleElem ? roleElem.value === "true" : false;
+            let isAdmin = document.getElementById('newRole').value === "true"; 
 
             if(!username || !password || !email || !serverName || !ram || !cpu || !disk) { 
-                showAiAlert("Harap isi semua kolom formulir secara lengkap!", "🚨 DATA KOSONG"); 
-                return; 
+                showAiAlert("Harap isi semua kolom formulir secara lengkap!", "🚨 DATA KOSONG"); return; 
             }
 
             let btn = document.querySelector('.btn-tambah');
@@ -463,11 +494,7 @@
             
             try {
                 btn.innerText = "⏳ 1/2: Membuat Akun User...";
-                let userPayload = { 
-                    "email": email, "username": username, "first_name": username, 
-                    "last_name": role === 'pemilik' ? (isAdmin ? "Admin" : "User") : myUsername, 
-                    "password": password, "root_admin": isAdmin 
-                };
+                let userPayload = { "email": email, "username": username, "first_name": username, "last_name": myUsername, "password": password, "root_admin": isAdmin };
                 
                 let resUser = await fetch(`${WORKER_URL}/?https://${PTERO_DOMAIN}/api/application/users`, {
                     method: 'POST', headers: { 'Accept': 'application/json', 'Content-Type': 'application/json', 'Authorization': `Bearer ${PTERO_API}` }, body: JSON.stringify(userPayload)
@@ -486,27 +513,25 @@
                     "feature_limits": { "databases": 5, "backups": 5, "allocations": 5 },
                     "deploy": { "locations": [parseInt(locId)], "dedicated_ip": false, "port_range": [] }
                 };
-                
                 let resServer = await fetch(`${WORKER_URL}/?https://${PTERO_DOMAIN}/api/application/servers`, {
                     method: 'POST', headers: { 'Accept': 'application/json', 'Content-Type': 'application/json', 'Authorization': `Bearer ${PTERO_API}` }, body: JSON.stringify(serverPayload)
                 });
-                if (!resServer.ok) throw new Error("Akun jadi, TAPI Gagal Deploy Server:\n" + await resServer.text());
+                if (!resServer.ok) throw new Error("Gagal Deploy Server:\n" + await resServer.text());
 
-                btn.innerText = "🌍 Bikin 1 Paket Sekarang"; btn.style.pointerEvents = "auto";
-                
+                btn.innerText = "🌍 Bikin 1 Paket Public Sekarang"; btn.style.pointerEvents = "auto";
                 munculkanModalStruk(username, password, email, serverName);
                 
                 document.getElementById('newUsername').value = ""; document.getElementById('newPassword').value = "";
                 document.getElementById('newEmail').value = ""; document.getElementById('newServerName').value = "";
                 ambilDataPtero(); 
             } catch(e) {
-                btn.innerText = "🌍 Bikin 1 Paket Sekarang"; btn.style.pointerEvents = "auto"; 
+                btn.innerText = "🌍 Bikin 1 Paket Public Sekarang"; btn.style.pointerEvents = "auto"; 
                 showAiAlert(`❌ ${e.message}`, "GAGAL DEPLOY");
             }
         }
 
         // ==========================================
-        // 💥 4. LOGIKA HAPUS 1 PAKET
+        // LOGIKA HAPUS 1 PAKET
         // ==========================================
         let userToDeleteId = null;
         let userToDeleteName = null;
@@ -548,9 +573,9 @@
         }
 
         // ==========================================
-        // 📋 5. STRUK & COPY
+        // STRUK & COPY
         // ==========================================
-        function munculkanModalStruk(user, pass, email, serverName) {
+    function munculkanModalStruk(user, pass, email, serverName) {
             document.getElementById('resUser').innerText = user; 
             document.getElementById('resPass').innerText = pass;
             let panelLink = `https://${PTERO_DOMAIN}`;
@@ -590,43 +615,12 @@
                     btn.style.background = "linear-gradient(45deg, #00f2fe, #4facfe)";
                     btn.style.color = "#1a1a2e";
                 }, 2000);
-            }).catch(err => { showAiAlert("Gagal menyalin otomatis. Silakan copy manual.", "📋 COPY GAGAL"); });
-        }
-                // ==========================================
-        // 🔍 FITUR LIVE SEARCH PADA TABEL
-        // ==========================================
-        function cariDataTabel() {
-            // Ambil nilai yang diketik, ubah ke huruf kecil semua biar gampang dicocokkan
-            let input = document.getElementById("searchInput").value.toLowerCase();
-            let table = document.getElementById("tabelPtero");
-            let tr = table.getElementsByTagName("tr");
-
-            // Mulai looping dari index 1 (karena index 0 itu baris judul/header tabel)
-            for (let i = 1; i < tr.length; i++) {
-                // Kalau baris ini adalah baris "loading" atau "kosong", lewati
-                if (tr[i].getElementsByTagName("td").length === 1) continue;
-
-                let tdID = tr[i].getElementsByTagName("td")[0];
-                let tdUsername = tr[i].getElementsByTagName("td")[1];
-                let tdEmail = tr[i].getElementsByTagName("td")[2];
-
-                if (tdID || tdUsername || tdEmail) {
-                    let textID = tdID.textContent || tdID.innerText;
-                    let textUsername = tdUsername.textContent || tdUsername.innerText;
-                    let textEmail = tdEmail.textContent || tdEmail.innerText;
-
-                    // Cek apakah input cocok dengan ID, Username, atau Email
-                    if (textID.toLowerCase().indexOf(input) > -1 || 
-                        textUsername.toLowerCase().indexOf(input) > -1 || 
-                        textEmail.toLowerCase().indexOf(input) > -1) {
-                        tr[i].style.display = ""; // Tampilkan baris
-                    } else {
-                        tr[i].style.display = "none"; // Sembunyikan baris
-                    }
-                }       
-            }
+            }).catch(err => { 
+                showAiAlert("Gagal menyalin otomatis. Silakan copy manual.", "📋 COPY GAGAL"); 
+            });
         }
 
+        // Panggil data pertama kali
         ambilDataPtero();
     </script>
 </body>

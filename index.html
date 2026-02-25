@@ -93,7 +93,7 @@
         .footer { text-align: center; margin-top: 40px; padding-bottom: 10px; font-size: 12px; color: var(--text-sub); letter-spacing: 0.5px; border-top: 1px solid var(--border-color); padding-top: 20px; }
         .footer span { color: var(--primary); font-weight: bold; }
     </style>
-    </head>
+</head>
 <body>
 
     <div id="splash-screen">
@@ -177,7 +177,7 @@
     </div>
 
     <h2>🚀 Menu Navigasi</h2>
-        <div id="sectionWeb" style="display: none;">
+    <div id="sectionWeb" style="display: none;">
         <div class="section-title">🛡️ Sistem Internal (Kelola Akses)</div>
         <div class="menu-grid">
             <a href="manage_panel_users.html" class="menu-card card-internal">
@@ -220,7 +220,7 @@
     </div>
 
     <div class="footer">
-        Panel Center <span>v5.2</span> <br>Build by Pstar7 x Mini 🚀
+        Panel Center <span>v5.3</span> <br>Build by Pstar7 x Mini 🚀
     </div>
 
     <div id="modalPassword" class="modal-overlay">
@@ -269,7 +269,7 @@
             </div>
         </div>
     </div>
-       <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
     <script>
@@ -471,8 +471,9 @@
         const WORKER_URL = "https://restless-truth-9b75.amisterious09.workers.dev/?"; 
         const PRVT_DOMAIN = "zeroix.panel-prvt.web.id"; 
         const PRVT_API = "ptla_ZM2Ka67FdLj62khENxUm22bKnsHHDBhUCEnDtXfuHhw"; 
-        const PUB_DOMAIN = "pteropublik.bypstar7.online"; 
-        const PUB_API = "ptla_jfNBOxsfLDu0Ui9YUZMDANXfuLHglNqSJ3V55gHTKWb"; 
+        // 🔥 UPDATE DOMAIN PUBLIC DISINI 🔥
+        const PUB_DOMAIN = "publik.zero.star.bypstar7.online"; 
+        const PUB_API = "ptla_UiLem536TIVuWzKHTfv5OOJMXD9jiA3Tvd49FRSTd0q"; 
 
         function ambilStatistik() {
             fetch(`${WORKER_URL}https://${PRVT_DOMAIN}/api/application/servers`, { headers: { 'Accept': 'application/json', 'Authorization': `Bearer ${PRVT_API}` } }).then(res => res.json()).then(data => { document.getElementById('countPrivate').innerText = data.meta.pagination.total; }).catch(() => document.getElementById('countPrivate').innerText = "❌");
@@ -498,4 +499,3 @@
     </script>
 </body>
 </html>
-    
