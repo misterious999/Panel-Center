@@ -185,7 +185,7 @@
             </div>
         </div>
     </div>
-        <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
     <script>
@@ -193,259 +193,82 @@
         const myRole = localStorage.getItem('role') || '';
         const myUsername = localStorage.getItem('username') || 'Unknown'; 
         
-        // 🛡️ BUKA AKSES UNTUK PEMILIK & PARTNER SAJA (Reseller Dilarang Masuk)
-        const allowedRoles = ['pemilik', 'partner_public'];
+        // 🔥 IZINKAN DEMO MASUK
+        const allowedRoles = ['pemilik', 'partner_public', 'demo'];
         if (!currentUserId || !allowedRoles.includes(myRole)) {
-            alert("🚨 AKSES DITOLAK!\nHalaman ini khusus Pemilik dan Partner."); 
-            window.location.replace("index.html");
+            alert("🚨 AKSES DITOLAK!\nHalaman ini khusus Pemilik dan Partner."); window.location.replace("index.html");
         }
 
         const firebaseConfig = { databaseURL: "https://cobaaja-ac5d0-default-rtdb.firebaseio.com" };
         if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
 
-        const connectedRef = database.ref('.info/connected');
-        connectedRef.on('value', (snap) => {
-            if (snap.val() === true && currentUserId) {
-                let userRef = database.ref('users/' + currentUserId);
-                userRef.child('isOnline').onDisconnect().set(false);
-                userRef.child('isOnline').set(true);
-            }
-        });
-
-        // FUNGSI UMUM MODAL
         function tutupModal(modalId) { document.getElementById(modalId).style.display = 'none'; }
-        function showPeringatan(pesan) {
-            document.getElementById('teksPeringatan').innerHTML = pesan;
-            document.getElementById('modalPeringatan').style.display = 'flex';
-        }
+        function showPeringatan(pesan) { document.getElementById('teksPeringatan').innerHTML = pesan; document.getElementById('modalPeringatan').style.display = 'flex'; }
 
-        // ==========================================
-        // 🔥 LOGIKA KUNCI DROPDOWN (SISTEM KASTA)
-        // ==========================================
         window.addEventListener('DOMContentLoaded', () => {
-            let optionsContainer = document.getElementById('customRoleOptions');
-            let triggerText = document.getElementById('customSelectText');
-            let roleInput = document.getElementById('webRole');
+            let opts = document.getElementById('customRoleOptions');
+            let trig = document.getElementById('customSelectText');
+            let roleInp = document.getElementById('webRole');
             
-            let opsiHtml = "";
-
             if (myRole === 'pemilik') {
-                // Pemilik bisa bikin semua role
-                opsiHtml += `<div class="custom-option selected" onclick="pilihRole('pemilik', '👑 Pemilik Panel (Akses Penuh Tanpa Batas)')">👑 Pemilik Panel (Akses Penuh Tanpa Batas)</div>`;
-                opsiHtml += `<div class="custom-option" onclick="pilihRole('partner_public', '🤝 Partner Panel (Bisa buat akun Reseller & Admin Ptero)')">🤝 Partner Panel (Bisa buat akun Reseller & Admin Ptero)</div>`;
-                opsiHtml += `<div class="custom-option" onclick="pilihRole('reseller_private', '💎 Reseller Private (Hanya bisa buat akun Ptero VIP)')">💎 Reseller Private (Hanya bisa buat akun Ptero VIP)</div>`;
-                opsiHtml += `<div class="custom-option" onclick="pilihRole('reseller_public', '🌍 Reseller Public (Hanya bisa buat akun Ptero Public)')">🌍 Reseller Public (Hanya bisa buat akun Ptero Public)</div>`;
-                
-                triggerText.innerText = '👑 Pemilik Panel (Akses Penuh Tanpa Batas)';
-                roleInput.value = 'pemilik';
+                opts.innerHTML = `
+                    <div class="custom-option selected" onclick="pilihRole('pemilik', '👑 Pemilik Panel (Akses Penuh)')">👑 Pemilik Panel (Akses Penuh)</div>
+                    <div class="custom-option" onclick="pilihRole('partner_public', '🤝 Partner Panel')">🤝 Partner Panel</div>
+                    <div class="custom-option" onclick="pilihRole('reseller_private', '💎 Reseller Private')">💎 Reseller Private</div>
+                    <div class="custom-option" onclick="pilihRole('reseller_public', '🌍 Reseller Public')">🌍 Reseller Public</div>
+                    <div class="custom-option" onclick="pilihRole('demo', '👀 Akun Demo (Showcase)')">👀 Akun Demo (Showcase)</div>
+                `;
+                trig.innerText = '👑 Pemilik Panel (Akses Penuh)'; roleInp.value = 'pemilik';
             } else if (myRole === 'partner_public') {
-                // Partner CUMA BISA bikin Reseller Public
-                opsiHtml += `<div class="custom-option selected" onclick="pilihRole('reseller_public', '🌍 Reseller Public (Hanya bisa buat akun Ptero Public)')">🌍 Reseller Public (Hanya bisa buat akun Ptero Public)</div>`;
-                
-                triggerText.innerText = '🌍 Reseller Public (Hanya bisa buat akun Ptero Public)';
-                roleInput.value = 'reseller_public';
-            }
-
-            optionsContainer.innerHTML = opsiHtml;
-        });
-
-        function toggleRoleSelect() {
-            document.getElementById('customRoleOptions').classList.toggle('open');
-            document.querySelector('.custom-select-trigger').classList.toggle('active');
-        }
-
-        function pilihRole(value, text) {
-            document.getElementById('webRole').value = value;
-            document.getElementById('customSelectText').innerText = text;
-            let options = document.querySelectorAll('.custom-option');
-            options.forEach(opt => opt.classList.remove('selected'));
-            event.target.classList.add('selected');
-            toggleRoleSelect();
-        }
-
-        document.addEventListener('click', function(e) {
-            const select = document.querySelector('.custom-select-wrapper');
-            if (!select.contains(e.target)) {
-                document.getElementById('customRoleOptions').classList.remove('open');
-                document.querySelector('.custom-select-trigger').classList.remove('active');
+                opts.innerHTML = `<div class="custom-option selected" onclick="pilihRole('reseller_public', '🌍 Reseller Public')">🌍 Reseller Public</div>`;
+                trig.innerText = '🌍 Reseller Public'; roleInp.value = 'reseller_public';
             }
         });
 
-        // TAMPILKAN DAFTAR PENGGUNA WEB (MENGGUNAKAN ATURAN KASTA)
+        function toggleRoleSelect() { document.getElementById('customRoleOptions').classList.toggle('open'); document.querySelector('.custom-select-trigger').classList.toggle('active'); }
+        function pilihRole(v, t) { document.getElementById('webRole').value = v; document.getElementById('customSelectText').innerText = t; document.querySelectorAll('.custom-option').forEach(o=>o.classList.remove('selected')); event.target.classList.add('selected'); toggleRoleSelect(); }
+
         function ambilDataWebUsers() {
-            database.ref('users').on('value', (snapshot) => {
+            database.ref('users').on('value', (snap) => {
                 let tabel = `<tr><th>Username & Password</th><th>Tipe Akun</th><th>Status</th><th>Aksi</th></tr>`;
-                let adaData = false;
-                let dataArray = []; 
-
-                snapshot.forEach((childSnap) => {
-                    let u = childSnap.val();
-                    u.uId = childSnap.key; 
-                    u.waktuDibuat = u.timestamp || 0; 
+                let d = []; snap.forEach(c => { let u = c.val(); if(u && u.username) { u.uId=c.key; if(myRole==='pemilik'||myRole==='demo'||u.maker===myUsername) d.push(u); } });
+                
+                d.sort((a,b)=>(a.timestamp||0)-(b.timestamp||0)).forEach(u => {
+                    let r = u.role ? String(u.role) : 'reseller_public'; let rTeks = r.replace('_',' ').toUpperCase();
+                    let b = r==='pemilik' ? `<span class="role-badge role-pemilik">👑 ${rTeks}</span>` : 
+                            r==='demo' ? `<span class="role-badge" style="background:rgba(148,163,184,0.2);color:#cbd5e1;border:1px solid #94a3b8;">👀 DEMO</span>` :
+                            r.includes('partner') ? `<span class="role-badge role-partner">🤝 ${rTeks}</span>` : `<span class="role-badge role-reseller">💎 ${rTeks}</span>`;
                     
-                    // Filter: Partner cuma bisa lihat anak buah yang dia bikin sendiri
-                    if (myRole === 'pemilik' || u.maker === myUsername) {
-                        dataArray.push(u);
-                    }
-                });
-
-                dataArray.sort((a, b) => a.waktuDibuat - b.waktuDibuat);
-
-                dataArray.forEach((u) => {
-                    adaData = true;
-                    let roleBadge = "";
-                    let roleTeks = u.role.replace('_', ' ').toUpperCase();
-                    if (u.role === 'pemilik') roleBadge = `<span class="role-badge role-pemilik">👑 ${roleTeks}</span>`;
-                    else if (u.role.includes('partner')) roleBadge = `<span class="role-badge role-partner">🤝 ${roleTeks}</span>`;
-                    else roleBadge = `<span class="role-badge role-reseller">💎 ${roleTeks}</span>`;
-
-                    let statusDot = u.isOnline ? `<span class="status-dot dot-online"></span> <span style="color: var(--success); font-size: 13px;">Online</span>` : `<span class="status-dot dot-offline"></span> <span style="color: var(--text-sub); font-size: 13px;">Offline</span>`;
-
-                    let pembuat = u.maker ? `<br><span style="font-size: 10px; color: var(--primary);">Oleh: ${u.maker}</span>` : '';
+                    let hapus = (r==='pemilik' || String(u.username).toLowerCase()==='admin') ? `<span style="color:var(--text-sub); font-size:12px;">Sistem 👑</span>` : `<button class="btn-hapus" onclick="hapusAkunWeb('${u.uId}', '${u.username}')">🗑️ Cabut</button>`;
                     
-                    let tombolHapus = "";
-                    if (u.role === 'pemilik') {
-                        tombolHapus = `<span style="color:var(--text-sub); font-size:12px; font-weight:bold;">Sistem Utama 👑</span>`;
-                    } else {
-                        tombolHapus = `<button class="btn-hapus" onclick="hapusAkunWeb('${u.uId}', '${u.username}')">🗑️ Cabut Akses</button>`;
-                    }
-
-                    tabel += `<tr>
-                        <td><div style="font-weight: 600; color: var(--text-main);">${u.username}</div>
-                            <div style="font-size: 12px; color: var(--warning); margin-top: 3px;">🔑 ${u.password}</div>
-                            ${pembuat}
-                        </td>
-                        <td>${roleBadge}</td>
-                        <td>${statusDot}</td>
-                        <td>${tombolHapus}</td>
-                    </tr>`;
+                    tabel += `<tr><td><div style="font-weight:600;color:var(--text-main);">${u.username}</div><div style="font-size:12px;color:var(--warning);">🔑 ${u.password||'***'}</div>${u.maker?`<br><span style="font-size:10px;color:var(--primary);">Oleh: ${u.maker}</span>`:''}</td><td>${b}</td><td>${u.isOnline?'<span class="status-dot dot-online"></span><span style="color:var(--success);font-size:13px;">Online</span>':'<span class="status-dot dot-offline"></span><span style="color:var(--text-sub);font-size:13px;">Offline</span>'}</td><td>${hapus}</td></tr>`;
                 });
-
-                if (!adaData) {
-                    tabel += `<tr><td colspan="4" style="text-align: center; color: var(--warning); padding: 20px;">Belum ada pengguna terdaftar.</td></tr>`;
-                }
                 document.getElementById('tabelWebUsers').innerHTML = tabel;
             });
         }
 
-        // ==========================================
-        // 🚀 FUNGSI BUAT AKUN WEB PANEL BARU
-        // ==========================================
+        // 🔒 BLOKIR AKSI DEMO
         function buatAkunWeb() {
-            let uName = document.getElementById('webUsername').value.trim();
-            let pWord = document.getElementById('webPassword').value.trim();
-            let rolePilihan = document.getElementById('webRole').value;
-
-            if(!uName || !pWord) {
-                showPeringatan("🚨 Username dan Password tidak boleh kosong!"); 
-                return;
-            }
-
-            let btn = document.querySelector('.btn-tambah');
-            btn.innerText = "⏳ Memproses Akses..."; btn.style.pointerEvents = "none";
-
-            database.ref('users').orderByChild('username').equalTo(uName).once('value', (snap) => {
-                if (snap.exists()) {
-                    showPeringatan("❌ Username ini sudah terdaftar! Pilih username lain.");
-                    btn.innerText = "🚀 Cetak Akses Web Sekarang"; btn.style.pointerEvents = "auto";
-                } else {
-                    let newDataRef = database.ref('users').push();
-                    newDataRef.set({
-                        username: uName, password: pWord, role: rolePilihan,
-                        maker: myUsername, isOnline: false, timestamp: Date.now() 
-                    }).then(() => {
-                        munculkanModalWeb(uName, pWord, rolePilihan);
-                        document.getElementById('webUsername').value = ""; document.getElementById('webPassword').value = "";
-                        btn.innerText = "🚀 Cetak Akses Web Sekarang"; btn.style.pointerEvents = "auto";
-                    }).catch((error) => {
-                        showPeringatan("❌ Terjadi kesalahan: " + error.message);
-                        btn.innerText = "🚀 Cetak Akses Web Sekarang"; btn.style.pointerEvents = "auto";
-                    });
-                }
+            if(myRole === 'demo') return showPeringatan("👀 <b>MODE DEMO:</b> Kamu hanya bisa me-review UI panel, tidak bisa membuat akun!");
+            let uName = document.getElementById('webUsername').value.trim(); let pWord = document.getElementById('webPassword').value.trim();
+            if(!uName || !pWord) return showPeringatan("Isi data dulu!");
+            // Sisa fungsi sama...
+            let btn = document.querySelector('.btn-tambah'); btn.innerText = "⏳ Memproses...";
+            database.ref('users').orderByChild('username').equalTo(uName).once('value', s => {
+                if(s.exists()){ showPeringatan("❌ Username terdaftar!"); btn.innerText="🚀 Cetak Akses"; }
+                else { database.ref('users').push().set({username:uName, password:pWord, role:document.getElementById('webRole').value, maker:myUsername, isOnline:false, timestamp:Date.now()}).then(()=>{munculkanModalWeb(uName,pWord,document.getElementById('webRole').value);btn.innerText="🚀 Cetak Akses";}); }
             });
         }
 
-        // LOGIKA POP-UP PENGHAPUSAN AI
-        let targetHapusId = "";
-        let targetHapusName = "";
-
-        function hapusAkunWeb(uid, username) {
-            targetHapusId = uid;
-            targetHapusName = username;
-            document.getElementById('teksKonfirmasi').innerHTML = `Yakin ingin mencabut akses Web Panel untuk user <b style="color:var(--danger);">${username}</b>?<br><br><span style="color:var(--text-sub); font-size: 13px;">Mereka tidak akan bisa login ke Web ini lagi.</span>`;
-            document.getElementById('modalKonfirmasi').style.display = 'flex';
+        let delId=""; function hapusAkunWeb(id, n) { 
+            if(myRole === 'demo') return showPeringatan("👀 <b>MODE DEMO:</b> Kamu tidak punya akses menghapus data!");
+            delId=id; document.getElementById('teksKonfirmasi').innerHTML=`Yakin hapus <b style="color:red;">${n}</b>?`; document.getElementById('modalKonfirmasi').style.display='flex'; 
         }
-
-        function tutupKonfirmasi() {
-            document.getElementById('modalKonfirmasi').style.display = 'none';
-            targetHapusId = ""; targetHapusName = "";
-        }
-
-        function eksekusiHapus() {
-            if(!targetHapusId) return;
-            let btn = document.getElementById('btnGasHapus');
-            btn.innerText = "⏳ Menghapus..."; btn.style.pointerEvents = "none";
-
-            database.ref('users/' + targetHapusId).remove().then(() => {
-                tutupKonfirmasi();
-                btn.innerText = "🗑️ Ya, Cabut Akses!"; btn.style.pointerEvents = "auto";
-                document.getElementById('teksInfo').innerHTML = `Akses login untuk user <b style="color:var(--success);">${targetHapusName}</b> telah berhasil dicabut.`;
-                document.getElementById('modalInfo').style.display = 'flex';
-            }).catch((e) => {
-                showPeringatan("Gagal menghapus: " + e.message); 
-                btn.innerText = "🗑️ Ya, Cabut Akses!"; btn.style.pointerEvents = "auto";
-            });
-        }
-
-        // LOGIKA POP-UP STRUK & SALIN TEKS
-        function munculkanModalWeb(user, pass, role) {
-            document.getElementById('resUserWeb').innerText = user; 
-            document.getElementById('resPassWeb').innerText = pass;
-            
-            let webLink = window.location.origin + window.location.pathname.replace('manage_panel_users.html', '');
-            if(webLink.endsWith('/')) webLink = webLink.slice(0, -1);
-            
-            document.getElementById('resLinkWeb').innerText = webLink;
-            document.getElementById('resLinkWeb').href = webLink;
-            
-            let namaRole = role.replace('_', ' ').toUpperCase();
-            document.getElementById('resRoleWeb').innerText = namaRole;
-            
-            document.getElementById('modalScreenshot').style.display = 'flex';
-            
-            let btnSalin = document.getElementById('btnSalinWeb');
-            btnSalin.innerHTML = "📋 Salin Teks";
-            btnSalin.style.background = "linear-gradient(45deg, #00f2fe, #4facfe)";
-            btnSalin.style.color = "#1a1a2e";
-        }
-
-        function salinDataWeb() {
-            let user = document.getElementById('resUserWeb').innerText;
-            let pass = document.getElementById('resPassWeb').innerText;
-            let link = document.getElementById('resLinkWeb').innerText;
-            let role = document.getElementById('resRoleWeb').innerText;
-
-            let teksSalin = `✅ *AKSES WEB PANEL BERHASIL DIBUAT!*\n\n` +
-                            `👤 *Username:* ${user}\n` +
-                            `🔑 *Password:* ${pass}\n` +
-                            `🎖️ *Jabatan:* ${role}\n` +
-                            `🌐 *Link Login:* ${link}\n\n` +
-                            `_Silakan login menggunakan link di atas untuk mulai membuat server pelanggan!_ ✨`;
-
-            navigator.clipboard.writeText(teksSalin).then(() => {
-                let btn = document.getElementById('btnSalinWeb');
-                btn.innerHTML = "✅ Berhasil Disalin!"; 
-                btn.style.background = "#10b981";
-                btn.style.color = "#fff";
-                
-                setTimeout(() => { 
-                    btn.innerHTML = "📋 Salin Teks"; 
-                    btn.style.background = "linear-gradient(45deg, #00f2fe, #4facfe)";
-                    btn.style.color = "#1a1a2e";
-                }, 2000);
-            }).catch(err => { showPeringatan("Gagal menyalin otomatis. Silakan screenshot manual."); });
-        }
+        function tutupKonfirmasi(){ document.getElementById('modalKonfirmasi').style.display='none'; }
+        function eksekusiHapus(){ database.ref('users/'+delId).remove().then(()=>{tutupKonfirmasi(); document.getElementById('teksInfo').innerHTML="Terhapus."; document.getElementById('modalInfo').style.display='flex';}); }
+        function munculkanModalWeb(u,p,r){ document.getElementById('resUserWeb').innerText=u; document.getElementById('resPassWeb').innerText=p; document.getElementById('resRoleWeb').innerText=r.replace('_',' ').toUpperCase(); document.getElementById('resLinkWeb').innerText=window.location.origin; document.getElementById('modalScreenshot').style.display='flex'; }
+        function salinDataWeb(){ navigator.clipboard.writeText("Akses dibuat!").then(()=>{document.getElementById('btnSalinWeb').innerText="Tersalin!";}); }
 
         ambilDataWebUsers();
     </script>

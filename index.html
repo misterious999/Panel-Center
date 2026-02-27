@@ -269,46 +269,13 @@
             </div>
         </div>
     </div>
-   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+       <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
     <script>
         window.addEventListener('load', () => {
-            const progressBar = document.getElementById('progressBar');
-            const loadingText = document.getElementById('loadingText');
-            const loadingPercent = document.getElementById('loadingPercent');
             const splash = document.getElementById('splash-screen');
-
-            let progress = 0;
-            const textPhases = [
-                "Menghubungkan ke Pterodactyl...",
-                "Memuat Database Firebase...",
-                "Autentikasi Kredensial...",
-                "Membangun Antarmuka...",
-                "Sistem Siap!"
-            ];
-            
-            let interval = setInterval(() => {
-                progress += Math.floor(Math.random() * 5) + 1; 
-                if (progress >= 100) progress = 100;
-                
-                progressBar.style.width = progress + '%';
-                loadingPercent.innerText = progress + '%';
-
-                if (progress < 25) loadingText.innerText = textPhases[0];
-                else if (progress < 50) loadingText.innerText = textPhases[1];
-                else if (progress < 75) loadingText.innerText = textPhases[2];
-                else if (progress < 95) loadingText.innerText = textPhases[3];
-                else loadingText.innerText = textPhases[4];
-
-                if (progress === 100) {
-                    clearInterval(interval);
-                    setTimeout(() => {
-                        splash.style.opacity = '0';
-                        splash.style.visibility = 'hidden';
-                    }, 500); 
-                }
-            }, 30); 
+            setTimeout(() => { splash.style.opacity = '0'; splash.style.visibility = 'hidden'; }, 1000); 
         });
 
         const currentUserId = localStorage.getItem('user_id');
@@ -321,38 +288,33 @@
         document.getElementById('sidebarName').innerText = username;
         document.getElementById('roleUser').innerText = "Role: " + (role || "Tidak diketahui");
 
-        // FUNGSI UMUM UNTUK MODAL AI
         function tutupModal(id) { document.getElementById(id).style.display = 'none'; }
-        
         function showAiAlert(pesan, judul = "🚨 PERHATIAN!") {
             document.getElementById('alertTitle').innerText = judul;
             document.getElementById('alertBody').innerHTML = pesan;
             document.getElementById('modalAlert').style.display = 'flex';
         }
-
         function showAiSuccess(pesan) {
             document.getElementById('successBody').innerHTML = pesan;
             document.getElementById('modalSuccess').style.display = 'flex';
         }
 
         function toggleSidebar() {
-            const sidebar = document.getElementById('sidebarMenu');
-            const overlay = document.getElementById('sidebarOverlay');
-            sidebar.classList.toggle('active');
-            overlay.classList.toggle('active');
+            document.getElementById('sidebarMenu').classList.toggle('active');
+            document.getElementById('sidebarOverlay').classList.toggle('active');
         }
 
-        // ATUR MENU KHUSUS OWNER VS PARTNER VS RESELLER
-        if (role === 'pemilik') {
+        // 🔥 ATUR MENU (DEMO BISA LIHAT SEMUA, TAPI GAK BISA BROADCAST PENGUMUMAN)
+        if (role === 'pemilik' || role === 'demo') {
             document.getElementById('sectionWeb').style.display = 'block';
-            document.getElementById('menuCctvLog').style.display = 'block'; // CCTV CUMA BUAT OWNER
+            document.getElementById('menuCctvLog').style.display = 'block'; 
             document.getElementById('sectionPrivate').style.display = 'block';
             document.getElementById('sectionPublic').style.display = 'block';
             document.getElementById('boxTotalUserPanel').style.display = 'block';
             document.getElementById('boxOnlineUser').style.display = 'block';
             document.getElementById('titleTotalUser').innerText = "Total Akun Web";
             document.getElementById('titleOnlineUser').innerText = "Web Online";
-            document.getElementById('boxPengumumanAdmin').style.display = 'block'; 
+            if(role === 'pemilik') document.getElementById('boxPengumumanAdmin').style.display = 'block'; 
         } else if (role === 'partner_public') {
             document.getElementById('sectionWeb').style.display = 'block';
             document.getElementById('sectionPublic').style.display = 'block';
@@ -360,9 +322,9 @@
             document.getElementById('boxOnlineUser').style.display = 'block';
             document.getElementById('titleTotalUser').innerText = "Total Resellermu";
             document.getElementById('titleOnlineUser').innerText = "Tim Online";
-        } else if (role === 'reseller_private' || role === 'reseller') {
+        } else if (role.includes('private') || role === 'reseller') {
             document.getElementById('sectionPrivate').style.display = 'block';
-        } else if (role === 'reseller_public') {
+        } else if (role.includes('public')) {
             document.getElementById('sectionPublic').style.display = 'block';
         }
 
@@ -372,126 +334,65 @@
 
         database.ref('users/' + currentUserId).on('value', (snap) => {
             if (snap.exists()) {
-                let userData = snap.val();
-                
+                let u = snap.val();
                 database.ref('users/' + currentUserId + '/isOnline').onDisconnect().set(false);
                 database.ref('users/' + currentUserId + '/isOnline').set(true);
-
-                if (userData.profilePic && userData.profilePic !== "") {
-                    document.getElementById('sidebarProfilePic').src = userData.profilePic;
-                } else {
-                    document.getElementById('sidebarProfilePic').src = `https://ui-avatars.com/api/?name=${username}&background=0D8ABC&color=fff&size=150`;
-                }
+                document.getElementById('sidebarProfilePic').src = u.profilePic || `https://ui-avatars.com/api/?name=${username}&background=0D8ABC&color=fff&size=150`;
             }
         });
 
+        // 🔒 BLOKIR AKSI JIKA ROLE = DEMO
         function simpanFotoProfil() {
-            let linkFoto = document.getElementById('inputProfileUrl').value.trim();
-            if(linkFoto === "") { 
-                showAiAlert("Harap tempelkan link URL foto terlebih dahulu!"); 
-                return; 
-            }
-            
-            database.ref('users/' + currentUserId).update({ profilePic: linkFoto }).then(() => {
-                showAiSuccess("Mantap! Foto profil berhasil diperbarui.");
-                document.getElementById('inputProfileUrl').value = ""; 
-            }).catch((error) => showAiAlert("Gagal merubah foto: " + error.message, "❌ ERROR"));
-        }
-
-        function logout() {
-            if (currentUserId) {
-                database.ref('users/' + currentUserId + '/isOnline').set(false).then(() => {
-                    localStorage.clear(); window.location.replace("login.html");
-                });
-            } else { localStorage.clear(); window.location.replace("login.html"); }
-        }
-
-        function bukaModalPassword() { 
-            toggleSidebar(); 
-            document.getElementById('modalPassword').style.display = 'flex'; 
+            if(role === 'demo') return showAiAlert("👀 <b>MODE DEMO:</b> Fitur ubah profil dinonaktifkan untuk akun demo.");
+            let link = document.getElementById('inputProfileUrl').value.trim();
+            if(!link) return showAiAlert("Harap tempelkan link URL foto!"); 
+            database.ref('users/' + currentUserId).update({ profilePic: link }).then(() => { showAiSuccess("Foto berhasil diperbarui."); document.getElementById('inputProfileUrl').value = ""; });
         }
 
         function simpanPassword() {
+            if(role === 'demo') return showAiAlert("👀 <b>MODE DEMO:</b> Fitur ganti password dinonaktifkan.");
             let passBaru = document.getElementById('inputPassBaru').value.trim();
-            if (passBaru === "") { showAiAlert("Password tidak boleh kosong!"); return; }
-            if (passBaru.length < 5) { showAiAlert("Keamanan kurang! Password minimal 5 karakter."); return; }
-
-            database.ref('users/' + currentUserId).update({ password: passBaru }).then(() => {
-                tutupModal('modalPassword');
-                showAiSuccess("Mantap! Password berhasil diperbarui!");
-            }).catch((error) => showAiAlert("Gagal merubah password: " + error.message, "❌ ERROR"));
+            if (!passBaru) return showAiAlert("Password tidak boleh kosong!");
+            database.ref('users/' + currentUserId).update({ password: passBaru }).then(() => { tutupModal('modalPassword'); showAiSuccess("Password berhasil diperbarui!"); });
         }
 
         function terbitkanPengumuman() {
+            if(role === 'demo') return showAiAlert("👀 <b>MODE DEMO:</b> Fitur broadcast dinonaktifkan.");
             let teks = document.getElementById('inputPengumuman').value.trim();
-            if(!teks) return showAiAlert("Ketik pesannya dulu Komandan!");
-            
-            database.ref('pengumuman_global').set({
-                pesan: teks, timestamp: Date.now() 
-            }).then(() => {
-                showAiSuccess("Pengumuman berhasil diterbitkan ke seluruh Reseller/Partner!");
-                document.getElementById('inputPengumuman').value = "";
-            });
+            if(!teks) return showAiAlert("Ketik pesannya dulu!");
+            database.ref('pengumuman_global').set({ pesan: teks, timestamp: Date.now() }).then(() => showAiSuccess("Pengumuman diterbitkan!"));
         }
 
-        function konfirmasiCabutPengumuman() {
-            document.getElementById('confirmBody').innerText = "Yakin ingin mencabut pengumuman global yang sedang aktif saat ini?";
-            document.getElementById('modalConfirm').style.display = 'flex';
+        function logout() {
+            if(currentUserId) database.ref('users/' + currentUserId + '/isOnline').set(false).then(() => { localStorage.clear(); window.location.replace("login.html"); });
+            else { localStorage.clear(); window.location.replace("login.html"); }
         }
-
-        function eksekusiCabutPengumuman() {
-            database.ref('pengumuman_global').remove().then(() => {
-                tutupModal('modalConfirm');
-                showAiSuccess("Pengumuman berhasil dicabut/dihapus.");
-            });
-        }
+        function bukaModalPassword() { toggleSidebar(); document.getElementById('modalPassword').style.display = 'flex'; }
+        function konfirmasiCabutPengumuman() { document.getElementById('modalConfirm').style.display = 'flex'; }
+        function eksekusiCabutPengumuman() { database.ref('pengumuman_global').remove().then(() => { tutupModal('modalConfirm'); showAiSuccess("Dicabut."); }); }
+        function tutupPengumuman() { let m = document.getElementById('modalPengumumanPop'); m.style.display = 'none'; localStorage.setItem('last_read_announcement', m.dataset.time); }
 
         database.ref('pengumuman_global').on('value', (snap) => {
-            let data = snap.val();
-            let modal = document.getElementById('modalPengumumanPop');
-            let teksArea = document.getElementById('teksIsiPengumuman');
-
-            if (data && data.pesan) {
-                let lastRead = localStorage.getItem('last_read_announcement');
-                if (lastRead != data.timestamp) {
-                    teksArea.innerText = data.pesan;
-                    modal.style.display = 'flex';
-                    modal.dataset.time = data.timestamp; 
-                }
-            } else { modal.style.display = 'none'; }
+            let data = snap.val(); let modal = document.getElementById('modalPengumumanPop');
+            if (data && data.pesan && localStorage.getItem('last_read_announcement') != data.timestamp) {
+                document.getElementById('teksIsiPengumuman').innerText = data.pesan; modal.style.display = 'flex'; modal.dataset.time = data.timestamp; 
+            } else modal.style.display = 'none';
         });
 
-        function tutupPengumuman() {
-            let modal = document.getElementById('modalPengumumanPop');
-            modal.style.display = 'none';
-            let timeId = modal.dataset.time;
-            if(timeId) localStorage.setItem('last_read_announcement', timeId);
-        }
-
+        // LOAD STATS
         const WORKER_URL = "https://restless-truth-9b75.amisterious09.workers.dev/?"; 
-        const PRVT_DOMAIN = "zeroix.panel-prvt.web.id"; 
-        const PRVT_API = "ptla_ZM2Ka67FdLj62khENxUm22bKnsHHDBhUCEnDtXfuHhw"; 
-        // 🔥 UPDATE DOMAIN PUBLIC DISINI 🔥
-        const PUB_DOMAIN = "publik.zero.star.bypstar7.online"; 
-        const PUB_API = "ptla_UiLem536TIVuWzKHTfv5OOJMXD9jiA3Tvd49FRSTd0q"; 
+        const PRVT_DOMAIN = "zeroix.panel-prvt.web.id"; const PRVT_API = "ptla_ZM2Ka67FdLj62khENxUm22bKnsHHDBhUCEnDtXfuHhw"; 
+        const PUB_DOMAIN = "publik.zero.star.bypstar7.online"; const PUB_API = "ptla_UiLem536TIVuWzKHTfv5OOJMXD9jiA3Tvd49FRSTd0q"; 
 
         function ambilStatistik() {
-            fetch(`${WORKER_URL}https://${PRVT_DOMAIN}/api/application/servers`, { headers: { 'Accept': 'application/json', 'Authorization': `Bearer ${PRVT_API}` } }).then(res => res.json()).then(data => { document.getElementById('countPrivate').innerText = data.meta.pagination.total; }).catch(() => document.getElementById('countPrivate').innerText = "❌");
-            fetch(`${WORKER_URL}https://${PUB_DOMAIN}/api/application/servers`, { headers: { 'Accept': 'application/json', 'Authorization': `Bearer ${PUB_API}` } }).then(res => res.json()).then(data => { document.getElementById('countPublic').innerText = data.meta.pagination.total; }).catch(() => document.getElementById('countPublic').innerText = "❌");
+            fetch(`${WORKER_URL}https://${PRVT_DOMAIN}/api/application/servers`, { headers: { 'Authorization': `Bearer ${PRVT_API}` } }).then(res=>res.json()).then(data=>document.getElementById('countPrivate').innerText = data.meta.pagination.total).catch(()=>"❌");
+            fetch(`${WORKER_URL}https://${PUB_DOMAIN}/api/application/servers`, { headers: { 'Authorization': `Bearer ${PUB_API}` } }).then(res=>res.json()).then(data=>document.getElementById('countPublic').innerText = data.meta.pagination.total).catch(()=>"❌");
 
-            if (role === 'pemilik' || role === 'partner_public') {
+            if (role === 'pemilik' || role === 'partner_public' || role === 'demo') {
                 database.ref('users').on('value', snap => {
-                    let totalUsers = 0, onlineCount = 0;
-                    snap.forEach(childSnap => {
-                        let userData = childSnap.val();
-                        if (role === 'pemilik' || userData.maker === username) {
-                            totalUsers++; if (userData.isOnline === true) onlineCount++;
-                        }
-                    });
-                    document.getElementById('countUsers').innerText = totalUsers;
-                    document.getElementById('countOnline').innerText = onlineCount;
-                }, () => {
-                    document.getElementById('countUsers').innerText = "❌"; document.getElementById('countOnline').innerText = "❌";
+                    let tUsers = 0, oCount = 0;
+                    snap.forEach(c => { let u = c.val(); if (role === 'pemilik' || role === 'demo' || u.maker === username) { tUsers++; if(u.isOnline) oCount++; } });
+                    document.getElementById('countUsers').innerText = tUsers; document.getElementById('countOnline').innerText = oCount;
                 });
             }
         }

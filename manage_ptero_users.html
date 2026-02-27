@@ -204,7 +204,7 @@
         </div>
     </div>
 
-    <div id="modalAiAlert" class="mini-ai-overlay">
+    <div id="modalAiAlert" class="mini-ai-overlay" style="z-index: 999999;">
         <div class="mini-ai-popup warning-mode">
             <div class="mini-ai-header warning" id="aiAlertTitle">PERHATIAN</div>
             <div class="mini-ai-body" id="aiAlertBody">Pesan peringatan di sini.</div>
@@ -214,7 +214,7 @@
         </div>
     </div>
 
-    <div id="modalAiSuccess" class="mini-ai-overlay">
+    <div id="modalAiSuccess" class="mini-ai-overlay" style="z-index: 999999;">
         <div class="mini-ai-popup success-mode" id="popupSuccessMode">
             <div class="mini-ai-header success" id="aiSuccessTitle">BERHASIL</div>
             <div class="mini-ai-body" id="aiSuccessBody">Proses sukses dilakukan.</div>
@@ -223,18 +223,19 @@
             </div>
         </div>
     </div>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
     <script>
         // ==========================================
-        // INISIALISASI & KEAMANAN AWAL
+        // INISIALISASI & KEAMANAN AWAL (PRIVATE)
         // ==========================================
         const currentUserId = localStorage.getItem('user_id');
         const role = localStorage.getItem('role') || '';
         const myUsername = localStorage.getItem('username') || 'Unknown'; 
         
-        const allowedRoles = ['pemilik', 'reseller_private', 'reseller'];
+        // 🔥 IZINKAN ROLE 'demo' MASUK 🔥
+        const allowedRoles = ['pemilik', 'reseller_private', 'reseller', 'demo'];
 
         if (!currentUserId || !allowedRoles.includes(role)) {
             alert("🚨 AKSES DITOLAK!\nHalaman ini khusus divisi Private.");
@@ -269,9 +270,7 @@
         // ==========================================
         // FUNGSI UMUM & MODAL AI
         // ==========================================
-        function tutupModal(id) { 
-            document.getElementById(id).style.display = 'none'; 
-        }
+        function tutupModal(id) { document.getElementById(id).style.display = 'none'; }
         
         function showAiAlert(pesan, judul = "PERHATIAN") {
             document.getElementById('aiAlertTitle').innerText = judul;
@@ -337,16 +336,19 @@
 
                 data.data.forEach(user => {
                     let u = user.attributes;
-                    if (role !== 'pemilik') {
+                    // Filter: Demo cuma bisa liat semua, tapi kita pura-purain dia cuma liat buatan 'admin'
+                    if (role !== 'pemilik' && role !== 'demo') {
                         if (u.root_admin === true) return; 
                         if (u.last_name !== myUsername) return; 
                     }
+                    if(role === 'demo' && u.last_name !== 'admin' && u.last_name !== 'Admin' && u.last_name !== 'User') return;
+
                     countDisplayed++;
                     
                     let status = u.root_admin ? `<span class="badge badge-admin">👑 Admin</span>` : `<span class="badge badge-user">👤 Member</span>`;
                     let namaPembuat = u.last_name;
                     if (namaPembuat === 'User' || namaPembuat === 'Admin') namaPembuat = 'admin'; 
-                    let makerTag = role === 'pemilik' ? `<br><span class="reseller-tag">Oleh: ${namaPembuat}</span>` : '';
+                    let makerTag = (role === 'pemilik' || role === 'demo') ? `<br><span class="reseller-tag">Oleh: ${namaPembuat}</span>` : '';
                     
                     let tombolHapus = u.id !== 1 ? `<button class="btn-hapus" id="btnHapus_${u.id}" onclick="munculkanModalHapusConfirm(${u.id}, '${u.username}')">🗑️ Hapus 1 Paket</button>` : `<span style="color:var(--text-sub); font-size:12px;">Sistem</span>`;
                     
@@ -396,13 +398,15 @@
                 }       
             }
         }
-
-        // ==========================================
+                // ==========================================
         // LOGIKA SAPU BERSIH
         // ==========================================
         let targetHantuGlobal = []; 
 
         function konfirmasiSapuAwal() {
+            // 🔥 KUNCI DEMO 🔥
+            if (role === 'demo') return showAiAlert("👀 <b>MODE DEMO:</b> Fitur ini dikunci. Silakan beli panel versi penuh untuk menggunakannya!", "AKSES DITOLAK");
+
             document.getElementById('sapuConfirmBody').innerHTML = "Sistem akan mendeteksi dan MENGHAPUS semua User (Member) yang sudah tidak memiliki Server aktif.<br><br>Proses ini <u>tidak bisa dikembalikan</u>. Lanjutkan pemindaian?";
             let btnExec = document.getElementById('btnEksekusiSapu');
             btnExec.innerText = "🔍 Pindai Data";
@@ -477,6 +481,9 @@
         // BUAT 1 PAKET 
         // ==========================================
         async function buatSatuPaket() {
+            // 🔥 KUNCI DEMO 🔥
+            if (role === 'demo') return showAiAlert("👀 <b>MODE DEMO:</b> Fitur ini dikunci. Silakan beli panel versi penuh untuk menggunakannya!", "AKSES DITOLAK");
+
             let username = document.getElementById('newUsername').value.trim();
             let password = document.getElementById('newPassword').value.trim();
             let email = document.getElementById('newEmail').value.trim();
@@ -540,6 +547,9 @@
         let userToDeleteName = null;
 
         function munculkanModalHapusConfirm(userId, username) {
+            // 🔥 KUNCI DEMO 🔥
+            if (role === 'demo') return showAiAlert("👀 <b>MODE DEMO:</b> Fitur ini dikunci. Silakan beli panel versi penuh untuk menggunakannya!", "AKSES DITOLAK");
+
             userToDeleteId = userId;
             userToDeleteName = username;
             document.getElementById('delUsername').innerText = username;
@@ -574,6 +584,7 @@
                 btn.innerText = "🗑️ Hapus 1 Paket"; btn.style.pointerEvents = "auto"; 
             }
         }
+
         // ==========================================
         // STRUK & COPY
         // ==========================================

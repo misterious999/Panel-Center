@@ -233,7 +233,8 @@
         const role = localStorage.getItem('role') || '';
         const myUsername = localStorage.getItem('username') || 'Unknown'; 
         
-        const allowedRoles = ['pemilik', 'reseller_public', 'partner_public'];
+        // 🔥 IZINKAN ROLE 'demo' MASUK 🔥
+        const allowedRoles = ['pemilik', 'reseller_public', 'partner_public', 'demo'];
 
         if (!currentUserId || !allowedRoles.includes(role)) {
             alert("🚨 AKSES DITOLAK!\nHalaman ini khusus divisi Public.");
@@ -243,6 +244,9 @@
         if (role === 'pemilik' || role === 'partner_public') {
             document.getElementById('roleContainer').style.display = 'block';
             document.getElementById('textDaftar').innerText = role === 'pemilik' ? "(Semua Reseller)" : "(Tim Kamu)";
+        } else if (role === 'demo') {
+            document.getElementById('roleContainer').style.display = 'block'; // Demo biar bisa liat dropdown
+            document.getElementById('textDaftar').innerText = "(Akun Demo)";
         } else {
             document.getElementById('roleContainer').style.display = 'none';
             document.getElementById('textDaftar').innerText = "Buatanmu";
@@ -261,7 +265,7 @@
             }
         });
 
-        // 🔥 FIX DOMAIN API BARU
+        // 🔥 DOMAIN PUBLIC BARU 🔥
         const PTERO_DOMAIN = "publik.zero.star.bypstar7.online"; 
         const PTERO_API = "ptla_UiLem536TIVuWzKHTfv5OOJMXD9jiA3Tvd49FRSTd0q"; 
         const WORKER_URL = "https://restless-truth-9b75.amisterious09.workers.dev"; 
@@ -335,15 +339,18 @@
 
                 data.data.forEach(user => {
                     let u = user.attributes;
-                    if (role !== 'pemilik') {
+                    // 🔥 Filter untuk Demo
+                    if (role !== 'pemilik' && role !== 'demo') {
                         if (u.last_name !== myUsername) return; 
                     }
+                    if(role === 'demo' && u.last_name !== 'admin' && u.last_name !== 'Admin' && u.last_name !== 'User') return;
+
                     countDisplayed++;
                     
                     let status = u.root_admin ? `<span class="badge badge-admin">👑 Admin</span>` : `<span class="badge badge-user">👤 Member</span>`;
                     let namaPembuat = u.last_name;
                     if (namaPembuat === 'User' || namaPembuat === 'Admin') namaPembuat = 'admin'; 
-                    let makerTag = role === 'pemilik' ? `<br><span class="reseller-tag">Oleh: ${namaPembuat}</span>` : '';
+                    let makerTag = (role === 'pemilik' || role === 'demo') ? `<br><span class="reseller-tag">Oleh: ${namaPembuat}</span>` : '';
                     
                     let tombolHapus = u.id !== 1 ? `<button class="btn-hapus" id="btnHapus_${u.id}" onclick="munculkanModalHapusConfirm(${u.id}, '${u.username}')">🗑️ Hapus 1 Paket</button>` : `<span style="color:var(--text-sub); font-size:12px;">Sistem</span>`;
                     
@@ -356,7 +363,7 @@
                     </tr>`;
                 });
 
-                if (countDisplayed === 0) tabel += `<tr><td colspan="5" style="text-align: center; color: var(--warning); padding: 20px;">Kamu belum membuat satupun akun pelanggan Public.</td></tr>`;
+                if (countDisplayed === 0) tabel += `<tr><td colspan="5" style="text-align: center; color: var(--warning); padding: 20px;">Belum ada akun yang bisa ditampilkan.</td></tr>`;
                 document.getElementById('tabelPtero').innerHTML = tabel;
             }).catch(e => {
                 document.getElementById('tabelPtero').innerHTML = `<tr><td colspan="5" style="text-align: center; color: var(--danger);">❌ Error: ${e.message}</td></tr>`;
@@ -393,13 +400,15 @@
                 }       
             }
         }
-
-        // ==========================================
+                // ==========================================
         // LOGIKA SAPU BERSIH
         // ==========================================
         let targetHantuGlobal = []; 
 
         function konfirmasiSapuAwal() {
+            // 🔥 GEMBOK DEMO 🔥
+            if (role === 'demo') return showAiAlert("👀 <b>MODE DEMO:</b> Fitur ini dikunci. Silakan beli panel versi penuh untuk menggunakannya!", "AKSES DITOLAK");
+
             document.getElementById('sapuConfirmBody').innerHTML = "Sistem akan mendeteksi dan MENGHAPUS semua User (Member) yang sudah tidak memiliki Server aktif.<br><br>Proses ini <u>tidak bisa dikembalikan</u>. Lanjutkan pemindaian?";
             let btnExec = document.getElementById('btnEksekusiSapu');
             btnExec.innerText = "🔍 Pindai Data";
@@ -474,6 +483,9 @@
         // BUAT 1 PAKET 
         // ==========================================
         async function buatSatuPaket() {
+            // 🔥 GEMBOK DEMO 🔥
+            if (role === 'demo') return showAiAlert("👀 <b>MODE DEMO:</b> Fitur ini dikunci. Silakan beli panel versi penuh untuk menggunakannya!", "AKSES DITOLAK");
+
             let username = document.getElementById('newUsername').value.trim();
             let password = document.getElementById('newPassword').value.trim();
             let email = document.getElementById('newEmail').value.trim();
@@ -537,6 +549,9 @@
         let userToDeleteName = null;
 
         function munculkanModalHapusConfirm(userId, username) {
+            // 🔥 GEMBOK DEMO 🔥
+            if (role === 'demo') return showAiAlert("👀 <b>MODE DEMO:</b> Fitur ini dikunci. Silakan beli panel versi penuh untuk menggunakannya!", "AKSES DITOLAK");
+
             userToDeleteId = userId;
             userToDeleteName = username;
             document.getElementById('delUsername').innerText = username;
@@ -575,7 +590,7 @@
         // ==========================================
         // STRUK & COPY
         // ==========================================
-    function munculkanModalStruk(user, pass, email, serverName) {
+        function munculkanModalStruk(user, pass, email, serverName) {
             document.getElementById('resUser').innerText = user; 
             document.getElementById('resPass').innerText = pass;
             let panelLink = `https://${PTERO_DOMAIN}`;
