@@ -208,8 +208,8 @@
         });
 
         // 🔥 PRIVATE DOMAIN & KEY 🔥
-        const PTERO_DOMAIN = "zeroix.panel-prvt.web.id"; 
-        const PTERO_API = "ptla_ZM2Ka67FdLj62khENxUm22bKnsHHDBhUCEnDtXfuHhw"; 
+        const PTERO_DOMAIN = "pterodactyl.nyxuqi.web.id"; 
+        const PTERO_API = "ptla_i03NiXtXdyg5Kpxk0HzKXynPiLkfy5mFy2AaDVtJbG8"; 
         const WORKER_URL = "https://restless-truth-9b75.amisterious09.workers.dev"; 
 
         function tutupModal(id) { document.getElementById(id).style.display = 'none'; }
@@ -283,7 +283,7 @@
             }).catch(e => { document.getElementById('tabelServer').innerHTML = `<tr><td colspan="5" style="text-align: center; color: var(--danger);">❌ Error: ${e.message}</td></tr>`; });
         }
 
-        async function buatServer() {
+                async function buatServer() {
             // 🔥 GEMBOK DEMO 🔥
             if (role === 'demo') return showAiAlert("👀 <b>MODE DEMO:</b> Fitur ini dikunci. Silakan beli panel versi penuh untuk menggunakannya!", "AKSES DITOLAK");
 
@@ -294,7 +294,19 @@
             if(!uId || !name || !ram || !cpu || !disk) return showAiAlert("Harap lengkapi semua data formulir!", "DATA TIDAK LENGKAP"); 
             
             let btn = document.querySelector('.btn-tambah'); btn.innerText = "⏳ Sedang Deploy..."; btn.style.pointerEvents = "none";
-            let payload = { "name": name, "user": parseInt(uId), "egg": parseInt(eggId), "docker_image": "ghcr.io/parkervcp/yolks:nodejs_20", "startup": "npm start", "environment": { "INST": "npm", "USER_UPLOAD": "0", "AUTO_UPDATE": "0", "CMD_RUN": "npm start" }, "limits": { "memory": parseInt(ram), "swap": 0, "disk": parseInt(disk), "io": 500, "cpu": parseInt(cpu) }, "feature_limits": { "databases": 5, "backups": 5, "allocations": 5 }, "deploy": { "locations": [parseInt(locId)], "dedicated_ip": false, "port_range": [] } };
+            
+            // 🔥 STARTUP DEWA DIPASANG LAGI 🔥
+            let payload = { 
+                "name": name, 
+                "user": parseInt(uId), 
+                "egg": parseInt(eggId), 
+                "docker_image": "ghcr.io/parkervcp/yolks:nodejs_20", 
+                "startup": "if [[ -d .git ]] && [[ {{AUTO_UPDATE}} == \"1\" ]]; then git pull; fi; if [[ ! -z ${NODE_PACKAGES} ]]; then /usr/local/bin/npm install ${NODE_PACKAGES}; fi; if [[ ! -z ${UNNODE_PACKAGES} ]]; then /usr/local/bin/npm uninstall ${UNNODE_PACKAGES}; fi; if [ -f /home/container/package.json ]; then /usr/local/bin/npm install; fi; if [[ ! -z ${CUSTOM_ENVIRONMENT_VARIABLES} ]]; then vars=$(echo ${CUSTOM_ENVIRONMENT_VARIABLES} | tr \";\" \"\\n\"); for line in $vars; do export $line; done fi; /usr/local/bin/${CMD_RUN};", 
+                "environment": { "INST": "npm", "USER_UPLOAD": "0", "AUTO_UPDATE": "0", "CMD_RUN": "npm start" }, 
+                "limits": { "memory": parseInt(ram), "swap": 0, "disk": parseInt(disk), "io": 500, "cpu": parseInt(cpu) }, 
+                "feature_limits": { "databases": 5, "backups": 5, "allocations": 5 }, 
+                "deploy": { "locations": [parseInt(locId)], "dedicated_ip": false, "port_range": [] } 
+            };
             
             try {
                 let res = await fetch(`${WORKER_URL}/?https://${PTERO_DOMAIN}/api/application/servers`, { method: 'POST', headers: { 'Accept': 'application/json', 'Content-Type': 'application/json', 'Authorization': `Bearer ${PTERO_API}` }, body: JSON.stringify(payload) });
