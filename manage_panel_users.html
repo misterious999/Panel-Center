@@ -333,7 +333,7 @@
         function eksekusiHapus() { database.ref('users/'+delId).remove().then(() => { tutupKonfirmasi(); document.getElementById('teksInfo').innerHTML = "Terhapus."; document.getElementById('modalInfo').style.display = 'flex'; }); }
 
         function munculkanModalWeb(u, p, r) { document.getElementById('resUserWeb').innerText = u; document.getElementById('resPassWeb').innerText = p; document.getElementById('resRoleWeb').innerText = r.toUpperCase(); document.getElementById('resLinkWeb').innerText = window.location.origin; document.getElementById('modalScreenshot').style.display = 'flex'; }
-        function salinDataWeb() { navigator.clipboard.writeText(`Username : ${document.getElementById('resUserWeb').innerText}\nPassword : ${document.getElementById('resPassWeb').innerText}`)\nLink :https://misterious999.github.io/Panel-Center.then(() => { alert("Tersalin!"); }); }
+        function salinDataWeb() { navigator.clipboard.writeText(`Username : ${document.getElementById('resUserWeb').innerText}\nPassword : ${document.getElementById('resPassWeb').innerText}`).then(() => { alert("Tersalin!"); }); }
 
         ambilDataWebUsers();
     </script>
