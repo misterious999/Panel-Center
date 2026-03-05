@@ -3,303 +3,413 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard - Panel Center v6.0</title>
+    <title>Dashboard Panel Center</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        /* Menggunakan warna Teal yang adem dan ramah di mata */
-        :root { 
-            --bg-color: #0f172a; 
-            --card-bg: #1e293b; 
-            --primary: #0d9488; 
-            --success: #10b981; 
-            --danger: #ef4444; 
-            --warning: #f59e0b; 
-            --text-main: #f8fafc; 
-            --text-sub: #94a3b8; 
-            --border-color: rgba(255,255,255,0.1); 
-        }
+        :root { --bg-color: #0f172a; --card-bg: #1e293b; --primary: #3b82f6; --success: #10b981; --danger: #ef4444; --warning: #f59e0b; --text-main: #f8fafc; --text-sub: #94a3b8; --border-color: rgba(255,255,255,0.1); }
+        body { font-family: 'Inter', sans-serif; background-color: var(--bg-color); color: var(--text-main); margin: 0; padding: 20px; box-sizing: border-box; overflow-x: hidden; }
         
-        body { 
-            font-family: 'Inter', sans-serif; 
-            background-color: var(--bg-color); 
-            color: var(--text-main); 
-            margin: 0; 
-            padding: 0; 
-            box-sizing: border-box; 
-            overflow-x: hidden;
-        }
+        .header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 30px; padding-bottom: 20px; border-bottom: 1px solid var(--border-color); }
+        .header-content { display: flex; flex-direction: column; gap: 5px; }
+        .header h1 { margin: 0; font-size: 24px; color: var(--text-main); }
+        .header p { margin: 0; color: var(--text-sub); font-size: 14px; }
         
-        /* Navbar / Header */
-        .top-nav {
-            background: rgba(30, 41, 59, 0.8);
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid var(--border-color);
-            padding: 15px 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
+        .btn-menu { background: rgba(59, 130, 246, 0.1); color: var(--primary); border: 1px solid var(--primary); padding: 8px; border-radius: 8px; cursor: pointer; transition: 0.2s; display: flex; align-items: center; justify-content: center; }
+        .btn-menu svg { width: 24px; height: 24px; fill: currentColor; }
+        .btn-menu:hover { background: var(--primary); color: white; box-shadow: 0 0 15px rgba(59, 130, 246, 0.4); }
 
-        .brand-logo {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 20px;
-            font-weight: 800;
-            color: var(--text-main);
-            letter-spacing: 1px;
-            text-transform: uppercase;
-        }
+        .sidebar-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(4px); z-index: 9998; opacity: 0; visibility: hidden; transition: all 0.3s ease; }
+        .sidebar-overlay.active { opacity: 1; visibility: visible; }
         
-        .brand-logo svg { width: 28px; height: 28px; fill: var(--primary); }
-
-        .user-profile {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            background: rgba(255,255,255,0.05);
-            padding: 6px 12px;
-            border-radius: 20px;
-            border: 1px solid var(--border-color);
-        }
-
-        .user-avatar {
-            width: 28px;
-            height: 28px;
-            background: var(--primary);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            font-size: 14px;
-            color: white;
-        }
-
-        .main-container { padding: 30px 20px; max-width: 1200px; margin: 0 auto; }
-                /* Welcome Banner */
-        .welcome-banner {
-            background: linear-gradient(135deg, rgba(13, 148, 136, 0.2) 0%, rgba(15, 23, 42, 0) 100%);
-            border: 1px solid rgba(13, 148, 136, 0.3);
-            padding: 25px;
-            border-radius: 16px;
-            margin-bottom: 30px;
-            position: relative;
-            overflow: hidden;
-        }
+        .sidebar { position: fixed; top: 0; right: -300px; width: 280px; height: 100%; background: linear-gradient(180deg, #1e293b, #0f172a); border-left: 1px solid var(--primary); box-shadow: -5px 0 25px rgba(0,0,0,0.5); z-index: 9999; transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1); display: flex; flex-direction: column; padding: 25px; box-sizing: border-box; overflow-y: auto; }
+        .sidebar.active { right: 0; }
         
-        .welcome-title { font-size: 24px; font-weight: 800; margin: 0 0 5px 0; }
-        .welcome-sub { color: var(--text-sub); margin: 0; font-size: 14px; line-height: 1.5; }
+        .sidebar-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 15px; margin-bottom: 20px; }
+        .sidebar-header h3 { margin: 0; color: var(--primary); font-size: 16px; text-transform: uppercase; letter-spacing: 1px; font-weight: 700; }
+        .btn-close-sidebar { background: transparent; color: var(--text-sub); border: none; cursor: pointer; transition: 0.2s; padding: 0; display: flex; align-items: center; justify-content: center; }
+        .btn-close-sidebar svg { width: 28px; height: 28px; fill: currentColor; }
+        .btn-close-sidebar:hover { color: var(--danger); transform: scale(1.1); }
         
-        /* Menu Grid */
-        .menu-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+        .sidebar-profile { text-align: center; margin-bottom: 15px; }
+        .sidebar-profile-img { width: 80px; height: 80px; border-radius: 50%; object-fit: cover; border: 2px solid var(--primary); margin-bottom: 10px; box-shadow: 0 0 15px rgba(59, 130, 246, 0.4); background-color: var(--card-bg); }
+        .sidebar-profile-name { font-size: 18px; font-weight: bold; color: var(--text-main); margin: 0 0 5px 0; }
+        
+        .profile-edit-box { background: rgba(0,0,0,0.2); padding: 12px; border-radius: 8px; border: 1px dashed rgba(255,255,255,0.2); margin-bottom: 25px; }
+        .profile-edit-box input { width: 100%; padding: 10px; margin-bottom: 10px; background: var(--bg-color); border: 1px solid var(--border-color); border-radius: 6px; color: var(--text-main); font-size: 12px; box-sizing: border-box; outline: none; transition: 0.2s; }
+        .profile-edit-box input:focus { border-color: var(--primary); box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2); }
 
-        .menu-card {
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 16px;
-            padding: 25px;
-            text-decoration: none;
-            color: var(--text-main);
-            transition: all 0.3s ease;
-            display: flex;
-            flex-direction: column;
-            position: relative;
-            overflow: hidden;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-        }
+        .sidebar-menu { display: flex; flex-direction: column; gap: 12px; flex-grow: 1; }
+        .sidebar-btn { padding: 12px 15px; border-radius: 8px; font-weight: 600; cursor: pointer; transition: 0.2s; font-size: 14px; display: flex; align-items: center; justify-content: center; gap: 10px; border: 1px solid transparent; }
+        .sidebar-btn svg { width: 18px; height: 18px; fill: currentColor; }
+        
+        .sidebar-btn-setting { background: rgba(59, 130, 246, 0.1); color: var(--primary); border-color: rgba(59, 130, 246, 0.3); }
+        .sidebar-btn-setting:hover { background: var(--primary); color: white; box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4); }
+        
+        .sidebar-btn-logout { background: rgba(239, 68, 68, 0.1); color: var(--danger); border-color: rgba(239, 68, 68, 0.3); margin-top: auto; }
+        .sidebar-btn-logout:hover { background: var(--danger); color: white; box-shadow: 0 4px 15px rgba(239, 68, 68, 0.4); }
 
-        .menu-card:hover {
-            transform: translateY(-5px);
-            border-color: var(--primary);
-            box-shadow: 0 15px 30px rgba(13, 148, 136, 0.15);
-        }
+        .box { background: var(--card-bg); padding: 20px; border-radius: 16px; border: 1px solid var(--border-color); margin-bottom: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        .box-announcement { border-color: var(--warning); box-shadow: 0 4px 15px rgba(245, 158, 11, 0.1); }
+        
+        .stats-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-bottom: 30px; }
+        .stat-card { background: var(--card-bg); padding: 20px; border-radius: 16px; border: 1px solid var(--border-color); text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.2); transition: 0.3s; display: flex; flex-direction: column; align-items: center; }
+        .stat-card:hover { transform: translateY(-5px); border-color: var(--primary); }
+        .stat-icon-wrapper { width: 45px; height: 45px; border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-bottom: 12px; }
+        .stat-icon-wrapper svg { width: 24px; height: 24px; }
+        .stat-value { font-size: 28px; font-weight: 700; color: var(--text-main); margin: 0; }
+        .stat-title { color: var(--text-sub); font-size: 12px; text-transform: uppercase; font-weight: 600; letter-spacing: 0.5px; margin-top: 8px; }
 
-        .menu-icon {
-            width: 50px;
-            height: 50px;
-            border-radius: 12px;
-            background: rgba(13, 148, 136, 0.1);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 15px;
-            transition: 0.3s;
-        }
+        h2 { font-size: 16px; margin-bottom: 15px; color: var(--text-main); border-left: 3px solid var(--primary); padding-left: 12px; text-transform: uppercase; letter-spacing: 1px; }
+        .section-title { font-size: 13px; color: var(--text-sub); margin: 25px 0 12px 0; border-bottom: 1px solid var(--border-color); padding-bottom: 8px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px;}
+                .menu-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px; margin-bottom: 10px; }
+        .menu-card { display: block; background: var(--card-bg); padding: 20px; border-radius: 12px; border: 1px solid var(--border-color); text-decoration: none; transition: 0.3s; position: relative; overflow: hidden; }
+        .menu-card-header { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+        .menu-card-header svg { width: 22px; height: 22px; }
+        .menu-card h3 { margin: 0; font-size: 15px; font-weight: 600; color: var(--text-main); }
+        .menu-card p { color: var(--text-sub); margin: 0; font-size: 13px; line-height: 1.5; }
+        
+        .card-internal { border-left: 4px solid var(--warning); } .card-internal:hover { background: rgba(245, 158, 11, 0.05); border-color: var(--warning); transform: translateX(4px); } .card-internal h3, .card-internal svg { color: var(--warning); fill: var(--warning); }
+        .card-private { border-left: 4px solid var(--primary); } .card-private:hover { background: rgba(59, 130, 246, 0.05); border-color: var(--primary); transform: translateX(4px); } .card-private h3, .card-private svg { color: var(--primary); fill: var(--primary); }
+        .card-public { border-left: 4px solid var(--success); } .card-public:hover { background: rgba(16, 185, 129, 0.05); border-color: var(--success); transform: translateX(4px); } .card-public h3, .card-public svg { color: var(--success); fill: var(--success); }
 
-        .menu-icon svg { width: 26px; height: 26px; fill: var(--primary); }
-        .menu-card:hover .menu-icon { background: var(--primary); }
-        .menu-card:hover .menu-icon svg { fill: white; }
+        .role-badge { display: inline-block; padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: bold; text-transform: uppercase; margin-bottom: 10px; background: rgba(245, 158, 11, 0.2); color: var(--warning); border: 1px solid var(--warning); }
 
-        .menu-title { font-size: 18px; font-weight: 700; margin: 0 0 8px 0; }
-        .menu-desc { font-size: 13px; color: var(--text-sub); margin: 0; line-height: 1.5; }
+        /* LOADING ANIMATION */
+        #splash-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-color); z-index: 99999; display: flex; align-items: center; justify-content: center; transition: opacity 0.6s ease, visibility 0.6s ease; }
+        .loading-container { width: 80%; max-width: 320px; text-align: center; }
+        .core-spinner { width: 50px; height: 50px; margin: 0 auto 20px auto; border-radius: 50%; border: 3px solid transparent; border-top-color: var(--primary); border-bottom-color: #00f2fe; animation: spin 1.2s cubic-bezier(0.68, -0.55, 0.265, 1.55) infinite; box-shadow: 0 0 20px rgba(59, 130, 246, 0.3); }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .loading-title { font-size: 20px; font-weight: 800; letter-spacing: 4px; color: var(--text-main); margin-bottom: 5px; text-shadow: 0 0 10px rgba(255,255,255,0.1); text-transform: uppercase; }
+        .loading-subtitle { font-size: 10px; color: var(--primary); letter-spacing: 2px; margin-bottom: 25px; font-weight: 600; text-transform: uppercase; }
+        .progress-bar-bg { width: 100%; height: 4px; background: rgba(255,255,255,0.05); border-radius: 4px; overflow: hidden; margin-bottom: 15px; position: relative; }
+        .progress-bar-fill { height: 100%; width: 0%; background: linear-gradient(90deg, transparent, var(--primary), #00f2fe); border-radius: 4px; transition: width 0.1s ease; box-shadow: 0 0 10px rgba(59, 130, 246, 0.8); }
+        .loading-info { display: flex; justify-content: space-between; font-size: 10px; color: var(--text-sub); font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
 
-        /* Khusus Card Logout */
-        .card-danger:hover { border-color: var(--danger); box-shadow: 0 15px 30px rgba(239, 68, 68, 0.15); }
-        .card-danger .menu-icon { background: rgba(239, 68, 68, 0.1); }
-        .card-danger .menu-icon svg { fill: var(--danger); }
-        .card-danger:hover .menu-icon { background: var(--danger); }
-        .card-danger:hover .menu-icon svg { fill: white; }
+        /* 🔥 MODALS MINIMALIST 🔥 */
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(5px); z-index: 9999; align-items: center; justify-content: center; padding: 20px; box-sizing: border-box; }
+        .modal-box { background: var(--card-bg); border: 1px solid var(--primary); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5); border-radius: 12px; padding: 25px; width: 100%; max-width: 350px; text-align: center; animation: popIn 0.3s ease-out forwards; max-height: 85vh; display: flex; flex-direction: column; }
+        @keyframes popIn { 0% { transform: scale(0.9); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+        
+        .modal-icon { width: 48px; height: 48px; margin: 0 auto 15px auto; flex-shrink: 0; }
+        .modal-icon.warning { fill: var(--warning); } .modal-icon.success { fill: var(--success); } .modal-icon.danger { fill: var(--danger); }
+        .modal-box h3 { margin-top: 0; color: var(--text-main); font-size: 18px; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 1px; flex-shrink: 0; }
+        
+        .modal-box-content { overflow-y: auto; padding-right: 5px; margin-bottom: 20px; flex-grow: 1; text-align: left; }
+        .modal-box-content::-webkit-scrollbar { width: 6px; } .modal-box-content::-webkit-scrollbar-track { background: rgba(0,0,0,0.1); border-radius: 10px; } .modal-box-content::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 10px; }
+        .modal-box p { color: var(--text-sub); font-size: 13px; margin-bottom: 10px; line-height: 1.5; }
+        .modal-box input, .modal-box textarea { width: 100%; padding: 12px; margin-bottom: 15px; background: var(--bg-color); border: 1px solid var(--border-color); border-radius: 8px; color: var(--text-main); font-size: 14px; box-sizing: border-box; outline: none; transition: 0.2s; font-family: 'Inter', sans-serif;}
+        .modal-box input:focus, .modal-box textarea:focus { border-color: var(--primary); }
+        
+        .btn-action { color: white; border: none; padding: 12px; width: 100%; border-radius: 8px; font-weight: 600; cursor: pointer; transition: 0.2s; margin-bottom: 10px; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; flex-shrink: 0; }
+        .btn-success { background: var(--success); } .btn-success:hover { background: #059669; }
+        .btn-warning { background: var(--warning); } .btn-warning:hover { background: #d97706; }
+        .btn-danger { background: var(--danger); } .btn-danger:hover { background: #dc2626; }
+        .btn-batal { background: rgba(255,255,255,0.05); color: var(--text-sub); border: 1px solid var(--border-color); padding: 10px; width: 100%; border-radius: 8px; font-weight: 600; cursor: pointer; transition: 0.2s; font-size: 13px; text-transform: uppercase; flex-shrink: 0; }
+        .btn-batal:hover { background: var(--danger); color: white; border-color: var(--danger); }
 
-        /* Badge Role */
-        .role-badge {
-            background: rgba(16, 185, 129, 0.2);
-            color: var(--success);
-            padding: 4px 10px;
-            border-radius: 6px;
-            font-size: 11px;
-            font-weight: bold;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-left: 10px;
-            border: 1px solid rgba(16, 185, 129, 0.3);
-        }
+        .footer { text-align: center; margin-top: 40px; padding-bottom: 10px; font-size: 12px; color: var(--text-sub); letter-spacing: 0.5px; border-top: 1px solid var(--border-color); padding-top: 20px; }
+        .footer span { color: var(--primary); font-weight: bold; }
     </style>
 </head>
 <body>
-    <div class="top-nav">
-        <div class="brand-logo">
-            <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 10h-4v4h-2v-4H7v-2h4V7h2v4h4v2zM7 7h10v2H7V7z"/></svg>
-            Panel Center
-        </div>
-        <div class="user-profile">
-            <div class="user-avatar" id="avatarHuruf">A</div>
-            <span style="font-size: 14px; font-weight: 600;" id="navUsername">Admin</span>
-        </div>
-    </div>
-
-    <div class="main-container">
-        <div class="welcome-banner">
-            <h1 class="welcome-title">Selamat Datang, <span id="welcomeName" style="color: var(--primary);">Bosku</span>! <span id="roleBadge" class="role-badge">PEMILIK</span></h1>
-            <p class="welcome-sub">Kelola seluruh layanan server Pterodactyl Anda dengan mudah, cepat, dan aman melalui Enterprise Dashboard v6.0.</p>
-        </div>
-
-        <div class="menu-grid">
-            <a href="spesifikasi.html" class="menu-card">
-                <div class="menu-icon">
-                    <svg viewBox="0 0 24 24"><path d="M2 7h2v2H2V7zm0 4h2v2H2v-2zm0 4h2v2H2v-2zM20 7h2v2h-2V7zm0 4h2v2h-2v-2zm0 4h2v2h-2v-2zM6 5h12v14H6V5zm2 2v2h8V7H8zm0 4v2h8v-2H8zm0 4v2h8v-2H8z"/></svg>
-                </div>
-                <h3 class="menu-title">Spesifikasi Server</h3>
-                <p class="menu-desc">Pantau penggunaan RAM, CPU, dan status nyala (Uptime) mesin Node utama secara real-time.</p>
-            </a>
-
-            <a href="manage_ptero_servers_pub.html" class="menu-card">
-                <div class="menu-icon">
-                    <svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
-                </div>
-                <h3 class="menu-title">Server Public</h3>
-                <p class="menu-desc">Buat dan kelola server bot public untuk reseller atau pelanggan umum. Fitur manajemen penuh.</p>
-            </a>
-
-            <a href="manage_ptero_servers.html" class="menu-card">
-                <div class="menu-icon">
-                    <svg viewBox="0 0 24 24"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zM9 6c0-1.66 1.34-3 3-3s3 1.34 3 3v2H9V6z"/></svg>
-                </div>
-                <h3 class="menu-title">Server Private</h3>
-                <p class="menu-desc">Buat dan kelola server VIP/Private yang terisolasi khusus. Akses tingkat tinggi.</p>
-            </a>
-
-            <a href="#" class="menu-card card-danger" onclick="prosesLogout()">
-                <div class="menu-icon">
-                    <svg viewBox="0 0 24 24"><path d="M13 3h-2v10h2V3zm4.83 2.17l-1.42 1.42C17.99 7.86 19 9.81 19 12c0 3.87-3.13 7-7 7s-7-3.13-7-7c0-2.19 1.01-4.14 2.58-5.42L6.17 5.17C4.23 6.82 3 9.26 3 12c0 4.97 4.03 9 9 9s9-4.03 9-9c0-2.74-1.23-5.18-3.17-6.83z"/></svg>
-                </div>
-                <h3 class="menu-title" style="color: var(--danger);">Keluar (Logout)</h3>
-                <p class="menu-desc">Akhiri sesi panel secara aman dan hapus data login dari browser ini.</p>
-            </a>
+    <div id="splash-screen">
+        <div class="loading-container">
+            <div class="core-spinner"></div>
+            <div class="loading-title">PANEL CENTER</div>
+            <div class="loading-subtitle">SECURE CONNECTION ESTABLISHED</div>
+            <div class="progress-bar-bg"><div class="progress-bar-fill" id="progressBar"></div></div>
+            <div class="loading-info"><span id="loadingText">Menghubungkan ke Server...</span><span id="loadingPercent">0%</span></div>
         </div>
     </div>
-            <script>
-        // 🔥 MODE DETEKTIF AKTIF 🔥
+
+    <div class="header">
+        <div class="header-content">
+            <h1>Selamat Datang, <span id="namaUser">Admin</span>.</h1>
+            <p>Dashboard Manajemen Sistem</p>
+        </div>
+        <button class="btn-menu" onclick="toggleSidebar()" title="Buka Menu">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M4 6h16v2H4zm0 5h16v2H4zm0 5h16v2H4z"/></svg>
+        </button>
+    </div>
+
+    <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+    <div class="sidebar" id="sidebarMenu">
+        <div class="sidebar-header">
+            <h3>Pengaturan</h3>
+            <button class="btn-close-sidebar" onclick="toggleSidebar()">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+            </button>
+        </div>
         
-        // 1. Ambil data dari brankas browser
-        const myUsername = localStorage.getItem('panel_username');
-        const myRole = localStorage.getItem('panel_role');
-        const myUserId = localStorage.getItem('user_id_ptero'); 
-        const myLocalPassword = localStorage.getItem('panel_password'); 
+        <div class="sidebar-profile">
+            <img id="sidebarProfilePic" src="https://ui-avatars.com/api/?name=User&background=0D8ABC&color=fff" alt="Profile" class="sidebar-profile-img">
+            <p class="sidebar-profile-name" id="sidebarName">Admin</p>
+            <span id="roleUser" class="role-badge">Memuat Role...</span>
+        </div>
 
-        // 2. JANGAN LUPA ISI DOMAIN & API KAMU LAGI DI SINI
-        const PTERO_DOMAIN = "panel.domainkamu.com"; 
-        const PTERO_API = "ptla_XyZ123ABC..."; 
-        const WORKER_URL = "https://restless-truth-9b75.amisterious09.workers.dev";
+        <div class="profile-edit-box">
+            <input type="text" id="inputProfileUrl" placeholder="URL Foto Profil Baru" autocomplete="off">
+            <button class="btn-action btn-success" style="margin: 0; padding: 10px; font-size: 12px;" onclick="simpanFotoProfil()">Perbarui Profil</button>
+        </div>
 
-        // ==========================================
-        // SATPAM 2: CCTV AUTO-KICK
-        // ==========================================
-        async function cctvPanelCenter() {
-            if (!myUserId || !myLocalPassword) {
-                console.log("CCTV Ditangguhkan: Data ID/Password lokal tidak ditemukan.");
-                return; 
-            }
+        <div class="sidebar-menu">
+            <button class="sidebar-btn sidebar-btn-setting" onclick="bukaModalPassword()">
+                <svg viewBox="0 0 24 24"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zM9 6c0-1.66 1.34-3 3-3s3 1.34 3 3v2H9V6zm9 14H6V10h12v10zm-6-3c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2z"/></svg> Ganti Password
+            </button>
+            <button class="sidebar-btn sidebar-btn-logout" onclick="logout()">
+                <svg viewBox="0 0 24 24"><path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/></svg> Keluar Sistem
+            </button>
+        </div>
+    </div>
 
+    <div id="boxPengumumanAdmin" class="box box-announcement" style="display: none;">
+        <h3 style="color: var(--warning); margin: 0 0 5px 0; font-size: 16px; display: flex; align-items: center; gap: 8px;">
+            <svg viewBox="0 0 24 24" style="width: 20px; height: 20px; fill: var(--warning);"><path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-7 9h-2V5h2v6zm0 4h-2v-2h2v2z"/></svg> Pengumuman Global
+        </h3>
+        <p style="font-size: 13px; color: var(--text-sub); margin-top: 0;">Siarkan pesan sistem ke seluruh pengguna yang aktif.</p>
+        <textarea id="inputPengumuman" rows="3" placeholder="Ketik pesan broadcast di sini..." style="width: 100%; padding: 12px; border-radius: 8px; background: var(--bg-color); color: var(--text-main); border: 1px solid var(--border-color); font-family: 'Inter', sans-serif; resize: vertical; margin-bottom: 10px; outline: none; box-sizing: border-box;"></textarea>
+        <div style="display: flex; gap: 10px;">
+            <button class="btn-action btn-warning" onclick="terbitkanPengumuman()" style="margin: 0; flex: 1;">Siarkan Pesan</button>
+            <button class="btn-batal" onclick="konfirmasiCabutPengumuman()" style="margin: 0; border-color: var(--danger); color: var(--danger); flex: 1;">Tarik Pesan</button>
+        </div>
+    </div>
+
+    <h2 style="display: flex; align-items: center; gap: 10px;">
+        <svg viewBox="0 0 24 24" style="width: 20px; height: 20px; fill: var(--primary);"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/></svg> Tinjauan Sistem
+    </h2>
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-icon-wrapper" style="background: rgba(59, 130, 246, 0.1);"><svg viewBox="0 0 24 24" style="fill: var(--primary);"><path d="M20 13H4c-.55 0-1 .45-1 1v6c0 .55.45 1 1 1h16c.55 0 1-.45 1-1v-6c0-.55-.45-1-1-1zm-4 5h-2v-2h2v2zm0-9h-2V7h2v2zm4-6H4c-.55 0-1 .45-1 1v6c0 .55.45 1 1 1h16c.55 0 1-.45 1-1V4c0-.55-.45-1-1-1z"/></svg></div>
+            <p class="stat-value" id="countPrivate">⏳</p><p class="stat-title">Server Private</p>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon-wrapper" style="background: rgba(16, 185, 129, 0.1);"><svg viewBox="0 0 24 24" style="fill: var(--success);"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg></div>
+            <p class="stat-value" id="countPublic">⏳</p><p class="stat-title">Server Public</p>
+        </div>
+        <div class="stat-card" id="boxTotalUserPanel" style="display: none;">
+            <div class="stat-icon-wrapper" style="background: rgba(245, 158, 11, 0.1);"><svg viewBox="0 0 24 24" style="fill: var(--warning);"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg></div>
+            <p class="stat-value" id="countUsers">⏳</p><p class="stat-title" id="titleTotalUser">Total Pengguna Web</p>
+        </div>
+        <div class="stat-card" id="boxOnlineUser" style="display: none;">
+            <div class="stat-icon-wrapper" style="background: rgba(16, 185, 129, 0.1);"><svg viewBox="0 0 24 24" style="fill: var(--success);"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg></div>
+            <p class="stat-value" id="countOnline" style="color: var(--success);">⏳</p><p class="stat-title" id="titleOnlineUser">Pengguna Online</p>
+        </div>
+    </div>
+
+    <h2 style="display: flex; align-items: center; gap: 10px;"><svg viewBox="0 0 24 24" style="width: 20px; height: 20px; fill: var(--primary);"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg> Menu Navigasi</h2>
+    
+    <div id="sectionWeb" style="display: none;">
+        <div class="section-title">Sistem Internal Web</div>
+        <div class="menu-grid">
+            <a href="manage_panel_users.html" class="menu-card card-internal">
+                <div class="menu-card-header"><svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg><h3>Kelola Akses Web</h3></div>
+                <p>Tambah atau hapus Partner/Reseller yang diizinkan masuk ke web ini.</p>
+            </a>
+            <a href="activity_logs.html" id="menuCctvLog" class="menu-card card-internal" style="border-left-color: #ef4444; display: none;">
+                <div class="menu-card-header"><svg viewBox="0 0 24 24" style="fill: #ef4444;"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg><h3 style="color: #ef4444;">Rekaman CCTV (Log)</h3></div>
+                <p>Pantau diam-diam siapa yang lagi login, bikin server, atau hapus data.</p>
+            </a>
+        </div>
+    </div>
+
+    <div id="sectionPrivate" style="display: none;">
+        <div class="section-title">Menu Navigasi Private</div>
+        <div class="menu-grid">
+            <a href="manage_ptero_users.html" class="menu-card card-private">
+                <div class="menu-card-header"><svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 10h-4v4h-2v-4H7v-2h4V7h2v4h4v2z"/></svg><h3>Bikin 1 Paket (User + Server)</h3></div>
+                <p>Buat akun panel baru sekaligus langsung aktifkan server bot Private-nya.</p>
+            </a>
+            <a href="manage_ptero_servers.html" class="menu-card card-private">
+                <div class="menu-card-header"><svg viewBox="0 0 24 24"><path d="M4 5v4h16V5H4zm0 14h16v-4H4v4zm0-7h16v-4H4v4z"/></svg><h3>Kelola Server Saja</h3></div>
+                <p>Bikin server Private tambahan buat pelanggan, hapus server, atau suspend.</p>
+            </a>
+        </div>
+    </div>
+
+    <div id="sectionPublic" style="display: none;">
+        <div class="section-title">Menu Navigasi Public</div>
+        <div class="menu-grid">
+            <a href="manage_ptero_users_pub.html" class="menu-card card-public">
+                <div class="menu-card-header"><svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 10h-4v4h-2v-4H7v-2h4V7h2v4h4v2z"/></svg><h3>Bikin 1 Paket (User + Server)</h3></div>
+                <p>Buat akun panel baru sekaligus langsung aktifkan server bot Public-nya.</p>
+            </a>
+            <a href="manage_ptero_servers_pub.html" class="menu-card card-public">
+                <div class="menu-card-header"><svg viewBox="0 0 24 24"><path d="M4 5v4h16V5H4zm0 14h16v-4H4v4zm0-7h16v-4H4v4z"/></svg><h3>Kelola Server Saja</h3></div>
+                <p>Bikin server Public tambahan buat pelanggan, hapus server, atau suspend.</p>
+            </a>
+        </div>
+    </div>
+
+    <div class="footer">Panel Center <span>v6.0</span> <br>Manajemen Hosting Elite System</div>
+        <div id="modalPassword" class="modal-overlay"><div class="modal-box"><svg class="modal-icon warning" viewBox="0 0 24 24"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zM9 6c0-1.66 1.34-3 3-3s3 1.34 3 3v2H9V6zm9 14H6V10h12v10zm-6-3c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2z"/></svg><h3>Ganti Password</h3><p>Masukkan password baru untuk akun kamu.</p><input type="password" id="inputPassBaru" placeholder="Ketik password baru..." autocomplete="off"><button class="btn-action btn-success" onclick="simpanPassword()">Simpan Perubahan</button><button class="btn-batal" onclick="tutupModal('modalPassword')">Batal</button></div></div>
+    <div id="modalPengumumanPop" class="modal-overlay" style="z-index: 999999;"><div class="modal-box" style="border-top: 4px solid var(--warning); border-color: var(--warning); box-shadow: 0 10px 30px rgba(245, 158, 11, 0.2);"><svg class="modal-icon warning" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg><h3 style="color: var(--warning);">INFORMASI PENTING</h3><div class="modal-box-content"><div style="background: rgba(245, 158, 11, 0.05); padding: 15px; border-radius: 8px; border: 1px solid rgba(245, 158, 11, 0.3);"><p id="teksIsiPengumuman" style="color: var(--text-main); margin: 0; line-height: 1.6; white-space: pre-wrap; font-size: 13px;"></p></div></div><button class="btn-action btn-warning" onclick="tutupPengumuman()">Siap, Paham!</button></div></div>
+    <div id="modalAlert" class="modal-overlay" style="z-index: 999999;"><div class="modal-box" style="border-top: 4px solid var(--warning); border-color: var(--warning);"><svg class="modal-icon warning" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg><h3 style="color: var(--warning);" id="alertTitle">PERHATIAN</h3><div class="modal-box-content" style="margin-bottom: 10px;"><p id="alertBody" style="color: var(--text-main); font-size: 13px; margin-bottom: 10px;"></p></div><button class="btn-batal" style="width: 100%; border-color: var(--warning); color: var(--warning);" onclick="tutupModal('modalAlert')">Mengerti</button></div></div>
+    <div id="modalSuccess" class="modal-overlay" style="z-index: 999999;"><div class="modal-box" style="border-top: 4px solid var(--success); border-color: var(--success);"><svg class="modal-icon success" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg><h3 style="color: var(--success);">BERHASIL</h3><div class="modal-box-content" style="margin-bottom: 10px;"><p id="successBody" style="color: var(--text-main); font-size: 13px; margin-bottom: 10px;"></p></div><button class="btn-action btn-success" onclick="tutupModal('modalSuccess')">Tutup</button></div></div>
+    <div id="modalConfirm" class="modal-overlay" style="z-index: 999999;"><div class="modal-box" style="border-top: 4px solid var(--danger); border-color: var(--danger);"><svg class="modal-icon danger" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg><h3 style="color: var(--danger);">KONFIRMASI</h3><div class="modal-box-content" style="margin-bottom: 10px;"><p id="confirmBody" style="color: var(--text-main); font-size: 13px; margin-bottom: 10px;">Yakin ingin melakukan ini?</p></div><div style="display: flex; gap: 10px;"><button class="btn-action btn-danger" style="margin: 0; flex: 1;" onclick="eksekusiCabutPengumuman()">Ya, Lanjutkan</button><button class="btn-batal" style="margin: 0; flex: 1;" onclick="tutupModal('modalConfirm')">Batal</button></div></div></div>
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+
+    <script>
+        // 🔥 PROTEKSI TAMBAHAN: ANTI INSPECT, COPAS, & KLIK KANAN 🔥
+        document.addEventListener('contextmenu', event => event.preventDefault());
+        document.onkeydown = function(e) {
+            if(e.keyCode == 123) return false; // F12
+            if(e.ctrlKey && e.shiftKey && e.keyCode == 'I'.charCodeAt(0)) return false; // Ctrl+Shift+I
+            if(e.ctrlKey && e.shiftKey && e.keyCode == 'C'.charCodeAt(0)) return false; // Ctrl+Shift+C
+            if(e.ctrlKey && e.shiftKey && e.keyCode == 'J'.charCodeAt(0)) return false; // Ctrl+Shift+J
+            if(e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) return false; // Ctrl+U
+        };
+
+        // 🔥 PROTOKOL KEAMANAN TINGKAT TINGGI: CCTV AUTO-KICK 🔥
+        async function cekValiditasSesi() {
+            const domainSesi = localStorage.getItem('ptero_domain');
+            const apiSesi = localStorage.getItem('ptero_api');
+            const jembatanWorker = "https://restless-truth-9b75.amisterious09.workers.dev";
+            
+            if (!domainSesi || !apiSesi) return;
             try {
-                let res = await fetch(`${WORKER_URL}/?https://${PTERO_DOMAIN}/api/application/users/${myUserId}`, {
+                let res = await fetch(`${jembatanWorker}/?https://${domainSesi}/api/client/account`, {
                     method: 'GET',
-                    headers: { 'Accept': 'application/json', 'Authorization': `Bearer ${PTERO_API}` }
+                    headers: { 'Accept': 'application/json', 'Authorization': `Bearer ${apiSesi}` }
                 });
-
-                if (res.ok) {
-                    let result = await res.json();
-                    let passwordDiServer = result.attributes.first_name; 
-
-                    if (myLocalPassword !== passwordDiServer) {
-                        // DETEKTIF ALERT 1
-                        alert(`🚨 KICK DARI CCTV 🚨\n\nSistem mendeteksi password tidak cocok!\n- Password di HP kamu: ${myLocalPassword}\n- Password di Server Ptero: ${passwordDiServer}\n\nSistem akan menendang Anda sekarang!`);
-                        
-                        localStorage.clear(); sessionStorage.clear();
-                        window.location.replace('login.html');
-                    }
+                if (res.status === 401 || res.status === 403) {
+                    console.warn("🚨 PELANGGARAN SESI TERDETEKSI: Password berubah atau sesi mati!");
+                    alert("Keamanan Sistem: Sesi Anda telah kedaluwarsa atau password akun telah diubah. Anda akan dikeluarkan dari panel demi keamanan.");
+                    localStorage.clear(); sessionStorage.clear();
+                    window.location.replace('login.html');
                 }
-            } catch (e) { console.error("CCTV Panel Error:", e); }
+            } catch (error) { console.error("CCTV Gagal mengecek status server:", error); }
+        }
+        cekValiditasSesi();
+        setInterval(cekValiditasSesi, 15000); 
+
+        window.addEventListener('load', () => {
+            const progressBar = document.getElementById('progressBar');
+            const loadingText = document.getElementById('loadingText');
+            const loadingPercent = document.getElementById('loadingPercent');
+            const splash = document.getElementById('splash-screen');
+
+            let progress = 0;
+            const textPhases = ["Menghubungkan ke Pterodactyl API...", "Sinkronisasi Database Pengguna...", "Verifikasi Kredensial Akses...", "Merender Antarmuka...", "Sistem Siap"];
+            
+            let interval = setInterval(() => {
+                progress += Math.floor(Math.random() * 5) + 1; 
+                if (progress >= 100) progress = 100;
+                progressBar.style.width = progress + '%';
+                loadingPercent.innerText = progress + '%';
+
+                if (progress < 25) loadingText.innerText = textPhases[0];
+                else if (progress < 50) loadingText.innerText = textPhases[1];
+                else if (progress < 75) loadingText.innerText = textPhases[2];
+                else if (progress < 95) loadingText.innerText = textPhases[3];
+                else loadingText.innerText = textPhases[4];
+
+                if (progress === 100) {
+                    clearInterval(interval);
+                    setTimeout(() => { splash.style.opacity = '0'; splash.style.visibility = 'hidden'; }, 500); 
+                }
+            }, 30); 
+        });
+
+        const currentUserId = localStorage.getItem('user_id');
+        const role = (localStorage.getItem('role') || '').trim().toLowerCase();
+        const username = localStorage.getItem('username') || "Admin";
+
+        if (!currentUserId) { window.location.replace("login.html"); }
+
+        document.getElementById('namaUser').innerText = username;
+        document.getElementById('sidebarName').innerText = username;
+        
+        let formatRole = role.replace('_', ' ').toUpperCase();
+        document.getElementById('roleUser').innerText = "Role: " + (formatRole || "UNKNOWN");
+
+        function tutupModal(id) { document.getElementById(id).style.display = 'none'; }
+        function showAiAlert(pesan, judul = "PERHATIAN") { document.getElementById('alertTitle').innerText = judul; document.getElementById('alertBody').innerHTML = pesan; document.getElementById('modalAlert').style.display = 'flex'; }
+        function showAiSuccess(pesan) { document.getElementById('successBody').innerHTML = pesan; document.getElementById('modalSuccess').style.display = 'flex'; }
+        function toggleSidebar() { document.getElementById('sidebarMenu').classList.toggle('active'); document.getElementById('sidebarOverlay').classList.toggle('active'); }
+
+        if (role === 'pemilik' || role === 'demo') {
+            document.getElementById('sectionWeb').style.display = 'block'; document.getElementById('menuCctvLog').style.display = 'block'; document.getElementById('sectionPrivate').style.display = 'block'; document.getElementById('sectionPublic').style.display = 'block';
+            document.getElementById('boxTotalUserPanel').style.display = 'flex'; document.getElementById('boxOnlineUser').style.display = 'flex';
+            document.getElementById('titleTotalUser').innerText = "Total Pengguna Web"; document.getElementById('titleOnlineUser').innerText = "Pengguna Online";
+            if(role === 'pemilik') document.getElementById('boxPengumumanAdmin').style.display = 'block'; 
+        } else if (role === 'partner_public') {
+            document.getElementById('sectionWeb').style.display = 'block'; document.getElementById('sectionPublic').style.display = 'block';
+            document.getElementById('boxTotalUserPanel').style.display = 'flex'; document.getElementById('boxOnlineUser').style.display = 'flex';
+            document.getElementById('titleTotalUser').innerText = "Total Jaringan Anda"; document.getElementById('titleOnlineUser').innerText = "Jaringan Online";
+        } else if (role.includes('private') || role === 'reseller') {
+            document.getElementById('sectionPrivate').style.display = 'block';
+        } else if (role.includes('public')) { document.getElementById('sectionPublic').style.display = 'block'; }
+
+        const firebaseConfig = { databaseURL: "https://cobaaja-ac5d0-default-rtdb.firebaseio.com" };
+        if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+
+        database.ref('users/' + currentUserId).on('value', (snap) => {
+            if (snap.exists()) {
+                let u = snap.val();
+                database.ref('users/' + currentUserId + '/isOnline').onDisconnect().set(false);
+                database.ref('users/' + currentUserId + '/isOnline').set(true);
+                document.getElementById('sidebarProfilePic').src = u.profilePic || `https://ui-avatars.com/api/?name=${username}&background=0D8ABC&color=fff&size=150`;
+            }
+        });
+
+        function simpanFotoProfil() {
+            if(role === 'demo') return showAiAlert("Mode Demo tidak diizinkan untuk mengubah profil.", "AKSES DITOLAK");
+            let link = document.getElementById('inputProfileUrl').value.trim();
+            if(!link) return showAiAlert("Silakan isi tautan URL gambar terlebih dahulu."); 
+            database.ref('users/' + currentUserId).update({ profilePic: link }).then(() => { showAiSuccess("Profil berhasil diperbarui."); document.getElementById('inputProfileUrl').value = ""; });
         }
 
-        // ==========================================
-        // SATPAM 1: CEK LOGIN DEPAN
-        // ==========================================
-        function cekLogin() {
-            if (!myUsername) {
-                // DETEKTIF ALERT 2
-                alert("🚨 KICK DARI PINTU DEPAN 🚨\n\nSistem tidak menemukan data 'panel_username' di browser ini.\n\nApakah kamu sudah login dari halaman login.html? Kamu akan diarahkan ke form login sekarang.");
-                
-                window.location.replace('login.html');
-                return;
-            }
-
-            // Kalau lolos, tampilkan UI
-            document.getElementById('navUsername').innerText = myUsername;
-            document.getElementById('welcomeName').innerText = myUsername;
-            document.getElementById('avatarHuruf').innerText = myUsername.charAt(0).toUpperCase();
-
-            let badge = document.getElementById('roleBadge');
-            if (myRole === 'pemilik') {
-                badge.innerText = "OWNER / PEMILIK";
-                badge.style.background = "rgba(13, 148, 136, 0.2)";
-                badge.style.color = "var(--primary)";
-                badge.style.borderColor = "rgba(13, 148, 136, 0.3)";
-            } else if (myRole === 'demo') {
-                badge.innerText = "AKUN DEMO";
-                badge.style.background = "rgba(245, 158, 11, 0.2)";
-                badge.style.color = "var(--warning)";
-                badge.style.borderColor = "rgba(245, 158, 11, 0.3)";
-            } else {
-                badge.innerText = "RESELLER VIP";
-            }
-
-            // Jalankan CCTV setelah dipastikan aman
-            cctvPanelCenter();
-            setInterval(cctvPanelCenter, 10000);
+        function simpanPassword() {
+            if(role === 'demo') return showAiAlert("Mode Demo tidak diizinkan untuk mengubah kredensial.", "AKSES DITOLAK");
+            let passBaru = document.getElementById('inputPassBaru').value.trim();
+            if (!passBaru) return showAiAlert("Kata sandi tidak boleh kosong.");
+            database.ref('users/' + currentUserId).update({ password: passBaru }).then(() => { tutupModal('modalPassword'); showAiSuccess("Kredensial berhasil diperbarui."); });
         }
 
-        function prosesLogout() {
-            if (confirm("Yakin ingin keluar dari panel?")) {
-                localStorage.clear(); sessionStorage.clear(); window.location.replace('login.html');
-            }
+        function terbitkanPengumuman() {
+            if(role === 'demo') return showAiAlert("Mode Demo tidak diizinkan untuk menggunakan siaran.", "AKSES DITOLAK");
+            let teks = document.getElementById('inputPengumuman').value.trim();
+            if(!teks) return showAiAlert("Silakan ketik isi pesan terlebih dahulu.");
+            database.ref('pengumuman_global').set({ pesan: teks, timestamp: Date.now() }).then(() => { showAiSuccess("Pesan berhasil disiarkan."); document.getElementById('inputPengumuman').value = ""; });
         }
 
-        // Gas!
-        window.onload = cekLogin;
+        function logout() {
+            if(currentUserId) database.ref('users/' + currentUserId + '/isOnline').set(false).then(() => { localStorage.clear(); window.location.replace("login.html"); });
+            else { localStorage.clear(); window.location.replace("login.html"); }
+        }
+        
+        function bukaModalPassword() { toggleSidebar(); document.getElementById('modalPassword').style.display = 'flex'; }
+        function konfirmasiCabutPengumuman() { document.getElementById('modalConfirm').style.display = 'flex'; }
+        function eksekusiCabutPengumuman() { database.ref('pengumuman_global').remove().then(() => { tutupModal('modalConfirm'); showAiSuccess("Siaran berhasil ditarik."); }); }
+        function tutupPengumuman() { let m = document.getElementById('modalPengumumanPop'); m.style.display = 'none'; localStorage.setItem('last_read_announcement', m.dataset.time); }
+
+        database.ref('pengumuman_global').on('value', (snap) => {
+            let data = snap.val(); let modal = document.getElementById('modalPengumumanPop');
+            if (data && data.pesan && localStorage.getItem('last_read_announcement') != data.timestamp) {
+                document.getElementById('teksIsiPengumuman').innerText = data.pesan; modal.style.display = 'flex'; modal.dataset.time = data.timestamp; 
+            } else modal.style.display = 'none';
+        });
+
+        const WORKER_URL = "https://restless-truth-9b75.amisterious09.workers.dev/?"; 
+        const PRVT_DOMAIN = "onlyprrvateptero.bypstar7.web.id"; const PRVT_API = "ptla_FN9WdJ1WzLH1BlGyzyeoWtZGDl9roNeAd8VVmz7g5tF"; 
+        const PUB_DOMAIN = "publikptero.bypstar7.web.id"; const PUB_API = "ptla_0NvSBLVYlIORbpGD5MxhOeM27CFKJwbOXRgvPyRI1Id"; 
+
+        function ambilStatistik() {
+            fetch(`${WORKER_URL}https://${PRVT_DOMAIN}/api/application/servers`, { headers: { 'Authorization': `Bearer ${PRVT_API}` } }).then(res=>res.json()).then(data=>document.getElementById('countPrivate').innerText = data.meta.pagination.total).catch(()=>"Error");
+            fetch(`${WORKER_URL}https://${PUB_DOMAIN}/api/application/servers`, { headers: { 'Authorization': `Bearer ${PUB_API}` } }).then(res=>res.json()).then(data=>document.getElementById('countPublic').innerText = data.meta.pagination.total).catch(()=>"Error");
+
+            if (role === 'pemilik' || role === 'partner_public' || role === 'demo') {
+                database.ref('users').on('value', snap => {
+                    let tUsers = 0, oCount = 0;
+                    snap.forEach(c => { let u = c.val(); if (role === 'pemilik' || role === 'demo' || u.maker === username) { tUsers++; if(u.isOnline) oCount++; } });
+                    document.getElementById('countUsers').innerText = tUsers; document.getElementById('countOnline').innerText = oCount;
+                });
+            }
+        }
+        ambilStatistik();
     </script>
 </body>
 </html>
