@@ -150,7 +150,8 @@
             <button class="mini-ai-btn-close" onclick="tutupError()">Coba Lagi</button>
         </div>
     </div>
-        <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
     <script>
         // LOGIKA MUSIK DENGAN SVG
@@ -227,15 +228,9 @@
                 if (users !== null) { 
                     for (let id in users) { 
                         if (users[id].username === userIn && users[id].password === passIn) { 
-                            
-                            // 🔥 CETAK KARCIS MASUK PANEL CENTER V6.0 🔥
-                            localStorage.setItem('panel_username', users[id].username); 
-                            localStorage.setItem('panel_role', users[id].role); 
-                            localStorage.setItem('panel_password', passIn); // Disimpan buat bahan cek CCTV
-                            
-                            // Ambil ID Pterodactyl (Jika di firebase gak ada ptero_id, sementara pakai id firebase)
-                            localStorage.setItem('user_id_ptero', users[id].ptero_id || id); 
-                            
+                            localStorage.setItem('user_id', id); 
+                            localStorage.setItem('role', users[id].role); 
+                            localStorage.setItem('username', users[id].username); 
                             loginSukses = true; 
                             break; 
                         } 
@@ -243,14 +238,13 @@
                 }
                 
                 if (loginSukses) { 
-                    // REKAM LOG AKTIVITAS KE FIREBASE
+                    // PASANG CCTV DI SINI 🔥
                     database.ref('activity_logs').push({
                         username: userIn,
-                        role: localStorage.getItem('panel_role') || 'Unknown',
+                        role: localStorage.getItem('role') || 'Unknown',
                         action: "Melakukan Login ke dalam Panel.",
                         timestamp: Date.now()
                     }).then(() => {
-                        // BUKA PINTU KE DASHBOARD! 🚀
                         window.location.replace("index.html"); 
                     });
                 } else { 
