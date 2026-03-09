@@ -497,8 +497,8 @@
         
         const PRVT_DOMAIN = "onlyprrvateptero.bypstar7.web.id"; 
         const PRVT_API = "ptla_FN9WdJ1WzLH1BlGyzyeoWtZGDl9roNeAd8VVmz7g5tF"; 
-        const PUB_DOMAIN = "papi.queen-priv.my.id"; 
-        const PUB_API = "ptla_qhiMmJ3rYH6S4OQ63GbqTyj2U6YvCPOUeJt0pN3e1rG"; 
+        const PUB_DOMAIN = "publikzero.bypstar7.web.id"; 
+        const PUB_API = "ptla_YTtzIHJr2S10NFRokBa3SQHHwM5NJrrXLnlSc2JibUv"; 
 
         function ambilStatistik() {
             fetch(`${WORKER_URL}https://${PRVT_DOMAIN}/api/application/servers`, { headers: { 'Authorization': `Bearer ${PRVT_API}` } }).then(res=>res.json()).then(data=>document.getElementById('countPrivate').innerText = data.meta.pagination.total).catch(()=>"Error");
