@@ -3,106 +3,204 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Riwayat Aktivitas (Log)</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <title>CCTV Log - Panel Center</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        :root { --bg-color: #0f172a; --card-bg: #1e293b; --primary: #3b82f6; --success: #10b981; --danger: #ef4444; --warning: #f59e0b; --text-main: #f8fafc; --text-sub: #94a3b8; --border-color: rgba(255,255,255,0.1); }
-        body { font-family: 'Inter', sans-serif; padding: 20px; background-color: var(--bg-color); color: var(--text-main); margin: 0; }
-        h2 { font-weight: 700; margin-bottom: 5px; color: var(--text-main); border-left: 4px solid var(--primary); padding-left: 10px; }
-        .sub-title { color: var(--text-sub); margin-bottom: 25px; font-size: 14px; }
-        .btn-back { display: inline-block; margin-bottom: 20px; padding: 10px 15px; background: rgba(255,255,255,0.05); color: var(--text-main); text-decoration: none; border-radius: 8px; font-size: 14px; font-weight: 600; border: 1px solid var(--border-color); transition: 0.2s; }
-        .btn-back:hover { background: var(--card-bg); transform: translateX(-3px); }
+        :root { 
+            --bg-color: #0f172a; --card-bg: #1e293b; 
+            --primary: #0d9488; 
+            --primary-glow: rgba(13, 148, 136, 0.15);
+            --success: #10b981; --danger: #ef4444; --warning: #f59e0b; 
+            --text-main: #f8fafc; --text-sub: #94a3b8; 
+            --border-color: rgba(255,255,255,0.08); 
+        }
+        body { font-family: 'Inter', sans-serif; padding: 30px 5%; background-color: var(--bg-color); color: var(--text-main); margin: 0; max-width: 1200px; margin: auto; }
         
-        .box { background: var(--card-bg); padding: 20px; border-radius: 16px; border: 1px solid var(--border-color); box-shadow: 0 4px 15px rgba(0,0,0,0.2); overflow-x: auto; }
+        .btn-back { display: inline-flex; align-items: center; gap: 8px; margin-bottom: 25px; padding: 10px 18px; background: var(--primary-glow); color: var(--primary); text-decoration: none; border-radius: 10px; font-size: 14px; font-weight: 600; border: 1px solid rgba(13, 148, 136, 0.3); transition: 0.3s; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        .btn-back svg { width: 18px; height: 18px; fill: currentColor; transition: transform 0.3s; }
+        .btn-back:hover { background: var(--primary); color: white; box-shadow: 0 6px 20px var(--primary-glow); transform: translateY(-2px); }
+        .btn-back:hover svg { transform: translateX(-4px); }
         
+        h2 { font-weight: 800; margin-bottom: 5px; color: var(--text-main); border-left: 4px solid var(--primary); padding-left: 12px; display: flex; align-items: center; gap: 10px; font-size: 22px; text-transform: uppercase; letter-spacing: 1px; }
+        h2 svg { width: 24px; height: 24px; fill: var(--primary); }
+        .sub-title { color: var(--text-sub); margin-bottom: 35px; font-size: 14px; line-height: 1.5; }
+                .box { background: var(--card-bg); padding: 30px; border-radius: 20px; border: 1px solid var(--border-color); margin-bottom: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.15); overflow-x: auto; }
+        .box-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; border-bottom: 1px solid var(--border-color); padding-bottom: 15px; flex-wrap: wrap; gap: 15px; }
+        .box-header h3 { margin: 0; font-size: 16px; display: flex; align-items: center; gap: 10px; color: var(--text-main); text-transform: uppercase; letter-spacing: 0.5px; font-weight: 700; }
+        .box-header h3 svg { width: 20px; height: 20px; fill: var(--primary); }
+
+        .btn-clear { background: rgba(239, 68, 68, 0.1); color: var(--danger); border: 1px solid rgba(239, 68, 68, 0.3); padding: 10px 16px; border-radius: 10px; font-weight: 700; cursor: pointer; transition: 0.3s; font-size: 13px; display: inline-flex; align-items: center; gap: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .btn-clear svg { width: 16px; height: 16px; fill: currentColor; }
+        .btn-clear:hover { background: var(--danger); color: white; box-shadow: 0 4px 15px rgba(239, 68, 68, 0.4); transform: translateY(-2px); }
+
         table { width: 100%; border-collapse: collapse; min-width: 600px; margin-top: 10px; }
-        th, td { padding: 12px 15px; text-align: left; border-bottom: 1px solid var(--border-color); font-size: 14px; }
-        th { background: rgba(255,255,255,0.02); color: var(--text-sub); font-weight: 600; text-transform: uppercase; font-size: 12px; letter-spacing: 1px; white-space: nowrap; }
-        tr:hover { background: rgba(255,255,255,0.02); }
+        th, td { padding: 16px; text-align: left; border-bottom: 1px solid var(--border-color); font-size: 14px; }
+        th { background: rgba(0,0,0,0.15); color: var(--text-sub); font-weight: 700; text-transform: uppercase; font-size: 11px; letter-spacing: 1px; white-space: nowrap; border-radius: 8px 8px 0 0; }
+        tr:hover { background: rgba(255,255,255,0.03); }
         
-        .time-badge { font-size: 11px; color: var(--text-sub); background: rgba(255,255,255,0.05); padding: 4px 8px; border-radius: 6px; white-space: nowrap; }
-        .user-text { font-weight: bold; color: var(--primary); }
-        .action-text { color: var(--text-main); }
+        .time-badge { font-size: 12px; color: var(--text-sub); background: rgba(255,255,255,0.05); padding: 6px 12px; border-radius: 8px; white-space: nowrap; display: inline-flex; align-items: center; gap: 6px; font-weight: 600; border: 1px solid var(--border-color);}
+        .time-badge svg { width: 14px; height: 14px; fill: currentColor; }
+        .user-text { font-weight: 800; color: var(--primary); font-size: 15px; display: flex; align-items: center; gap: 6px; }
+        .user-text svg { width: 16px; height: 16px; fill: currentColor; }
+        .role-tag { font-size: 10px; color: var(--warning); text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px; padding: 2px 8px; background: rgba(245, 158, 11, 0.1); border-radius: 4px; display: inline-block; margin-top: 4px; border: 1px solid rgba(245, 158, 11, 0.2); }
+        .action-text { color: var(--text-main); font-size: 14px; line-height: 1.6; }
+                /* MODALS */
+        .mini-ai-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(8px); z-index: 9999; justify-content: center; align-items: center; padding: 20px; box-sizing: border-box; animation: fadeInPop 0.3s ease; }
+        .mini-ai-popup { background: var(--card-bg); border-radius: 24px; width: 100%; max-width: 400px; padding: 35px 30px; text-align: center; color: var(--text-main); position: relative; box-shadow: 0 25px 50px rgba(0,0,0,0.6); border: 1px solid var(--border-color); }
         
-        /* Tombol Hapus Log */
-        .btn-clear { background: rgba(239, 68, 68, 0.1); color: var(--danger); border: 1px solid var(--danger); padding: 8px 15px; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.2s; font-size: 13px; float: right; }
-        .btn-clear:hover { background: var(--danger); color: white; }
+        .modal-icon-top { width: 60px; height: 60px; margin: 0 auto 20px auto; display: flex; align-items: center; justify-content: center; border-radius: 50%; }
+        .modal-icon-top svg { width: 30px; height: 30px; }
+        
+        .mode-danger .modal-icon-top { background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3); } .mode-danger .modal-icon-top svg { fill: var(--danger); } .mode-danger .mini-ai-header { color: var(--danger); }
+        .mode-success .modal-icon-top { background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3); } .mode-success .modal-icon-top svg { fill: var(--success); } .mode-success .mini-ai-header { color: var(--success); }
+
+        .mini-ai-header { font-size: 20px; font-weight: 800; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px; }
+        .mini-ai-body { font-size: 14px; color: var(--text-sub); line-height: 1.6; margin-bottom: 25px; }
+        
+        .ai-btn-group { display: flex; gap: 12px; }
+        .mini-ai-btn { flex: 1; border: none; padding: 14px; font-weight: 700; font-size: 13px; border-radius: 12px; cursor: pointer; transition: 0.3s; text-transform: uppercase; letter-spacing: 0.5px; }
+        .btn-primary-action { background: var(--primary); color: white; } .btn-primary-action:hover { background: #0f766e; transform: translateY(-2px); }
+        .btn-danger-action { background: var(--danger); color: white; } .btn-danger-action:hover { background: #dc2626; transform: translateY(-2px); }
+        .btn-outline-action { background: rgba(255,255,255,0.03); border: 1px solid var(--border-color); color: var(--text-sub); } .btn-outline-action:hover { background: rgba(255,255,255,0.08); color: var(--text-main); }
+
+        @keyframes fadeInPop { from { opacity: 0; transform: scale(0.95) translateY(10px); } to { opacity: 1; transform: scale(1) translateY(0); } }
     </style>
 </head>
 <body>
-    <a href="index.html" class="btn-back">⬅ Kembali ke Dashboard</a>
+    <a href="index.html" class="btn-back">
+        <svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+        Kembali ke Dashboard
+    </a>
     
-    <h2>📝 Riwayat Aktivitas Panel</h2>
-    <p class="sub-title">Memantau seluruh aktivitas User, Reseller, dan Partner di dalam sistem.</p>
+    <h2>
+        <svg viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
+        Riwayat Aktivitas Panel
+    </h2>
+    <p class="sub-title">Memantau secara rahasia seluruh aktivitas login dan eksekusi di dalam sistem.</p>
 
     <div class="box">
-        <div style="margin-bottom: 20px; overflow: hidden;">
-            <h3 style="margin: 0; float: left; display: flex; align-items: center; gap: 8px;">📷 Log CCTV (100 Aktivitas Terakhir)</h3>
-            <button class="btn-clear" onclick="hapusSemuaLog()">🗑️ Bersihkan Log</button>
+        <div class="box-header">
+            <h3><svg viewBox="0 0 24 24"><path d="M13 13v8h8v-8h-8zM3 21h8v-8H3v8zM3 3v8h8V3H3zm13.66-1.31L11 7.34 16.66 13l5.66-5.66-5.66-5.65z"/></svg> Rekaman CCTV (100 Terakhir)</h3>
+            <button class="btn-clear" onclick="bukaModalHapusLog()">
+                <svg viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
+                Bersihkan Log
+            </button>
         </div>
 
         <table id="tabelLog">
-            <tr><th>Waktu (WIB)</th><th>Pelaku (User)</th><th>Aktivitas yang Dilakukan</th></tr>
-            <tr><td colspan="3" style="text-align: center; color: var(--text-sub); padding: 20px;">⏳ Memuat rekaman CCTV...</td></tr>
+            <tr><th>Waktu (WIB)</th><th>Pelaku (User)</th><th>Aktivitas Sistem</th></tr>
+            <tr><td colspan="3" style="text-align: center; color: var(--text-sub); padding: 30px;">
+                <svg viewBox="0 0 24 24" style="width: 24px; height: 24px; fill: var(--text-sub); animation: spin 1s linear infinite; margin-bottom: 10px;"><path d="M12 4V2C6.48 2 2 6.48 2 12h2c0-4.41 3.59-8 8-8zm0 16c-4.41 0-8-3.59-8-8H2c0 5.52 4.48 10 10 10v-2zM22 12c0-5.52-4.48-10-10-10v2c4.41 0 8 3.59 8 8h-2l3 3 3-3h-2z"/></svg>
+                <br>⏳ Memutar ulang rekaman CCTV...
+            </td></tr>
         </table>
     </div>
 
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
-    <script>
-        const currentUserId = localStorage.getItem('user_id');
-        const role = localStorage.getItem('role') || '';
+    <div id="modalAksesDitolak" class="mini-ai-overlay" style="z-index: 999999;">
+        <div class="mini-ai-popup mode-danger">
+            <div class="modal-icon-top"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg></div>
+            <div class="mini-ai-header">AKSES DIBLOKIR!</div>
+            <div class="mini-ai-body">Ini adalah Ruang Kontrol CCTV Rahasia.<br><b>Hanya Pemilik yang diizinkan masuk!</b><br><br><small>Anda akan dikeluarkan secara otomatis...</small></div>
+            <div class="ai-btn-group"><button class="mini-ai-btn btn-danger-action" onclick="window.location.replace('index.html')">Tinggalkan Ruangan</button></div>
+        </div>
+    </div>
 
-        // Halaman ini khusus Komandan (Pemilik)
+    <div id="modalHapusLog" class="mini-ai-overlay">
+        <div class="mini-ai-popup mode-danger">
+            <div class="modal-icon-top"><svg viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg></div>
+            <div class="mini-ai-header">HAPUS SEMUA LOG?</div>
+            <div class="mini-ai-body">Yakin ingin memusnahkan semua jejak aktivitas dari database CCTV ini?<br><br>Data yang dihancurkan <u>tidak bisa dikembalikan</u>!</div>
+            <div class="ai-btn-group">
+                <button class="mini-ai-btn btn-danger-action" id="btnProsesHapus" onclick="eksekusiHapusLog()">Ya, Musnahkan!</button>
+                <button class="mini-ai-btn btn-outline-action" onclick="tutupModal('modalHapusLog')">Batal</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="modalSukses" class="mini-ai-overlay" style="z-index: 99999;">
+        <div class="mini-ai-popup mode-success">
+            <div class="modal-icon-top"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg></div>
+            <div class="mini-ai-header">BERHASIL!</div>
+            <div class="mini-ai-body">Database CCTV telah bersih total. Tidak ada jejak yang tersisa.</div>
+            <div class="ai-btn-group"><button class="mini-ai-btn btn-primary-action" style="background: var(--success);" onclick="tutupModal('modalSukses')">Tutup</button></div>
+        </div>
+    </div>
+        <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+
+    <script>
+        // 🔥 FIX BACA KARCIS & BUG VARIABEL GANDA 🔥
+        const currentUserId = localStorage.getItem('user_id') || localStorage.getItem('user_id_ptero');
+        const roleRaw = localStorage.getItem('role') || localStorage.getItem('panel_role') || '';
+        const role = roleRaw.trim().toLowerCase(); 
+        // ⚠️ (Variabel const role yang kembarnya sudah DIBASMI) ⚠️
+        
+        const myUsername = localStorage.getItem('username') || localStorage.getItem('panel_username') || 'Unknown'; 
+
+        // Blokir selain Pemilik!
         if (!currentUserId || role !== 'pemilik') {
-            alert("🚨 AKSES DITOLAK!\nHalaman log CCTV ini sangat rahasia, hanya untuk Pemilik.");
-            window.location.replace("index.html");
+            document.getElementById('modalAksesDitolak').style.display = 'flex';
+            setTimeout(() => { window.location.replace('index.html'); }, 3000);
         }
 
         const firebaseConfig = { databaseURL: "https://cobaaja-ac5d0-default-rtdb.firebaseio.com" };
         if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
 
-        // Mengambil data Log
+        function tutupModal(id) { document.getElementById(id).style.display = 'none'; }
+        
+        function bukaModalHapusLog() { document.getElementById('modalHapusLog').style.display = 'flex'; }
+
+        // 🔥 MESIN PENGAMBIL DATA CCTV 🔥
         function ambilLog() {
-            // Ambil 100 log terbaru biar gak ngelag
             database.ref('activity_logs').orderByChild('timestamp').limitToLast(100).on('value', (snap) => {
-                let tabel = `<tr><th>Waktu (WIB)</th><th>Pelaku (User)</th><th>Aktivitas yang Dilakukan</th></tr>`;
+                let tabel = `<tr><th>Waktu (WIB)</th><th>Pelaku (User)</th><th>Aktivitas Sistem</th></tr>`;
                 let adaData = false;
                 let dataArray = [];
 
                 snap.forEach((child) => { dataArray.push(child.val()); });
                 
-                // Urutkan dari yang paling baru ke paling lama
+                // Urutkan dari yang terbaru di atas
                 dataArray.sort((a, b) => b.timestamp - a.timestamp);
+
+                const iconUser = `<svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>`;
+                const iconClock = `<svg viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"/><path d="M12.5 7H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg>`;
 
                 dataArray.forEach(log => {
                     adaData = true;
-                    // Format waktu
                     let date = new Date(log.timestamp);
-                    let waktu = date.toLocaleString('id-ID', { day: '2-digit', month: 'short', hour: '2-digit', minute:'2-digit', second:'2-digit' });
+                    let waktu = date.toLocaleString('id-ID', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute:'2-digit', second:'2-digit' });
 
                     tabel += `<tr>
-                        <td><span class="time-badge">🕒 ${waktu}</span></td>
-                        <td><span class="user-text">👤 ${log.username}</span><br><span style="font-size:10px; color:var(--text-sub); text-transform:uppercase;">${log.role.replace('_', ' ')}</span></td>
+                        <td><span class="time-badge">${iconClock} ${waktu}</span></td>
+                        <td><span class="user-text">${iconUser} ${log.username}</span><span class="role-tag">${log.role.replace('_', ' ')}</span></td>
                         <td class="action-text">${log.action}</td>
                     </tr>`;
                 });
 
-                if (!adaData) tabel += `<tr><td colspan="3" style="text-align: center; color: var(--warning); padding: 20px;">Sistem bersih. Belum ada aktivitas yang terekam.</td></tr>`;
+                if (!adaData) tabel += `<tr><td colspan="3" style="text-align: center; color: var(--warning); padding: 30px;">CCTV Bersih. Belum ada aktivitas terekam.</td></tr>`;
                 document.getElementById('tabelLog').innerHTML = tabel;
             });
         }
 
-        function hapusSemuaLog() {
-            if(confirm("🚨 YAKIN INGIN MENGHAPUS SEMUA REKAMAN CCTV?\n\nLog yang dihapus tidak bisa dikembalikan!")) {
-                database.ref('activity_logs').remove().then(() => {
-                    alert("✅ Semua log berhasil dibersihkan!");
-                });
-            }
+        // 🔥 MESIN PENGHAPUS LOG 🔥
+        function eksekusiHapusLog() {
+            let btn = document.getElementById('btnProsesHapus');
+            btn.innerHTML = `<svg viewBox="0 0 24 24" style="animation: spin 1s linear infinite; width:16px; fill:white;"><path d="M12 4V2C6.48 2 2 6.48 2 12h2c0-4.41 3.59-8 8-8zm0 16c-4.41 0-8-3.59-8-8H2c0 5.52 4.48 10 10 10v-2zM22 12c0-5.52-4.48-10-10-10v2c4.41 0 8 3.59 8 8h-2l3 3 3-3h-2z"/></svg> Menghapus...`;
+            btn.style.pointerEvents = "none";
+
+            database.ref('activity_logs').remove().then(() => {
+                tutupModal('modalHapusLog');
+                document.getElementById('modalSukses').style.display = 'flex';
+                btn.innerHTML = `Ya, Musnahkan!`;
+                btn.style.pointerEvents = "auto";
+            });
         }
 
-        ambilLog();
+        // Jalankan CCTV
+        if (currentUserId && role === 'pemilik') {
+            ambilLog();
+        }
     </script>
 </body>
 </html>

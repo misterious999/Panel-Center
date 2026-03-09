@@ -4,16 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login Panel Center</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root { 
-            --primary: #3b82f6; 
-            --primary-hover: #2563eb;
+            --primary: #0d9488; /* Teal 600 - Adem di mata */
+            --primary-hover: #0f766e; /* Teal 700 */
+            --primary-glow: rgba(13, 148, 136, 0.3);
             --danger: #ef4444;
             --text-main: #f8fafc; 
             --text-sub: #94a3b8; 
             --input-bg: rgba(15, 23, 42, 0.6);
             --border-color: rgba(255, 255, 255, 0.1); 
+            --card-bg: #1e293b;
         }
         
         body { 
@@ -33,68 +35,68 @@
         .bg-video { position: fixed; top: 50%; left: 50%; min-width: 100%; min-height: 100%; width: auto; height: auto; z-index: -2; transform: translateX(-50%) translateY(-50%); object-fit: cover; }
         
         /* OVERLAY LEBIH GELAP BIAR MATA NYAMAN */
-        .bg-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.75); backdrop-filter: blur(5px); z-index: -1; }
-
-        /* KOTAK LOGIN KACA (RINGAN & MINIMALIS) */
+        .bg-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.75); backdrop-filter: blur(8px); z-index: -1; }
+                /* KOTAK LOGIN KACA (PREMIUM UI) */
         .login-box {
             background: rgba(30, 41, 59, 0.7); 
-            backdrop-filter: blur(10px); 
-            padding: 40px 30px;
-            border-radius: 20px;
+            backdrop-filter: blur(15px); 
+            padding: 40px 35px;
+            border-radius: 24px;
             border: 1px solid var(--border-color);
-            box-shadow: 0 15px 35px rgba(0,0,0,0.5); 
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5), inset 0 0 0 1px rgba(255,255,255,0.05); 
             width: 100%;
             max-width: 360px;
             text-align: center;
             z-index: 1;
-            animation: fadeIn 0.6s ease-out forwards;
+            animation: fadeIn 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+            from { opacity: 0; transform: translateY(30px) scale(0.95); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
         }
 
         /* LOGO ELEGAN */
-        .login-logo { width: 85px; height: 85px; border-radius: 50%; object-fit: cover; margin: 0 auto 15px auto; display: block; border: 2px solid rgba(255,255,255,0.2); box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3); background-color: var(--input-bg); }
-        .login-box h2 { margin-top: 0; margin-bottom: 5px; font-size: 24px; color: var(--text-main); letter-spacing: 0.5px; }
-        .login-box p { color: var(--text-sub); font-size: 13px; margin-bottom: 30px; }
+        .login-logo { width: 90px; height: 90px; border-radius: 50%; object-fit: cover; margin: 0 auto 20px auto; display: block; border: 2px solid var(--primary); box-shadow: 0 0 20px var(--primary-glow); background-color: var(--input-bg); }
+        .login-box h2 { margin-top: 0; margin-bottom: 5px; font-size: 24px; font-weight: 800; color: var(--text-main); letter-spacing: 0.5px; }
+        .login-box p { color: var(--text-sub); font-size: 13px; margin-bottom: 30px; line-height: 1.5; }
         
         .input-group { text-align: left; margin-bottom: 20px; }
-        .input-group label { display: block; margin-bottom: 8px; font-size: 12px; font-weight: 600; color: var(--text-sub); text-transform: uppercase; letter-spacing: 1px; }
-        .input-group input { width: 100%; padding: 14px 15px; background: var(--input-bg); border: 1px solid var(--border-color); border-radius: 12px; color: var(--text-main); font-size: 14px; box-sizing: border-box; outline: none; transition: 0.2s; }
-        .input-group input:focus { border-color: var(--primary); box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2); background: rgba(15, 23, 42, 0.9); }
+        .input-group label { display: block; margin-bottom: 8px; font-size: 11px; font-weight: 700; color: var(--text-sub); text-transform: uppercase; letter-spacing: 1px; }
+        .input-group input { width: 100%; padding: 14px 16px; background: rgba(15, 23, 42, 0.5); border: 1px solid var(--border-color); border-radius: 12px; color: var(--text-main); font-size: 14px; box-sizing: border-box; outline: none; transition: 0.3s; font-family: 'Inter', sans-serif;}
+        .input-group input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-glow); background: rgba(15, 23, 42, 0.9); }
 
-        /* TOMBOL MASUK YANG KALEM (SVG UPDATE) */
-        .btn-masuk { width: 100%; padding: 15px; background: var(--primary); color: white; border: none; border-radius: 12px; font-size: 15px; font-weight: 700; cursor: pointer; transition: 0.2s; margin-top: 10px; box-shadow: 0 4px 15px rgba(59, 130, 246, 0.2); display: flex; justify-content: center; align-items: center; gap: 8px; }
-        .btn-masuk:hover { background: var(--primary-hover); transform: translateY(-2px); box-shadow: 0 6px 20px rgba(59, 130, 246, 0.3); }
+        /* TOMBOL MASUK TEAL */
+        .btn-masuk { width: 100%; padding: 15px; background: linear-gradient(135deg, var(--primary), #059669); color: white; border: none; border-radius: 12px; font-size: 15px; font-weight: 700; cursor: pointer; transition: 0.3s; margin-top: 10px; box-shadow: 0 5px 15px var(--primary-glow); display: flex; justify-content: center; align-items: center; gap: 8px; text-transform: uppercase; letter-spacing: 0.5px;}
+        .btn-masuk:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(13, 148, 136, 0.5); }
         .btn-masuk svg { width: 18px; height: 18px; fill: currentColor; }
-
-        /* TOMBOL MUSIK MELAYANG (SVG UPDATE) */
-        .audio-btn { position: fixed; bottom: 25px; right: 25px; background: rgba(30, 41, 59, 0.8); backdrop-filter: blur(8px); border: 1px solid var(--border-color); color: var(--text-main); padding: 10px 18px; border-radius: 50px; cursor: pointer; z-index: 10; font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 8px; transition: 0.2s; box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
-        .audio-btn:hover { background: rgba(59, 130, 246, 0.2); border-color: var(--primary); transform: translateY(-2px); }
+                /* TOMBOL MUSIK MELAYANG */
+        .audio-btn { position: fixed; bottom: 25px; right: 25px; background: rgba(30, 41, 59, 0.8); backdrop-filter: blur(8px); border: 1px solid var(--border-color); color: var(--text-main); padding: 10px 18px; border-radius: 50px; cursor: pointer; z-index: 10; font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 8px; transition: 0.3s; box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
+        .audio-btn:hover { background: var(--primary-glow); border-color: var(--primary); transform: translateY(-3px); }
         .audio-btn svg { width: 16px; height: 16px; fill: currentColor; }
 
         /* COPYRIGHT KAPSUL */
-        .copyright-capsule { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); z-index: 10; text-align: center; opacity: 0; animation: fadeInUp 0.8s ease-out forwards 0.3s; }
+        .copyright-capsule { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); z-index: 10; text-align: center; opacity: 0; animation: fadeInUp 0.8s ease-out forwards 0.5s; }
         .copyright-text { display: inline-block; padding: 8px 20px; background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(8px); border-radius: 50px; border: 1px solid var(--border-color); box-shadow: 0 5px 15px rgba(0,0,0,0.3); color: var(--text-sub); font-size: 12px; letter-spacing: 0.5px; }
         .copyright-text b { color: var(--primary); font-weight: 700; }
 
         /* =========================================
-           POP-UP MODAL ERROR (UPDATE SVG & ANIMASI)
+           POP-UP MODAL ERROR (CLEAN UI)
            ========================================= */
-        .mini-ai-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(4px); z-index: 9999; justify-content: center; align-items: center; padding: 20px; box-sizing: border-box; animation: fadeInPop 0.2s ease; }
-        .mini-ai-popup { background: var(--card-bg); border-radius: 16px; border-top: 5px solid var(--danger); width: 100%; max-width: 320px; padding: 25px; text-align: center; color: #fff; box-shadow: 0 15px 35px rgba(0,0,0,0.5); }
+        .mini-ai-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(8px); z-index: 9999; justify-content: center; align-items: center; padding: 20px; box-sizing: border-box; animation: fadeInPop 0.3s ease; }
+        .mini-ai-popup { background: var(--card-bg); border-radius: 20px; width: 100%; max-width: 350px; padding: 30px 25px; text-align: center; color: var(--text-main); position: relative; box-shadow: 0 25px 50px rgba(0,0,0,0.6); border: 1px solid var(--border-color); }
         
-        .modal-icon { width: 48px; height: 48px; fill: var(--danger); margin: 0 auto 15px auto; display: block; }
-        .mini-ai-header { font-size: 18px; font-weight: 700; color: var(--danger); margin-bottom: 10px; }
-        .mini-ai-body { font-size: 14px; color: var(--text-main); line-height: 1.5; margin-bottom: 25px; }
+        .modal-icon-top { width: 60px; height: 60px; margin: 0 auto 20px auto; display: flex; align-items: center; justify-content: center; border-radius: 50%; background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3); box-shadow: 0 0 20px rgba(239, 68, 68, 0.2); }
+        .modal-icon-top svg { width: 30px; height: 30px; fill: var(--danger); }
         
-        .mini-ai-btn-close { width: 100%; background: rgba(239, 68, 68, 0.1); border: 1px solid var(--danger); color: var(--danger); padding: 12px; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.2s; font-size: 14px; }
-        .mini-ai-btn-close:hover { background: var(--danger); color: white; }
+        .mini-ai-header { font-size: 18px; font-weight: 800; color: var(--danger); margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px; }
+        .mini-ai-body { font-size: 13px; color: var(--text-sub); line-height: 1.6; margin-bottom: 25px; }
+        
+        .mini-ai-btn-close { width: 100%; background: var(--danger); color: white; border: none; padding: 14px; border-radius: 12px; font-weight: 700; font-size: 13px; cursor: pointer; transition: 0.3s; text-transform: uppercase; letter-spacing: 0.5px; box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3); }
+        .mini-ai-btn-close:hover { background: #dc2626; transform: translateY(-2px); box-shadow: 0 6px 20px rgba(239, 68, 68, 0.4); }
 
         @keyframes fadeInUp { from { opacity: 0; transform: translate(-50%, 20px); } to { opacity: 1; transform: translate(-50%, 0); } }
-        @keyframes fadeInPop { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+        @keyframes fadeInPop { from { opacity: 0; transform: scale(0.95) translateY(10px); } to { opacity: 1; transform: scale(1) translateY(0); } }
 
         @media (max-width: 480px) {
             .copyright-capsule { bottom: 85px; width: 80%; }
@@ -105,7 +107,7 @@
 </head>
 <body>
 
-    <audio id="bgMusic" loop><source src="https://cdn.yupra.my.id/yp/1wl675dd.opus" type="audio/ogg"></audio>
+    <audio id="bgMusic" loop><source src="https://files.catbox.moe/v439jy.mp3" type="audio/ogg"></audio>
 
     <div class="copyright-capsule">
         <div class="copyright-text">
@@ -122,7 +124,7 @@
     <div class="bg-overlay"></div>
 
     <div class="login-box">
-        <img src="https://files.catbox.moe/dg0v4i.jpg" alt="Logo Panel" class="login-logo" onerror="this.src='https://ui-avatars.com/api/?name=Zeroix+Dark&background=1e293b&color=3b82f6&size=150'">
+        <img src="https://files.catbox.moe/dg0v4i.jpg" alt="Logo Panel" class="login-logo" onerror="this.src='https://ui-avatars.com/api/?name=Zeroix+Dark&background=1e293b&color=0d9488&size=150'">
         
         <h2>ZeroixDark Center</h2>
         <p>Login untuk mengelola server Pterodactyl</p>
@@ -144,14 +146,15 @@
 
     <div id="modalLoginError" class="mini-ai-overlay">
         <div class="mini-ai-popup">
-            <svg class="modal-icon" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+            <div class="modal-icon-top">
+                <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+            </div>
             <div class="mini-ai-header">Akses Ditolak</div>
             <div class="mini-ai-body" id="errorMsgText">Username atau Password salah.</div>
             <button class="mini-ai-btn-close" onclick="tutupError()">Coba Lagi</button>
         </div>
     </div>
-    
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
     <script>
         // LOGIKA MUSIK DENGAN SVG
@@ -189,7 +192,7 @@
             } 
         });
 
-        // FUNGSI MODAL ERROR (BAHASA MANUSIA)
+        // FUNGSI MODAL ERROR
         function tampilkanError(pesan) {
             document.getElementById('errorMsgText').innerText = pesan;
             document.getElementById('modalLoginError').style.display = 'flex';
@@ -228,9 +231,14 @@
                 if (users !== null) { 
                     for (let id in users) { 
                         if (users[id].username === userIn && users[id].password === passIn) { 
-                            localStorage.setItem('user_id', id); 
-                            localStorage.setItem('role', users[id].role); 
-                            localStorage.setItem('username', users[id].username); 
+                            
+                            // 🔥 CETAK KARCIS MASUK PANEL CENTER V6.0 🔥
+                            localStorage.setItem('panel_username', users[id].username); 
+                            localStorage.setItem('panel_role', users[id].role); 
+                            localStorage.setItem('panel_password', passIn); 
+                            
+                            localStorage.setItem('user_id_ptero', users[id].ptero_id || id); 
+                            
                             loginSukses = true; 
                             break; 
                         } 
@@ -238,13 +246,14 @@
                 }
                 
                 if (loginSukses) { 
-                    // PASANG CCTV DI SINI 🔥
+                    // REKAM LOG AKTIVITAS KE FIREBASE
                     database.ref('activity_logs').push({
                         username: userIn,
-                        role: localStorage.getItem('role') || 'Unknown',
+                        role: localStorage.getItem('panel_role') || 'Unknown',
                         action: "Melakukan Login ke dalam Panel.",
                         timestamp: Date.now()
                     }).then(() => {
+                        // BUKA PINTU KE DASHBOARD! 🚀
                         window.location.replace("index.html"); 
                     });
                 } else { 

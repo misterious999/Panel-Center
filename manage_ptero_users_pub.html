@@ -6,125 +6,107 @@
     <title>Kelola User Ptero (Public)</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        :root { --bg-color: #0f172a; --card-bg: #1e293b; --primary: #3b82f6; --success: #10b981; --danger: #ef4444; --warning: #f59e0b; --text-main: #f8fafc; --text-sub: #94a3b8; --input-bg: #0f172a; --border-color: rgba(255,255,255,0.1); }
-        body { font-family: 'Inter', sans-serif; padding: 20px; background-color: var(--bg-color); color: var(--text-main); margin: 0; }
+        :root { 
+            --bg-color: #0f172a; --card-bg: #1e293b; 
+            --primary: #0d9488; /* Teal 600 */
+            --primary-glow: rgba(13, 148, 136, 0.15);
+            --success: #10b981; --danger: #ef4444; --warning: #f59e0b; 
+            --text-main: #f8fafc; --text-sub: #94a3b8; 
+            --input-bg: #0f172a; --border-color: rgba(255,255,255,0.08); 
+        }
+        body { font-family: 'Inter', sans-serif; padding: 20px 5%; background-color: var(--bg-color); color: var(--text-main); margin: 0; max-width: 1200px; margin: auto; }
         
-        /* 🔥 UPGRADE TOMBOL KEMBALI 🔥 */
-        .btn-back { display: inline-flex; align-items: center; gap: 8px; margin-bottom: 25px; padding: 10px 18px; background: rgba(59, 130, 246, 0.1); color: var(--primary); text-decoration: none; border-radius: 10px; font-size: 14px; font-weight: 600; border: 1px solid rgba(59, 130, 246, 0.3); transition: 0.3s; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        .btn-back { display: inline-flex; align-items: center; gap: 8px; margin-bottom: 20px; padding: 10px 18px; background: var(--primary-glow); color: var(--primary); text-decoration: none; border-radius: 10px; font-size: 14px; font-weight: 600; border: 1px solid rgba(13, 148, 136, 0.3); transition: 0.3s; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
         .btn-back svg { width: 18px; height: 18px; fill: currentColor; transition: transform 0.3s; }
-        .btn-back:hover { background: var(--primary); color: white; box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4); transform: translateY(-2px); }
+        .btn-back:hover { background: var(--primary); color: white; box-shadow: 0 6px 20px var(--primary-glow); transform: translateY(-2px); }
         .btn-back:hover svg { transform: translateX(-4px); }
         
-        h2 { font-weight: 800; margin-bottom: 5px; color: var(--text-main); border-left: 4px solid var(--primary); padding-left: 12px; display: flex; align-items: center; gap: 10px; font-size: 22px; text-transform: uppercase; letter-spacing: 1px; }
-        h2 svg { width: 24px; height: 24px; fill: var(--primary); }
-        .sub-title { color: var(--text-sub); margin-bottom: 25px; font-size: 14px; line-height: 1.5; }
+        h2 { font-weight: 800; margin-bottom: 5px; color: var(--text-main); border-left: 4px solid var(--primary); padding-left: 12px; display: flex; align-items: center; gap: 10px; font-size: 20px; text-transform: uppercase; letter-spacing: 1px; }
+        h2 svg { width: 22px; height: 22px; fill: var(--primary); }
+        .sub-title { color: var(--text-sub); margin-bottom: 25px; font-size: 13px; line-height: 1.5; }
+                .box { background: var(--card-bg); padding: 25px; border-radius: 16px; border: 1px solid var(--border-color); margin-bottom: 25px; box-shadow: 0 8px 25px rgba(0,0,0,0.15); overflow-x: auto; }
+        .box-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid var(--border-color); padding-bottom: 12px; flex-wrap: wrap; gap: 10px; }
+        .box-header h3 { margin: 0; font-size: 15px; display: flex; align-items: center; gap: 8px; color: var(--text-main); text-transform: uppercase; letter-spacing: 0.5px; font-weight: 700; }
+        .box-header h3 svg { width: 18px; height: 18px; fill: var(--primary); }
         
-        .box { background: var(--card-bg); padding: 25px; border-radius: 16px; border: 1px solid var(--border-color); margin-bottom: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); overflow-x: auto; }
-        .box-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid var(--border-color); padding-bottom: 15px; flex-wrap: wrap; gap: 10px; }
-        .box-header h3 { margin: 0; font-size: 16px; display: flex; align-items: center; gap: 10px; color: var(--text-main); text-transform: uppercase; letter-spacing: 0.5px; font-weight: 700; }
-        .box-header h3 svg { width: 20px; height: 20px; fill: var(--primary); }
+        /* 🔥 FIX LDR: Jarak input dipepetin 🔥 */
+        label { display: block; margin-bottom: 6px; font-size: 11px; font-weight: 700; color: var(--text-sub); text-transform: uppercase; letter-spacing: 0.5px; }
+        input { width: 100%; padding: 12px 14px; margin-bottom: 0; background: var(--input-bg); border: 1px solid var(--border-color); border-radius: 10px; color: var(--text-main); font-size: 14px; box-sizing: border-box; outline: none; transition: 0.3s; font-family: 'Inter', sans-serif;}
+        input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-glow); background: rgba(15, 23, 42, 0.8); }
         
-        label { display: block; margin-bottom: 8px; font-size: 12px; font-weight: 600; color: var(--text-sub); text-transform: uppercase; letter-spacing: 0.5px; }
-        input { width: 100%; padding: 14px; margin-bottom: 15px; background: var(--input-bg); border: 1px solid var(--border-color); border-radius: 10px; color: var(--text-main); font-size: 14px; box-sizing: border-box; outline: none; transition: 0.3s; font-family: 'Inter', sans-serif;}
-        input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2); background: rgba(15, 23, 42, 0.8); }
-        .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
-        .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; }
+        .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin-bottom: 15px; }
+        .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 15px; } 
         
-        /* DROPDOWN CUSTOM DENGAN SVG */
-        .custom-select-wrapper { position: relative; user-select: none; margin-bottom: 20px; }
-        .custom-select-trigger { width: 100%; padding: 14px 15px; background: var(--input-bg); border: 1px solid var(--border-color); border-radius: 10px; color: var(--text-main); font-size: 14px; box-sizing: border-box; cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: 0.3s; font-weight: 500; }
-        .custom-select-trigger:hover, .custom-select-trigger.active { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2); }
+        .custom-select-wrapper { position: relative; user-select: none; margin-bottom: 15px; }
+        .custom-select-trigger { width: 100%; padding: 12px 14px; background: var(--input-bg); border: 1px solid var(--border-color); border-radius: 10px; color: var(--text-main); font-size: 14px; box-sizing: border-box; cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: 0.3s; font-weight: 500; }
+        .custom-select-trigger:hover, .custom-select-trigger.active { border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-glow); }
         .custom-select-trigger svg { width: 16px; height: 16px; fill: var(--text-sub); transition: transform 0.3s ease; }
         .custom-select-trigger.active svg { transform: rotate(180deg); fill: var(--primary); }
         
         .custom-options { position: absolute; display: none; top: calc(100% + 5px); left: 0; right: 0; background: var(--card-bg); border: 1px solid var(--primary); border-radius: 10px; box-shadow: 0 15px 35px rgba(0,0,0,0.5); z-index: 99; overflow: hidden; animation: fadeIn 0.2s ease; }
         .custom-options.open { display: block; }
-        .custom-option { padding: 14px 15px; font-size: 14px; color: var(--text-main); cursor: pointer; transition: 0.2s; border-bottom: 1px solid var(--border-color); display: flex; align-items: center; gap: 10px; }
-        .custom-option svg { width: 18px; height: 18px; fill: var(--text-sub); }
+        .custom-option { padding: 12px 14px; font-size: 13px; color: var(--text-main); cursor: pointer; transition: 0.2s; border-bottom: 1px solid var(--border-color); display: flex; align-items: center; gap: 8px; }
+        .custom-option svg { width: 16px; height: 16px; fill: var(--text-sub); transition: 0.2s; }
         .custom-option:last-child { border-bottom: none; }
-        .custom-option:hover, .custom-option.selected { background: rgba(59, 130, 246, 0.15); color: var(--primary); padding-left: 20px; font-weight: 600; }
+        .custom-option:hover, .custom-option.selected { background: var(--primary-glow); color: var(--primary); padding-left: 20px; font-weight: 600; }
         .custom-option:hover svg, .custom-option.selected svg { fill: var(--primary); }
 
-        .btn-tambah { width: 100%; background: linear-gradient(135deg, var(--primary), #00f2fe); color: white; border: none; cursor: pointer; border-radius: 10px; padding: 15px; font-weight: 700; transition: 0.3s; margin-top: 5px; font-size: 15px; text-transform: uppercase; letter-spacing: 1px; display: flex; justify-content: center; align-items: center; gap: 8px; box-shadow: 0 5px 15px rgba(59, 130, 246, 0.4); }
-        .btn-tambah svg { width: 20px; height: 20px; fill: currentColor; }
-        .btn-tambah:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(59, 130, 246, 0.6); }
+        .btn-tambah { width: 100%; background: linear-gradient(135deg, var(--primary), #059669); color: white; border: none; cursor: pointer; border-radius: 10px; padding: 14px; font-weight: 700; transition: 0.3s; margin-top: 5px; font-size: 14px; text-transform: uppercase; letter-spacing: 1px; display: flex; justify-content: center; align-items: center; gap: 8px; box-shadow: 0 4px 15px var(--primary-glow); }
+        .btn-tambah svg { width: 18px; height: 18px; fill: currentColor; }
+        .btn-tambah:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(13, 148, 136, 0.4); }
         
-        .btn-sapu { background: rgba(245, 158, 11, 0.1); color: var(--warning); border: 1px solid rgba(245, 158, 11, 0.3); cursor: pointer; border-radius: 8px; padding: 10px 15px; font-weight: 600; transition: 0.3s; font-size: 13px; display: inline-flex; align-items: center; gap: 6px; }
-        .btn-sapu svg { width: 16px; height: 16px; fill: currentColor; }
-        .btn-sapu:hover { background: var(--warning); color: white; box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4); }
+        .btn-sapu { background: rgba(245, 158, 11, 0.1); color: var(--warning); border: 1px solid rgba(245, 158, 11, 0.3); cursor: pointer; border-radius: 8px; padding: 8px 14px; font-weight: 600; transition: 0.3s; font-size: 12px; display: inline-flex; align-items: center; gap: 6px; }
+        .btn-sapu svg { width: 14px; height: 14px; fill: currentColor; }
+        .btn-sapu:hover { background: var(--warning); color: white; box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4); transform: translateY(-2px); }
+                .search-container { position: relative; margin-bottom: 20px; }
+        .search-container svg { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); width: 16px; height: 16px; fill: var(--text-sub); }
+        .search-container input { padding-left: 40px; margin-bottom: 0; background: rgba(0,0,0,0.15); border-color: rgba(13, 148, 136, 0.3); }
+        .search-container input:focus { background: var(--input-bg); border-color: var(--primary); }
 
         table { width: 100%; border-collapse: collapse; min-width: 600px; margin-top: 10px; }
-        th, td { padding: 15px; text-align: left; border-bottom: 1px solid var(--border-color); font-size: 14px; }
-        th { background: rgba(0,0,0,0.2); color: var(--text-sub); font-weight: 700; text-transform: uppercase; font-size: 12px; letter-spacing: 1px; white-space: nowrap; }
+        th, td { padding: 14px; text-align: left; border-bottom: 1px solid var(--border-color); font-size: 13px; }
+        th { background: rgba(0,0,0,0.15); color: var(--text-sub); font-weight: 700; text-transform: uppercase; font-size: 11px; letter-spacing: 1px; white-space: nowrap; border-radius: 8px 8px 0 0;}
         tr:hover { background: rgba(255,255,255,0.03); }
         
-        .btn-hapus { background: rgba(239, 68, 68, 0.1); color: var(--danger); border: 1px solid rgba(239, 68, 68, 0.3); cursor: pointer; border-radius: 8px; padding: 8px 15px; font-weight: 600; font-size: 13px; transition: 0.3s; white-space: nowrap; display: inline-flex; align-items: center; gap: 6px; }
-        .btn-hapus svg { width: 16px; height: 16px; fill: currentColor; }
-        .btn-hapus:hover { background: var(--danger); color: white; box-shadow: 0 5px 15px rgba(239, 68, 68, 0.4); border-color: var(--danger); }
+        .btn-hapus { background: rgba(239, 68, 68, 0.1); color: var(--danger); border: 1px solid rgba(239, 68, 68, 0.3); cursor: pointer; border-radius: 8px; padding: 8px 12px; font-weight: 600; font-size: 12px; transition: 0.3s; white-space: nowrap; display: inline-flex; align-items: center; gap: 6px; }
+        .btn-hapus svg { width: 14px; height: 14px; fill: currentColor; }
+        .btn-hapus:hover { background: var(--danger); color: white; box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3); border-color: var(--danger); transform: scale(1.05); }
         
-        .badge { padding: 6px 12px; border-radius: 8px; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; }
-        .badge svg { width: 14px; height: 14px; fill: currentColor; }
+        .badge { padding: 6px 12px; border-radius: 8px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; }
+        .badge svg { width: 12px; height: 12px; fill: currentColor; }
         .badge-admin { background: rgba(245, 158, 11, 0.15); color: var(--warning); border: 1px solid rgba(245, 158, 11, 0.3); }
-        .badge-user { background: rgba(59, 130, 246, 0.15); color: var(--primary); border: 1px solid rgba(59, 130, 246, 0.3); }
-        .reseller-tag { font-size: 11px; color: var(--primary); background: rgba(59,130,246,0.1); padding: 4px 8px; border-radius: 6px; display: inline-block; margin-top: 6px; font-weight: 600;}
+        .badge-user { background: var(--primary-glow); color: var(--primary); border: 1px solid rgba(13, 148, 136, 0.3); }
+        .reseller-tag { font-size: 10px; color: var(--primary); background: var(--primary-glow); padding: 4px 8px; border-radius: 6px; display: inline-block; margin-top: 6px; font-weight: 600; border: 1px solid rgba(13, 148, 136, 0.2);}
 
-        /* SEARCH INPUT CUSTOM */
-        .search-container { position: relative; margin-bottom: 20px; }
-        .search-container svg { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); width: 18px; height: 18px; fill: var(--text-sub); }
-        .search-container input { padding-left: 45px; margin-bottom: 0; border-color: rgba(59, 130, 246, 0.4); box-shadow: 0 0 10px rgba(0,0,0,0.2); background: rgba(0,0,0,0.2); }
-        .search-container input:focus { background: var(--input-bg); }
-                /* =========================================
-           STYLE POP-UP GAYA MINI AI (GLOBAL)
-           ========================================= */
+        /* MODALS */
         .mini-ai-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(8px); z-index: 9999; justify-content: center; align-items: center; padding: 20px; box-sizing: border-box; animation: fadeInPop 0.3s ease; }
-        .mini-ai-popup { background: var(--card-bg); border-radius: 20px; width: 100%; max-width: 420px; padding: 30px; text-align: center; color: var(--text-main); position: relative; box-shadow: 0 25px 50px rgba(0,0,0,0.6); border: 1px solid var(--border-color); }
+        .mini-ai-popup { background: var(--card-bg); border-radius: 20px; width: 100%; max-width: 380px; padding: 30px 25px; text-align: center; color: var(--text-main); position: relative; box-shadow: 0 20px 40px rgba(0,0,0,0.6); border: 1px solid var(--border-color); }
         
-        .modal-icon-top { width: 60px; height: 60px; margin: 0 auto 20px auto; display: flex; align-items: center; justify-content: center; border-radius: 50%; }
-        .modal-icon-top svg { width: 30px; height: 30px; }
+        .modal-icon-top { width: 50px; height: 50px; margin: 0 auto 15px auto; display: flex; align-items: center; justify-content: center; border-radius: 50%; }
+        .modal-icon-top svg { width: 24px; height: 24px; }
         
-        .mode-danger .modal-icon-top { background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3); box-shadow: 0 0 20px rgba(239, 68, 68, 0.2); }
-        .mode-danger .modal-icon-top svg { fill: var(--danger); }
-        .mode-danger .mini-ai-header { color: var(--danger); }
-        
-        .mode-success .modal-icon-top { background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3); box-shadow: 0 0 20px rgba(16, 185, 129, 0.2); }
-        .mode-success .modal-icon-top svg { fill: var(--success); }
-        .mode-success .mini-ai-header { color: var(--success); }
-        
-        .mode-warning .modal-icon-top { background: rgba(245, 158, 11, 0.1); border: 1px solid rgba(245, 158, 11, 0.3); box-shadow: 0 0 20px rgba(245, 158, 11, 0.2); }
-        .mode-warning .modal-icon-top svg { fill: var(--warning); }
-        .mode-warning .mini-ai-header { color: var(--warning); }
-        
-        .mode-info .modal-icon-top { background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.3); box-shadow: 0 0 20px rgba(59, 130, 246, 0.2); }
-        .mode-info .modal-icon-top svg { fill: var(--primary); }
-        .mode-info .mini-ai-header { color: var(--primary); }
+        .mode-danger .modal-icon-top { background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3); } .mode-danger .modal-icon-top svg { fill: var(--danger); } .mode-danger .mini-ai-header { color: var(--danger); }
+        .mode-success .modal-icon-top { background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3); } .mode-success .modal-icon-top svg { fill: var(--success); } .mode-success .mini-ai-header { color: var(--success); }
+        .mode-warning .modal-icon-top { background: rgba(245, 158, 11, 0.1); border: 1px solid rgba(245, 158, 11, 0.3); } .mode-warning .modal-icon-top svg { fill: var(--warning); } .mode-warning .mini-ai-header { color: var(--warning); }
+        .mode-info .modal-icon-top { background: var(--primary-glow); border: 1px solid rgba(13, 148, 136, 0.3); } .mode-info .modal-icon-top svg { fill: var(--primary); } .mode-info .mini-ai-header { color: var(--primary); }
 
-        .mini-ai-header { font-size: 20px; font-weight: 800; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px; }
-        .mini-ai-body { font-size: 14px; color: var(--text-sub); line-height: 1.6; margin-bottom: 25px; }
+        .mini-ai-header { font-size: 18px; font-weight: 800; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px; }
+        .mini-ai-body { font-size: 13px; color: var(--text-sub); line-height: 1.5; margin-bottom: 20px; }
         
-        .info-detail-ai { background: rgba(0, 0, 0, 0.2); border: 1px solid var(--border-color); border-radius: 12px; padding: 20px; text-align: left; margin-bottom: 25px; }
-        .detail-row { margin-bottom: 15px; padding-bottom: 15px; border-bottom: 1px dashed rgba(255,255,255,0.1); }
+        .info-detail-ai { background: rgba(0, 0, 0, 0.2); border: 1px solid var(--border-color); border-radius: 12px; padding: 15px; text-align: left; margin-bottom: 20px; }
+        .detail-row { margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px dashed rgba(255,255,255,0.05); }
         .detail-row:last-child { margin-bottom: 0; padding-bottom: 0; border-bottom: none; }
-        .detail-label { font-size: 11px; color: var(--text-sub); text-transform: uppercase; font-weight: 700; letter-spacing: 1px; margin-bottom: 5px; display: flex; align-items: center; gap: 5px; }
-        .detail-label svg { width: 14px; height: 14px; fill: var(--text-sub); }
+        .detail-label { font-size: 10px; color: var(--text-sub); text-transform: uppercase; font-weight: 700; letter-spacing: 1px; margin-bottom: 4px; display: flex; align-items: center; gap: 5px; }
+        .detail-label svg { width: 12px; height: 12px; fill: var(--text-sub); }
         .detail-value { font-size: 14px; font-weight: 600; color: var(--text-main); word-break: break-all; }
         .value-highlight { color: var(--primary); }
-        .value-pass { color: var(--warning); }
         
-        .ai-btn-group { display: flex; gap: 12px; }
-        .mini-ai-btn { flex: 1; border: none; padding: 14px; font-weight: 700; font-size: 14px; border-radius: 10px; cursor: pointer; transition: 0.3s; text-transform: uppercase; letter-spacing: 0.5px; display: flex; align-items: center; justify-content: center; gap: 8px; }
-        .mini-ai-btn svg { width: 18px; height: 18px; fill: currentColor; }
-        
-        .btn-primary-action { background: var(--primary); color: white; box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3); }
-        .btn-primary-action:hover { background: var(--primary-hover); transform: translateY(-2px); box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4); }
-        
-        .btn-danger-action { background: var(--danger); color: white; box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3); }
-        .btn-danger-action:hover { background: #dc2626; transform: translateY(-2px); box-shadow: 0 6px 20px rgba(239, 68, 68, 0.4); }
-        
-        .btn-warning-action { background: var(--warning); color: white; box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3); }
-        .btn-warning-action:hover { background: #d97706; transform: translateY(-2px); box-shadow: 0 6px 20px rgba(245, 158, 11, 0.4); }
-
-        .btn-outline-action { background: rgba(255,255,255,0.05); border: 1px solid var(--border-color); color: var(--text-main); }
-        .btn-outline-action:hover { background: rgba(255,255,255,0.1); }
+        .ai-btn-group { display: flex; gap: 10px; }
+        .mini-ai-btn { flex: 1; border: none; padding: 12px; font-weight: 700; font-size: 12px; border-radius: 10px; cursor: pointer; transition: 0.3s; text-transform: uppercase; letter-spacing: 0.5px; display: flex; justify-content: center; align-items: center; gap: 6px;}
+        .btn-primary-action { background: var(--primary); color: white; } .btn-primary-action:hover { background: #0f766e; transform: translateY(-2px); }
+        .btn-danger-action { background: var(--danger); color: white; } .btn-danger-action:hover { background: #dc2626; transform: translateY(-2px); }
+        .btn-warning-action { background: var(--warning); color: white; } .btn-warning-action:hover { background: #d97706; transform: translateY(-2px); }
+        .btn-outline-action { background: rgba(255,255,255,0.03); border: 1px solid var(--border-color); color: var(--text-sub); } .btn-outline-action:hover { background: rgba(255,255,255,0.08); color: var(--text-main); }
 
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         @keyframes fadeInPop { from { opacity: 0; transform: scale(0.95) translateY(10px); } to { opacity: 1; transform: scale(1) translateY(0); } }
@@ -145,10 +127,7 @@
 
     <div class="box">
         <div class="box-header">
-            <h3>
-                <svg viewBox="0 0 24 24"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM14 13v4h-4v-4H7l5-5 5 5h-3z"/></svg>
-                Auto-Deploy 1 Paket (User + Server)
-            </h3>
+            <h3><svg viewBox="0 0 24 24"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM14 13v4h-4v-4H7l5-5 5 5h-3z"/></svg> Auto-Deploy 1 Paket (User + Server)</h3>
         </div>
         <div class="grid-2">
             <div><label>Username Panel</label><input type="text" id="newUsername" placeholder="Tanpa spasi..." autocomplete="off"></div>
@@ -158,6 +137,7 @@
             <div><label>Email Aktif</label><input type="email" id="newEmail" placeholder="user@gmail.com" autocomplete="off"></div>
             <div><label>Nama Server Bot</label><input type="text" id="newServerName" placeholder="Contoh: Bot Public VIP" autocomplete="off"></div>
         </div>
+        
         <div class="grid-3">
             <div><label>RAM (MB)</label><input type="number" id="newRam" value="2000"></div>
             <div><label>CPU (%)</label><input type="number" id="newCpu" value="60"></div>
@@ -165,7 +145,7 @@
         </div>
         
         <div class="grid-2" style="display: none;">
-            <input type="number" id="newLocId" value="1"> 
+            <input type="number" id="newLocId" value="2"> 
             <input type="number" id="newEggId" value="15">
         </div>
         
@@ -173,10 +153,8 @@
             <label>Tipe Akun (Pterodactyl Role)</label>
             <div class="custom-select-wrapper">
                 <div class="custom-select-trigger" onclick="toggleRoleSelect()">
-                    <span id="customSelectText">
-                        <svg viewBox="0 0 24 24" style="width:16px;height:16px;margin-right:8px;fill:currentColor;vertical-align:middle;"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg> Member Biasa
-                    </span>
-                    <svg viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>
+                    <span id="customSelectText"><svg viewBox="0 0 24 24" style="width:14px;margin-right:6px;vertical-align:middle;fill:currentColor;"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg> Member Biasa</span>
+                    <svg viewBox="0 0 24 24" class="arrow"><path d="M7 10l5 5 5-5z"/></svg>
                 </div>
                 <div class="custom-options" id="customRoleOptions">
                     <div class="custom-option selected" onclick="pilihRole('false', 'Member Biasa')">
@@ -198,14 +176,8 @@
 
     <div class="box">
         <div class="box-header">
-            <h3>
-                <svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
-                Semua User Pelanggan <span id="textDaftar"></span>
-            </h3>
-            <button class="btn-sapu" id="btnSapu" onclick="konfirmasiSapuAwal()">
-                <svg viewBox="0 0 24 24"><path d="M19.36 2.72L20.78 4.14L15.06 9.85C16.13 11.39 16.28 13.24 15.38 14.44L9.06 8.12C10.26 7.22 12.11 7.37 13.65 8.44L19.36 2.72M5.93 17.57C3.92 15.56 2.69 13.16 2.35 10.92L7.23 15.8L5.93 17.57M11.66 11.33L10.33 10L3 17.33L4.33 18.66L11.66 11.33M20.65 19.3L15.3 14C15.65 16.24 14.41 18.65 12.4 20.65L20.65 19.3Z" /></svg>
-                Bersihkan User Tanpa Server
-            </button>
+            <h3><svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg> Semua User Pelanggan <span id="textDaftar"></span></h3>
+            <button class="btn-sapu" id="btnSapu" onclick="konfirmasiSapuAwal()"><svg viewBox="0 0 24 24"><path d="M19.36 2.72L20.78 4.14L15.06 9.85C16.13 11.39 16.28 13.24 15.38 14.44L9.06 8.12C10.26 7.22 12.11 7.37 13.65 8.44L19.36 2.72M5.93 17.57C3.92 15.56 2.69 13.16 2.35 10.92L7.23 15.8L5.93 17.57M11.66 11.33L10.33 10L3 17.33L4.33 18.66L11.66 11.33M20.65 19.3L15.3 14C15.65 16.24 14.41 18.65 12.4 20.65L20.65 19.3Z" /></svg> Bersihkan User Tanpa Server</button>
         </div>
         <div class="search-container">
             <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
@@ -213,108 +185,38 @@
         </div>
         <table id="tabelPtero">
             <tr><th>ID</th><th>Username</th><th>Email</th><th>Status</th><th>Aksi</th></tr>
-            <tr><td colspan="5" style="text-align: center; color: var(--text-sub); padding: 30px;">
-                <svg viewBox="0 0 24 24" style="width: 24px; height: 24px; fill: var(--text-sub); animation: spin 1s linear infinite; margin-bottom: 10px;"><path d="M12 4V2C6.48 2 2 6.48 2 12h2c0-4.41 3.59-8 8-8zm0 16c-4.41 0-8-3.59-8-8H2c0 5.52 4.48 10 10 10v-2zM22 12c0-5.52-4.48-10-10-10v2c4.41 0 8 3.59 8 8h-2l3 3 3-3h-2z"/></svg>
-                <br>Mengambil data...
-            </td></tr>
+            <tr><td colspan="5" style="text-align: center; color: var(--text-sub); padding: 30px;"><svg viewBox="0 0 24 24" style="width: 24px; height: 24px; fill: var(--text-sub); animation: spin 1s linear infinite; margin-bottom: 10px;"><path d="M12 4V2C6.48 2 2 6.48 2 12h2c0-4.41 3.59-8 8-8zm0 16c-4.41 0-8-3.59-8-8H2c0 5.52 4.48 10 10 10v-2zM22 12c0-5.52-4.48-10-10-10v2c4.41 0 8 3.59 8 8h-2l3 3 3-3h-2z"/></svg><br>Mengambil data...</td></tr>
         </table>
     </div>
-        <div id="modalScreenshot" class="mini-ai-overlay">
+
+    <div id="modalScreenshot" class="mini-ai-overlay">
         <div class="mini-ai-popup mode-info">
-            <div class="modal-icon-top">
-                <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
-            </div>
+            <div class="modal-icon-top"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg></div>
             <div class="mini-ai-header">PUBLIC ACCESS DIBUAT</div>
-            <p style="margin-bottom: 20px; color: var(--text-sub); font-size: 13px;">Proses 1 Paket berhasil. Detail akun telah tersimpan di sistem.</p>
+            <p style="margin-bottom: 15px; color: var(--text-sub); font-size: 12px;">Proses 1 Paket berhasil. Detail akun telah tersimpan di sistem.</p>
             <div class="info-detail-ai">
-                <div class="detail-row">
-                    <div class="detail-label"><svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg> Detail Akun</div>
-                    <div class="detail-value">User: <span id="resUser" class="value-highlight"></span></div>
-                    <div class="detail-value">Pass: <span id="resPass" class="value-pass"></span></div>
-                </div>
-                <div class="detail-row">
-                    <div class="detail-label"><svg viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zm6.93 6h-2.95c-.32-1.25-.78-2.45-1.38-3.56 1.84.63 3.37 1.91 4.33 3.56zM12 4.04c.83 1.2 1.48 2.53 1.91 3.96h-3.82c.43-1.43 1.08-2.76 1.91-3.96z"/></svg> Akses Panel</div>
-                    <div class="detail-value"><a id="resLink" href="#" target="_blank" style="color: var(--primary); text-decoration: none;"></a></div>
-                </div>
-                <div class="detail-row" style="border: none; padding: 0;">
-                    <div class="detail-label"><svg viewBox="0 0 24 24"><path d="M4 5v4h16V5H4zm0 14h16v-4H4v4zm0-7h16v-4H4v4z"/></svg> Spesifikasi Server</div>
-                    <div class="detail-value">Server: <span id="resServer" style="color: var(--success);"></span></div>
-                </div>
+                <div class="detail-row"><div class="detail-label"><svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg> Detail Akun</div><div class="detail-value">User: <span id="resUser" class="value-highlight"></span></div><div class="detail-value">Pass: <span id="resPass" style="color:var(--warning);"></span></div></div>
+                <div class="detail-row"><div class="detail-label"><svg viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zm6.93 6h-2.95c-.32-1.25-.78-2.45-1.38-3.56 1.84.63 3.37 1.91 4.33 3.56zM12 4.04c.83 1.2 1.48 2.53 1.91 3.96h-3.82c.43-1.43 1.08-2.76 1.91-3.96z"/></svg> Akses Panel</div><div class="detail-value"><a id="resLink" href="#" target="_blank" style="color: var(--primary); text-decoration: none;"></a></div></div>
+                <div class="detail-row" style="border: none; padding: 0;"><div class="detail-label"><svg viewBox="0 0 24 24"><path d="M4 5v4h16V5H4zm0 14h16v-4H4v4zm0-7h16v-4H4v4z"/></svg> Spesifikasi Server</div><div class="detail-value">Server: <span id="resServer" style="color: var(--success);"></span></div></div>
             </div>
-            <div class="ai-btn-group">
-                <button class="mini-ai-btn btn-primary-action" onclick="salinDataBuyer()" id="btnSalin">
-                    <svg viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
-                    Salin Teks
-                </button>
-                <button class="mini-ai-btn btn-outline-action" onclick="tutupModal('modalScreenshot')">Tutup</button>
-            </div>
+            <div class="ai-btn-group"><button class="mini-ai-btn btn-primary-action" onclick="salinDataBuyer()" id="btnSalin"><svg viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg> Salin Teks</button><button class="mini-ai-btn btn-outline-action" onclick="tutupModal('modalScreenshot')">Tutup</button></div>
         </div>
     </div>
 
-    <div id="modalHapusConfirm" class="mini-ai-overlay">
-        <div class="mini-ai-popup mode-danger">
-            <div class="modal-icon-top"><svg viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg></div>
-            <div class="mini-ai-header">Hapus User & Server</div>
-            <div class="mini-ai-body">
-                Yakin ingin menghapus user <b style="color: var(--danger);" id="delUsername"></b> beserta <b>SEMUA SERVER</b> miliknya?<br><br>
-                Data yang dihapus <u>tidak bisa dikembalikan</u>!
-            </div>
-            <div class="ai-btn-group">
-                <button id="btnKonfirmasiHapus" class="mini-ai-btn btn-danger-action" onclick="prosesHapusUser()">Hapus Permanen</button>
-                <button class="mini-ai-btn btn-outline-action" onclick="tutupModal('modalHapusConfirm')">Batal</button>
-            </div>
-        </div>
-    </div>
-
-    <div id="modalSapuConfirm" class="mini-ai-overlay">
-        <div class="mini-ai-popup mode-warning">
-            <div class="modal-icon-top"><svg viewBox="0 0 24 24"><path d="M19.36 2.72L20.78 4.14L15.06 9.85C16.13 11.39 16.28 13.24 15.38 14.44L9.06 8.12C10.26 7.22 12.11 7.37 13.65 8.44L19.36 2.72M5.93 17.57C3.92 15.56 2.69 13.16 2.35 10.92L7.23 15.8L5.93 17.57M11.66 11.33L10.33 10L3 17.33L4.33 18.66L11.66 11.33M20.65 19.3L15.3 14C15.65 16.24 14.41 18.65 12.4 20.65L20.65 19.3Z" /></svg></div>
-            <div class="mini-ai-header">Sapu Bersih</div>
-            <div class="mini-ai-body" id="sapuConfirmBody"></div>
-            <div class="ai-btn-group">
-                <button id="btnEksekusiSapu" class="mini-ai-btn btn-warning-action" onclick="eksekusiSapuBersih()">Lanjutkan Eksekusi</button>
-                <button class="mini-ai-btn btn-outline-action" onclick="tutupModal('modalSapuConfirm')">Batal</button>
-            </div>
-        </div>
-    </div>
-
-    <div id="modalAiAlert" class="mini-ai-overlay" style="z-index: 999999;">
-        <div class="mini-ai-popup mode-warning">
-            <div class="modal-icon-top"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg></div>
-            <div class="mini-ai-header" id="aiAlertTitle">PERHATIAN</div>
-            <div class="mini-ai-body" id="aiAlertBody">Pesan peringatan di sini.</div>
-            <div class="ai-btn-group">
-                <button class="mini-ai-btn btn-primary-action" style="background: var(--warning);" onclick="tutupModal('modalAiAlert')">Mengerti</button>
-            </div>
-        </div>
-    </div>
-
-    <div id="modalAiSuccess" class="mini-ai-overlay" style="z-index: 999999;">
-        <div class="mini-ai-popup mode-success" id="popupSuccessMode">
-            <div class="modal-icon-top" id="iconSuccessMode"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg></div>
-            <div class="mini-ai-header" id="aiSuccessTitle">BERHASIL</div>
-            <div class="mini-ai-body" id="aiSuccessBody">Proses sukses dilakukan.</div>
-            <div class="ai-btn-group">
-                <button class="mini-ai-btn btn-primary-action" id="btnTutupSuccess" style="background: var(--success);" onclick="tutupModal('modalAiSuccess')">Tutup</button>
-            </div>
-        </div>
-    </div>
+    <div id="modalHapusConfirm" class="mini-ai-overlay"><div class="mini-ai-popup mode-danger"><div class="modal-icon-top"><svg viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg></div><div class="mini-ai-header">Hapus User & Server</div><div class="mini-ai-body">Yakin ingin menghapus user <b style="color: var(--danger);" id="delUsername"></b> beserta <b>SEMUA SERVER</b> miliknya?<br><br>Data yang dihapus <u>tidak bisa dikembalikan</u>!</div><div class="ai-btn-group"><button id="btnKonfirmasiHapus" class="mini-ai-btn btn-danger-action" onclick="prosesHapusUser()">Hapus Permanen</button><button class="mini-ai-btn btn-outline-action" onclick="tutupModal('modalHapusConfirm')">Batal</button></div></div></div>
+    <div id="modalSapuConfirm" class="mini-ai-overlay"><div class="mini-ai-popup mode-warning"><div class="modal-icon-top"><svg viewBox="0 0 24 24"><path d="M19.36 2.72L20.78 4.14L15.06 9.85C16.13 11.39 16.28 13.24 15.38 14.44L9.06 8.12C10.26 7.22 12.11 7.37 13.65 8.44L19.36 2.72M5.93 17.57C3.92 15.56 2.69 13.16 2.35 10.92L7.23 15.8L5.93 17.57M11.66 11.33L10.33 10L3 17.33L4.33 18.66L11.66 11.33M20.65 19.3L15.3 14C15.65 16.24 14.41 18.65 12.4 20.65L20.65 19.3Z" /></svg></div><div class="mini-ai-header">Sapu Bersih</div><div class="mini-ai-body" id="sapuConfirmBody"></div><div class="ai-btn-group"><button id="btnEksekusiSapu" class="mini-ai-btn btn-warning-action" onclick="eksekusiSapuBersih()">Lanjutkan Eksekusi</button><button class="mini-ai-btn btn-outline-action" onclick="tutupModal('modalSapuConfirm')">Batal</button></div></div></div>
+    <div id="modalAiAlert" class="mini-ai-overlay" style="z-index: 999999;"><div class="mini-ai-popup mode-warning"><div class="modal-icon-top"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg></div><div class="mini-ai-header" id="aiAlertTitle">PERHATIAN</div><div class="mini-ai-body" id="aiAlertBody">Pesan peringatan di sini.</div><div class="ai-btn-group"><button class="mini-ai-btn btn-primary-action" style="background: var(--warning);" onclick="tutupModal('modalAiAlert')">Mengerti</button></div></div></div>
+    <div id="modalAiSuccess" class="mini-ai-overlay" style="z-index: 999999;"><div class="mini-ai-popup mode-success" id="popupSuccessMode"><div class="modal-icon-top" id="iconSuccessMode"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg></div><div class="mini-ai-header" id="aiSuccessTitle">BERHASIL</div><div class="mini-ai-body" id="aiSuccessBody">Proses sukses dilakukan.</div><div class="ai-btn-group"><button class="mini-ai-btn btn-primary-action" id="btnTutupSuccess" style="background: var(--success);" onclick="tutupModal('modalAiSuccess')">Tutup</button></div></div></div>
         <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
     <script>
-        // ==========================================
-        // INISIALISASI & KEAMANAN AWAL (PUBLIC)
-        // ==========================================
         const currentUserId = localStorage.getItem('user_id');
         const role = localStorage.getItem('role') || '';
         const myUsername = localStorage.getItem('username') || 'Unknown'; 
         
         const allowedRoles = ['pemilik', 'reseller_public', 'partner_public', 'demo'];
-
-        if (!currentUserId || !allowedRoles.includes(role)) {
-            window.location.replace("index.html");
-        }
+        if (!currentUserId || !allowedRoles.includes(role)) { window.location.replace("index.html"); }
         
         if (role === 'pemilik' || role === 'partner_public') {
             document.getElementById('roleContainer').style.display = 'block';
@@ -331,289 +233,149 @@
         if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
 
-        // 🔥 LOGIKA HEARTBEAT ONLINE 🔥
-        if (currentUserId) {
-            const userStatusRef = database.ref('users/' + currentUserId + '/isOnline');
-            userStatusRef.set(true);
-            userStatusRef.onDisconnect().set(false);
-        }
+        if (currentUserId) { database.ref('users/' + currentUserId + '/isOnline').set(true); database.ref('users/' + currentUserId + '/isOnline').onDisconnect().set(false); }
 
-        // 🔥 DOMAIN PUBLIC BARU 🔥
+        // 🔥 API & DOMAIN BARU (TERUPDATE) 🔥
+        const WORKER_URL = "https://restless-truth-9b75.amisterious09.workers.dev"; 
         const PTERO_DOMAIN = "publikzero.bypstar7.web.id"; 
         const PTERO_API = "ptla_YTtzIHJr2S10NFRokBa3SQHHwM5NJrrXLnlSc2JibUv"; 
-        const WORKER_URL = "https://restless-truth-9b75.amisterious09.workers.dev"; 
 
         const spinnerSvg = `<svg viewBox="0 0 24 24" style="animation: spin 1s linear infinite; width:16px; height:16px; fill:currentColor;"><path d="M12 4V2C6.48 2 2 6.48 2 12h2c0-4.41 3.59-8 8-8zm0 16c-4.41 0-8-3.59-8-8H2c0 5.52 4.48 10 10 10v-2zM22 12c0-5.52-4.48-10-10-10v2c4.41 0 8 3.59 8 8h-2l3 3 3-3h-2z"/></svg>`;
 
         function tutupModal(id) { document.getElementById(id).style.display = 'none'; }
-        
-        function showAiAlert(pesan, judul = "PERHATIAN") {
-            document.getElementById('aiAlertTitle').innerText = judul;
-            document.getElementById('aiAlertBody').innerHTML = pesan;
-            document.getElementById('modalAiAlert').style.display = 'flex';
-        }
-
-        function showAiSuccess(pesan, judul = "BERHASIL", isDanger = false) {
-            document.getElementById('aiSuccessTitle').innerText = judul;
-            document.getElementById('aiSuccessBody').innerHTML = pesan;
-            
-            let popup = document.getElementById('popupSuccessMode');
-            let iconBox = document.getElementById('iconSuccessMode');
-            let btn = document.getElementById('btnTutupSuccess');
-
-            if(isDanger) {
-                popup.className = "mini-ai-popup mode-danger";
-                iconBox.innerHTML = `<svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>`;
-                btn.style.background = "var(--danger)";
-            } else {
-                popup.className = "mini-ai-popup mode-success";
-                iconBox.innerHTML = `<svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>`;
-                btn.style.background = "var(--success)";
-            }
+        function showAiAlert(p, j = "PERHATIAN") { document.getElementById('aiAlertTitle').innerText = j; document.getElementById('aiAlertBody').innerHTML = p; document.getElementById('modalAiAlert').style.display = 'flex'; }
+        function showAiSuccess(p, j = "BERHASIL", isDanger = false) {
+            document.getElementById('aiSuccessTitle').innerText = j; document.getElementById('aiSuccessBody').innerHTML = p;
+            let popup = document.getElementById('popupSuccessMode'); let iconBox = document.getElementById('iconSuccessMode'); let btn = document.getElementById('btnTutupSuccess');
+            if(isDanger) { popup.className = "mini-ai-popup mode-danger"; iconBox.innerHTML = `<svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>`; btn.style.background = "var(--danger)"; } 
+            else { popup.className = "mini-ai-popup mode-success"; iconBox.innerHTML = `<svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>`; btn.style.background = "var(--success)"; }
             document.getElementById('modalAiSuccess').style.display = 'flex';
         }
 
-        function toggleRoleSelect() {
-            document.getElementById('customRoleOptions').classList.toggle('open');
-            document.querySelector('.custom-select-trigger').classList.toggle('active');
-        }
-
+        function toggleRoleSelect() { document.getElementById('customRoleOptions').classList.toggle('open'); document.querySelector('.custom-select-trigger').classList.toggle('active'); }
         function pilihRole(value, text) {
             document.getElementById('newRole').value = value;
-            document.getElementById('customSelectText').innerHTML = `<svg viewBox="0 0 24 24" style="width:16px;height:16px;margin-right:8px;fill:currentColor;vertical-align:middle;"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>` + text;
-            let options = document.querySelectorAll('.custom-option');
-            options.forEach(opt => opt.classList.remove('selected'));
-            event.target.classList.add('selected');
+            let icon = value === 'true' ? `<svg viewBox="0 0 24 24" style="width:14px;margin-right:6px;vertical-align:middle;fill:currentColor;"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z"/></svg>` : `<svg viewBox="0 0 24 24" style="width:14px;margin-right:6px;vertical-align:middle;fill:currentColor;"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>`;
+            document.getElementById('customSelectText').innerHTML = icon + text;
+            let options = document.querySelectorAll('.custom-option'); options.forEach(opt => opt.classList.remove('selected')); event.target.classList.add('selected');
             toggleRoleSelect();
         }
-
-        document.addEventListener('click', function(e) {
-            const select = document.querySelector('.custom-select-wrapper');
-            if (select && !select.contains(e.target)) {
-                document.getElementById('customRoleOptions').classList.remove('open');
-                let trigger = document.querySelector('.custom-select-trigger');
-                if(trigger) trigger.classList.remove('active');
-            }
-        });
+        document.addEventListener('click', function(e) { const select = document.querySelector('.custom-select-wrapper'); if (select && !select.contains(e.target)) { document.getElementById('customRoleOptions').classList.remove('open'); let trigger = document.querySelector('.custom-select-trigger'); if(trigger) trigger.classList.remove('active'); } });
 
         function ambilDataPtero() {
-            fetch(`${WORKER_URL}/?https://${PTERO_DOMAIN}/api/application/users`, {
-                headers: { 'Accept': 'application/json', 'Authorization': `Bearer ${PTERO_API}` }
-            }).then(res => res.json()).then(data => {
-                let tabel = `<tr><th>ID</th><th>Username</th><th>Email</th><th>Status</th><th>Aksi</th></tr>`;
-                let countDisplayed = 0;
-                
-                const svgCrown = `<svg viewBox="0 0 24 24" style="width:14px;fill:currentColor;"><path d="M12 1.5l3.09 6.3 6.91 1-5 4.87 1.18 6.88L12 17.25l-6.18 3.25L7 13.62 2 8.75l6.91-1L12 1.5z"/></svg>`;
-                const svgUser = `<svg viewBox="0 0 24 24" style="width:14px;fill:currentColor;"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>`;
+            fetch(`${WORKER_URL}/?https://${PTERO_DOMAIN}/api/application/users`, { headers: { 'Accept': 'application/json', 'Authorization': `Bearer ${PTERO_API}` } }).then(res => res.json()).then(data => {
+                let tabel = `<tr><th>ID</th><th>Username</th><th>Email</th><th>Status</th><th>Aksi</th></tr>`; let countDisplayed = 0;
+                const svgCrown = `<svg viewBox="0 0 24 24"><path d="M12 1.5l3.09 6.3 6.91 1-5 4.87 1.18 6.88L12 17.25l-6.18 3.25L7 13.62 2 8.75l6.91-1L12 1.5z"/></svg>`;
+                const svgUser = `<svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>`;
                 const svgTrash = `<svg viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>`;
 
                 data.data.forEach(user => {
                     let u = user.attributes;
                     if (role !== 'pemilik' && role !== 'demo') { if (u.last_name !== myUsername) return; }
-                    if (role === 'demo' && u.last_name !== 'admin' && u.last_name !== 'Admin' && u.last_name !== 'User') return;
+                    if(role === 'demo' && u.last_name !== 'admin' && u.last_name !== 'Admin' && u.last_name !== 'User') return;
 
                     countDisplayed++;
-                    
                     let status = u.root_admin ? `<span class="badge badge-admin">${svgCrown} Admin</span>` : `<span class="badge badge-user">${svgUser} Member</span>`;
-                    let namaPembuat = u.last_name;
-                    if (namaPembuat === 'User' || namaPembuat === 'Admin') namaPembuat = 'admin'; 
+                    let namaPembuat = u.last_name; if (namaPembuat === 'User' || namaPembuat === 'Admin') namaPembuat = 'admin'; 
                     let makerTag = (role === 'pemilik' || role === 'demo') ? `<br><span class="reseller-tag">Oleh: ${namaPembuat}</span>` : '';
-                    
-                    // Admin Pusat protection
                     let tombolHapus = u.id !== 1 ? `<button class="btn-hapus" id="btnHapus_${u.id}" onclick="munculkanModalHapusConfirm(${u.id}, '${u.username}')">${svgTrash} Hapus 1 Paket</button>` : `<span style="color:var(--text-sub); font-size:12px; font-weight:bold;">Sistem Pusat</span>`;
                     
-                    tabel += `<tr>
-                        <td style="color: var(--text-sub); font-weight: bold;">#${u.id}</td>
-                        <td style="font-weight: 700; color: var(--text-main); font-size:15px;">${u.username}${makerTag}</td>
-                        <td style="color: var(--text-sub); font-size: 13px;">${u.email}</td>
-                        <td>${status}</td>
-                        <td>${tombolHapus}</td>
-                    </tr>`;
+                    tabel += `<tr><td style="color: var(--text-sub); font-weight: bold;">#${u.id}</td><td style="font-weight: 700; color: var(--text-main); font-size:14px;">${u.username}${makerTag}</td><td style="color: var(--text-sub); font-size: 12px;">${u.email}</td><td>${status}</td><td>${tombolHapus}</td></tr>`;
                 });
-
                 if (countDisplayed === 0) tabel += `<tr><td colspan="5" style="text-align: center; color: var(--warning); padding: 30px;">Belum ada akun yang bisa ditampilkan.</td></tr>`;
                 document.getElementById('tabelPtero').innerHTML = tabel;
-            }).catch(e => {
-                document.getElementById('tabelPtero').innerHTML = `<tr><td colspan="5" style="text-align: center; color: var(--danger);">Error: ${e.message}</td></tr>`;
-            });
+            }).catch(e => { document.getElementById('tabelPtero').innerHTML = `<tr><td colspan="5" style="text-align: center; color: var(--danger);">Error koneksi API: ${e.message}</td></tr>`; });
         }
 
         function cariDataTabel() {
-            let input = document.getElementById("searchInput").value.toLowerCase();
-            let table = document.getElementById("tabelPtero");
-            let tr = table.getElementsByTagName("tr");
+            let input = document.getElementById("searchInput").value.toLowerCase(); let table = document.getElementById("tabelPtero"); let tr = table.getElementsByTagName("tr");
             for (let i = 1; i < tr.length; i++) {
                 if (tr[i].getElementsByTagName("td").length === 1) continue;
-                tr[i].style.display = tr[i].innerText.toLowerCase().indexOf(input) > -1 ? "" : "none";
+                let tdID = tr[i].getElementsByTagName("td")[0]; let tdUsername = tr[i].getElementsByTagName("td")[1]; let tdEmail = tr[i].getElementsByTagName("td")[2];
+                if (tdID || tdUsername || tdEmail) {
+                    let text = (tdID.textContent || tdID.innerText) + (tdUsername.textContent || tdUsername.innerText) + (tdEmail.textContent || tdEmail.innerText);
+                    tr[i].style.display = text.toLowerCase().indexOf(input) > -1 ? "" : "none";
+                }       
             }
         }
-
-        let targetHantuGlobal = []; 
-
+                let targetHantuGlobal = []; 
         function konfirmasiSapuAwal() {
             if (role === 'demo') return showAiAlert("<b>MODE DEMO:</b> Fitur ini dikunci.", "AKSES DITOLAK");
             document.getElementById('sapuConfirmBody').innerHTML = "Sistem akan mendeteksi dan MENGHAPUS semua User (Member) yang sudah tidak memiliki Server aktif.<br><br>Proses ini <u>tidak bisa dikembalikan</u>. Lanjutkan pemindaian?";
-            let btnExec = document.getElementById('btnEksekusiSapu');
-            btnExec.innerHTML = `<svg viewBox="0 0 24 24" style="width:18px;fill:currentColor;"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg> Pindai Data`;
-            btnExec.onclick = prosesPindaiHantu; 
+            let btnExec = document.getElementById('btnEksekusiSapu'); btnExec.innerHTML = `<svg viewBox="0 0 24 24" style="width:16px;fill:currentColor;"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg> Pindai Data`; btnExec.onclick = prosesPindaiHantu; 
             document.getElementById('modalSapuConfirm').style.display = 'flex';
         }
-
         async function prosesPindaiHantu() {
-            tutupModal('modalSapuConfirm');
-            let btn = document.getElementById('btnSapu');
-            let originalSapuText = btn.innerHTML;
-            btn.innerHTML = `${spinnerSvg} Memindai Hantu...`; btn.style.pointerEvents = "none";
-
+            tutupModal('modalSapuConfirm'); let btn = document.getElementById('btnSapu'); let originalSapuText = btn.innerHTML; btn.innerHTML = `${spinnerSvg} Memindai Hantu...`; btn.style.pointerEvents = "none";
             try {
                 let resServers = await fetch(`${WORKER_URL}/?https://${PTERO_DOMAIN}/api/application/servers`, { headers: { 'Accept': 'application/json', 'Authorization': `Bearer ${PTERO_API}` } });
-                let dataServers = await resServers.json();
-                let serverOwners = dataServers.data.map(s => s.attributes.user);
-
+                let serverOwners = (await resServers.json()).data.map(s => s.attributes.user);
                 let resUsers = await fetch(`${WORKER_URL}/?https://${PTERO_DOMAIN}/api/application/users`, { headers: { 'Accept': 'application/json', 'Authorization': `Bearer ${PTERO_API}` } });
-                let dataUsers = await resUsers.json();
                 
-                let targetHapus = [];
-                dataUsers.data.forEach(user => {
-                    let u = user.attributes;
-                    if (u.root_admin || u.id === 1) return;
-                    if (role !== 'pemilik' && u.last_name !== myUsername) return;
-                    if (!serverOwners.includes(u.id)) targetHapus.push(u);
-                });
+                let targetHapus = []; (await resUsers.json()).data.forEach(user => { let u = user.attributes; if (u.root_admin || u.id === 1) return; if (role !== 'pemilik' && u.last_name !== myUsername) return; if (!serverOwners.includes(u.id)) targetHapus.push(u); });
+                if (targetHapus.length === 0) { showAiSuccess("Tidak ada <b>'User Hantu'</b> di daftar Public kamu.", "✨ PANEL BERSIH!"); btn.innerHTML = originalSapuText; btn.style.pointerEvents = "auto"; return; }
 
-                if (targetHapus.length === 0) {
-                    showAiSuccess("Tidak ada <b>'User Hantu'</b> (User tanpa server) di daftar Public kamu.", "✨ PANEL BERSIH!");
-                    btn.innerHTML = originalSapuText; btn.style.pointerEvents = "auto";
-                    return;
-                }
-
-                targetHantuGlobal = targetHapus;
-                document.getElementById('sapuConfirmBody').innerHTML = `Ditemukan <b style="color:var(--danger); font-size:18px;">${targetHapus.length} USER HANTU!</b><br><br>Sistem siap mengeksekusi penghapusan massal. Lanjutkan eksekusi?`;
-                
-                let btnExec = document.getElementById('btnEksekusiSapu');
-                btnExec.innerHTML = `<svg viewBox="0 0 24 24" style="width:18px;fill:currentColor;"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 10h-4v4h-2v-4H7v-2h4V7h2v4h4v2z"/></svg> Ya, Eksekusi!`;
-                btnExec.onclick = eksekusiHapusHantu; 
-
-                document.getElementById('modalSapuConfirm').style.display = 'flex';
-                btn.innerHTML = originalSapuText; btn.style.pointerEvents = "auto";
-
+                targetHantuGlobal = targetHapus; document.getElementById('sapuConfirmBody').innerHTML = `Ditemukan <b style="color:var(--danger); font-size:18px;">${targetHapus.length} USER HANTU!</b><br><br>Lanjutkan eksekusi penghapusan?`;
+                let btnExec = document.getElementById('btnEksekusiSapu'); btnExec.innerHTML = `<svg viewBox="0 0 24 24" style="width:16px;fill:currentColor;"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 10h-4v4h-2v-4H7v-2h4V7h2v4h4v2z"/></svg> Ya, Eksekusi!`; btnExec.onclick = eksekusiHapusHantu; 
+                document.getElementById('modalSapuConfirm').style.display = 'flex'; btn.innerHTML = originalSapuText; btn.style.pointerEvents = "auto";
             } catch (e) { showAiAlert("Terjadi Error: " + e.message, "ERROR"); btn.innerHTML = originalSapuText; btn.style.pointerEvents = "auto"; }
         }
-
         async function eksekusiHapusHantu() {
-            tutupModal('modalSapuConfirm');
-            let btn = document.getElementById('btnSapu'); let originalSapuText = btn.innerHTML;
-            btn.innerHTML = `${spinnerSvg} Menghapus ${targetHantuGlobal.length} User...`; btn.style.pointerEvents = "none";
-
+            tutupModal('modalSapuConfirm'); let btn = document.getElementById('btnSapu'); let originalSapuText = btn.innerHTML; btn.innerHTML = `${spinnerSvg} Menghapus...`; btn.style.pointerEvents = "none";
             try {
-                let terhapus = 0;
-                for (let u of targetHantuGlobal) {
-                    await fetch(`${WORKER_URL}/?https://${PTERO_DOMAIN}/api/application/users/${u.id}`, { method: 'DELETE', headers: { 'Accept': 'application/json', 'Authorization': `Bearer ${PTERO_API}` } });
-                    terhapus++;
-                }
-                showAiSuccess(`Sapu bersih selesai!<br>Total <b>${terhapus} User Hantu</b> dimusnahkan.`, "CLEAR!", false);
-                ambilDataPtero(); 
-            } catch (e) { showAiAlert("Terjadi error: " + e.message, "ERROR"); }
-            btn.innerHTML = originalSapuText; btn.style.pointerEvents = "auto";
+                let terhapus = 0; for (let u of targetHantuGlobal) { await fetch(`${WORKER_URL}/?https://${PTERO_DOMAIN}/api/application/users/${u.id}`, { method: 'DELETE', headers: { 'Accept': 'application/json', 'Authorization': `Bearer ${PTERO_API}` } }); terhapus++; }
+                showAiSuccess(`Sapu bersih selesai!<br>Total <b>${terhapus} User Hantu</b> dimusnahkan.`, "CLEAR!", false); ambilDataPtero(); 
+            } catch (e) { showAiAlert("Error: " + e.message, "ERROR"); } btn.innerHTML = originalSapuText; btn.style.pointerEvents = "auto";
         }
 
         async function buatSatuPaket() {
             if (role === 'demo') return showAiAlert("<b>MODE DEMO:</b> Fitur ini dikunci.", "AKSES DITOLAK");
-
-            let username = document.getElementById('newUsername').value.trim(); let password = document.getElementById('newPassword').value.trim();
-            let email = document.getElementById('newEmail').value.trim(); let serverName = document.getElementById('newServerName').value.trim();
-            let ram = document.getElementById('newRam').value; let cpu = document.getElementById('newCpu').value;
-            let disk = document.getElementById('newDisk').value; let locId = document.getElementById('newLocId').value; let eggId = document.getElementById('newEggId').value;
-            let isAdmin = document.getElementById('newRole').value === "true"; 
-
-            if(!username || !password || !email || !serverName || !ram || !cpu || !disk) return showAiAlert("Harap isi semua kolom formulir!", "DATA KOSONG");
-
+            let username = document.getElementById('newUsername').value.trim(); let password = document.getElementById('newPassword').value.trim(); let email = document.getElementById('newEmail').value.trim(); let serverName = document.getElementById('newServerName').value.trim(); let ram = document.getElementById('newRam').value; let cpu = document.getElementById('newCpu').value; let disk = document.getElementById('newDisk').value; let locId = document.getElementById('newLocId').value; let eggId = document.getElementById('newEggId').value; let isAdmin = document.getElementById('newRole').value === "true"; 
+            if(!username || !password || !email || !serverName || !ram || !cpu || !disk) { showAiAlert("Harap isi semua kolom formulir!", "DATA KOSONG"); return; }
             let btn = document.querySelector('.btn-tambah'); let originalText = btn.innerHTML; btn.style.pointerEvents = "none";
             
             try {
                 btn.innerHTML = `${spinnerSvg} 1/2: Membuat Akun User...`;
                 let userPayload = { "email": email, "username": username, "first_name": username, "last_name": myUsername, "password": password, "root_admin": isAdmin };
                 let resUser = await fetch(`${WORKER_URL}/?https://${PTERO_DOMAIN}/api/application/users`, { method: 'POST', headers: { 'Accept': 'application/json', 'Content-Type': 'application/json', 'Authorization': `Bearer ${PTERO_API}` }, body: JSON.stringify(userPayload) });
-                if (!resUser.ok) throw new Error("Gagal buat Akun: " + await resUser.text());
-                
-                let dataUser = await resUser.json(); let newUserId = dataUser.attributes.id; 
+                if (!resUser.ok) throw new Error("Gagal buat Akun:\n" + await resUser.text());
+                let newUserId = (await resUser.json()).attributes.id; 
 
                 btn.innerHTML = `${spinnerSvg} 2/2: Mendeploy Server...`;
-                let serverPayload = {
-                    "name": serverName, "description": `Dibuat Di Website ZeroixDark oleh ${myUsername}`, "user": newUserId, "egg": parseInt(eggId),
-                    "docker_image": "ghcr.io/parkervcp/yolks:nodejs_20", 
-                    "startup": "if [[ -d .git ]] && [[ {{AUTO_UPDATE}} == \"1\" ]]; then git pull; fi; if [[ ! -z ${NODE_PACKAGES} ]]; then /usr/local/bin/npm install ${NODE_PACKAGES}; fi; if [[ ! -z ${UNNODE_PACKAGES} ]]; then /usr/local/bin/npm uninstall ${UNNODE_PACKAGES}; fi; if [ -f /home/container/package.json ]; then /usr/local/bin/npm install; fi; if [[ ! -z ${CUSTOM_ENVIRONMENT_VARIABLES} ]]; then vars=$(echo ${CUSTOM_ENVIRONMENT_VARIABLES} | tr \";\" \"\\n\"); for line in $vars; do export $line; done fi; /usr/local/bin/${CMD_RUN};",
-                    "environment": { "INST": "npm", "USER_UPLOAD": "0", "AUTO_UPDATE": "0", "CMD_RUN": "npm start" },
-                    "limits": { "memory": parseInt(ram), "swap": 0, "disk": parseInt(disk), "io": 500, "cpu": parseInt(cpu) },
-                    "feature_limits": { "databases": 5, "backups": 5, "allocations": 5 },
-                    "deploy": { "locations": [parseInt(locId)], "dedicated_ip": false, "port_range": [] }
-                };
+                let serverPayload = { "name": serverName, "description": `Dibuat Di Website Panel Center oleh ${myUsername}`, "user": newUserId, "egg": parseInt(eggId), "docker_image": "ghcr.io/parkervcp/yolks:nodejs_20", "startup": "if [[ -d .git ]] && [[ {{AUTO_UPDATE}} == \"1\" ]]; then git pull; fi; if [[ ! -z ${NODE_PACKAGES} ]]; then /usr/local/bin/npm install ${NODE_PACKAGES}; fi; if [[ ! -z ${UNNODE_PACKAGES} ]]; then /usr/local/bin/npm uninstall ${UNNODE_PACKAGES}; fi; if [ -f /home/container/package.json ]; then /usr/local/bin/npm install; fi; if [[ ! -z ${CUSTOM_ENVIRONMENT_VARIABLES} ]]; then vars=$(echo ${CUSTOM_ENVIRONMENT_VARIABLES} | tr \";\" \"\\n\"); for line in $vars; do export $line; done fi; /usr/local/bin/${CMD_RUN};", "environment": { "INST": "npm", "USER_UPLOAD": "0", "AUTO_UPDATE": "0", "CMD_RUN": "npm start" }, "limits": { "memory": parseInt(ram), "swap": 0, "disk": parseInt(disk), "io": 500, "cpu": parseInt(cpu) }, "feature_limits": { "databases": 5, "backups": 5, "allocations": 5 }, "deploy": { "locations": [parseInt(locId)], "dedicated_ip": false, "port_range": [] } };
                 let resServer = await fetch(`${WORKER_URL}/?https://${PTERO_DOMAIN}/api/application/servers`, { method: 'POST', headers: { 'Accept': 'application/json', 'Content-Type': 'application/json', 'Authorization': `Bearer ${PTERO_API}` }, body: JSON.stringify(serverPayload) });
                 if (!resServer.ok) throw new Error("Gagal Deploy Server:\n" + await resServer.text());
 
-                btn.innerHTML = originalText; btn.style.pointerEvents = "auto";
-                munculkanModalStruk(username, password, email, serverName);
-                
-                document.getElementById('newUsername').value = ""; document.getElementById('newPassword').value = "";
-                document.getElementById('newEmail').value = ""; document.getElementById('newServerName').value = "";
-                ambilDataPtero(); 
+                btn.innerHTML = originalText; btn.style.pointerEvents = "auto"; munculkanModalStruk(username, password, email, serverName);
+                document.getElementById('newUsername').value = ""; document.getElementById('newPassword').value = ""; document.getElementById('newEmail').value = ""; document.getElementById('newServerName').value = ""; ambilDataPtero(); 
             } catch(e) { btn.innerHTML = originalText; btn.style.pointerEvents = "auto"; showAiAlert(`${e.message}`, "GAGAL DEPLOY"); }
         }
 
         let userToDeleteId = null; let userToDeleteName = null;
         function munculkanModalHapusConfirm(userId, username) {
             if (role === 'demo') return showAiAlert("<b>MODE DEMO:</b> Fitur ini dikunci.", "AKSES DITOLAK");
-            userToDeleteId = userId; userToDeleteName = username;
-            document.getElementById('delUsername').innerText = username; document.getElementById('modalHapusConfirm').style.display = 'flex';
+            userToDeleteId = userId; userToDeleteName = username; document.getElementById('delUsername').innerText = username; document.getElementById('modalHapusConfirm').style.display = 'flex';
         }
-
         async function prosesHapusUser() {
-            tutupModal('modalHapusConfirm'); 
-            let userId = userToDeleteId; let username = userToDeleteName;
-            let btn = document.getElementById(`btnHapus_${userId}`); let originalText = btn.innerHTML;
-            btn.innerHTML = `${spinnerSvg} Menghancurkan...`; btn.style.pointerEvents = "none";
-
+            tutupModal('modalHapusConfirm'); let userId = userToDeleteId; let username = userToDeleteName; let btn = document.getElementById(`btnHapus_${userId}`); let originalText = btn.innerHTML; btn.innerHTML = `${spinnerSvg} Menghancurkan...`; btn.style.pointerEvents = "none";
             try {
                 let resServers = await fetch(`${WORKER_URL}/?https://${PTERO_DOMAIN}/api/application/servers`, { headers: { 'Accept': 'application/json', 'Authorization': `Bearer ${PTERO_API}` } });
-                let dataServers = await resServers.json();
-                let serversMilikUser = dataServers.data.filter(s => s.attributes.user === userId);
-                let serverCount = serversMilikUser.length;
-
-                for (let server of serversMilikUser) {
-                    let sId = server.attributes.id;
-                    await fetch(`${WORKER_URL}/?https://${PTERO_DOMAIN}/api/application/servers/${sId}/force`, { method: 'DELETE', headers: { 'Accept': 'application/json', 'Authorization': `Bearer ${PTERO_API}` } });
-                }
-
+                let serversMilikUser = (await resServers.json()).data.filter(s => s.attributes.user === userId);
+                for (let server of serversMilikUser) { await fetch(`${WORKER_URL}/?https://${PTERO_DOMAIN}/api/application/servers/${server.attributes.id}/force`, { method: 'DELETE', headers: { 'Accept': 'application/json', 'Authorization': `Bearer ${PTERO_API}` } }); }
                 let resUser = await fetch(`${WORKER_URL}/?https://${PTERO_DOMAIN}/api/application/users/${userId}`, { method: 'DELETE', headers: { 'Accept': 'application/json', 'Authorization': `Bearer ${PTERO_API}` } });
                 if (!resUser.ok) throw new Error(await resUser.text());
-
-                showAiSuccess(`User <b style="color: #ef4444;">${username}</b> beserta <b>${serverCount}</b> Server miliknya musnah!`, "DUAARR!! MUSNAH!", true);
-                ambilDataPtero(); 
+                showAiSuccess(`User <b style="color: #ef4444;">${username}</b> beserta <b>${serversMilikUser.length}</b> Server miliknya telah musnah!`, "DUAARR!! MUSNAH!", true); ambilDataPtero(); 
             } catch (e) { showAiAlert("Gagal menghapus: " + e.message, "ERROR"); btn.innerHTML = originalText; btn.style.pointerEvents = "auto"; }
         }
 
         function munculkanModalStruk(user, pass, email, serverName) {
-            document.getElementById('resUser').innerText = user; document.getElementById('resPass').innerText = pass;
-            let panelLink = `https://${PTERO_DOMAIN}`;
-            document.getElementById('resLink').innerText = panelLink; document.getElementById('resLink').href = panelLink;
-            document.getElementById('resServer').innerText = serverName; document.getElementById('modalScreenshot').style.display = 'flex';
-            
-            let btnSalin = document.getElementById('btnSalin');
-            if(btnSalin) btnSalin.innerHTML = `<svg viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg> Salin Teks`;
+            document.getElementById('resUser').innerText = user; document.getElementById('resPass').innerText = pass; let panelLink = `https://${PTERO_DOMAIN}`; document.getElementById('resLink').innerText = panelLink; document.getElementById('resLink').href = panelLink; document.getElementById('resServer').innerText = serverName; document.getElementById('modalScreenshot').style.display = 'flex';
+            let btnSalin = document.getElementById('btnSalin'); if(btnSalin) btnSalin.innerHTML = `<svg viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg> Salin Teks`;
         }
-
         function salinDataBuyer() {
-            let user = document.getElementById('resUser').innerText; let pass = document.getElementById('resPass').innerText;
-            let link = document.getElementById('resLink').innerText; let server = document.getElementById('resServer').innerText;
-
-            let teksSalin = `*AKSES PUBLIC BERHASIL DIBUAT*\n\nUsername: ${user}\nPassword: ${pass}\nLink Panel: ${link}\nServer Bot: ${server}\n\n_Terima kasih telah berbelanja!_`;
-
-            navigator.clipboard.writeText(teksSalin).then(() => {
-                let btn = document.getElementById('btnSalin'); btn.innerHTML = `<svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg> Berhasil Disalin!`;
-                setTimeout(() => { btn.innerHTML = `<svg viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg> Salin Teks`; }, 2000);
-            }).catch(err => { showAiAlert("Gagal menyalin otomatis. Silakan copy manual.", "COPY GAGAL"); });
+            let teksSalin = `*AKSES PUBLIC BERHASIL DIBUAT*\n\nUsername: ${document.getElementById('resUser').innerText}\nPassword: ${document.getElementById('resPass').innerText}\nLink Panel: ${document.getElementById('resLink').innerText}\nServer Bot: ${document.getElementById('resServer').innerText}\n\n_Terima kasih telah berbelanja!_`;
+            navigator.clipboard.writeText(teksSalin).then(() => { let btn = document.getElementById('btnSalin'); btn.innerHTML = `<svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg> Berhasil Disalin!`; setTimeout(() => { btn.innerHTML = `<svg viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg> Salin Teks`; }, 2000); }).catch(() => showAiAlert("Gagal menyalin.", "COPY GAGAL"));
         }
-
         ambilDataPtero();
     </script>
 </body>
